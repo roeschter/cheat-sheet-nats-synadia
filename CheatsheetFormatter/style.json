@@ -1,0 +1,15 @@
+{
+    orientation: landscape,
+    background: white,
+    textcolor: black,
+    
+    borderleft: 50,
+    borderright: 50,
+    bordertop: 20,
+    borderbottom: 50,
+    
+    titleheight: 100,
+    
+    laneborder: 20,
+    lanes: 4
+}

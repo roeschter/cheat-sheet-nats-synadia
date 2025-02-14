@@ -1,0 +1,16 @@
+{
+    titlelogo: "NATS.png",
+    title: "Cheatsheet",
+    
+    block: [
+        {
+            title: "Server (NATS Server or NATS Core)",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Supports publish/subseribe, requests/reply, and point-to-point (Queueing) messaging patterns.",
+                "Written in Go for simplicity, performance, and scalability."
+            ]    
+        },
+    ]
+    
+}
