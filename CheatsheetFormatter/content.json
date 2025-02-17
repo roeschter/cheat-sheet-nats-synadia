@@ -1,16 +1,86 @@
 {
     titlelogo: "NATS.png",
-    title: "Cheatsheet",
+    pagetitle: "Cheatsheet",
     
-    block: [
+    blocks: [
         {
-            title: "Server (NATS Server or NATS Core)",
+            title: "Server\\* (*NATS* **Ser\\*ver** or ***NATS Core***)",
             items: [
-                "The central system that manages message routing between clients.",
-                "Supports publish/subseribe, requests/reply, and point-to-point (Queueing) messaging patterns.",
-                "Written in Go for simplicity, performance, and scalability."
+                "The central system that manages message routing between clients. A very long text that will certainly not fit.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+                {
+                    items: [ 
+                        "ACME",
+                        "ABCDEFG",
+                        {
+                            items: [ 
+                                "ACME",
+                                "ABCDEFG",
+                                "Written in **Go** for simplicity, performance, and scalability.",
+                            ]
+                        },
+                        "Written in **Go** for simplicity, performance, and scalability.",
+                    ]
+                },
+                "Supports **publish/subscribe, requests/reply, and point-to-point (Queueing) messaging patterns.**",
             ]    
         },
+        {
+            title: "Server 1",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        },
+        {
+            title: "Server 2",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        },
+        {
+            title: "Server 3",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        },
+        {
+            title: "Server 4",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        },
+        {
+            title: "Server 5",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        },
+        {
+            title: "Server 6",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        },
+        {
+            title: "Server 7",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        },
+        {
+            title: "Server 8",
+            items: [
+                "The central system that manages message routing between clients.",
+                "Written in **Go** for simplicity, performance, and scalability.",
+            ]
+        }
     ]
     
 }

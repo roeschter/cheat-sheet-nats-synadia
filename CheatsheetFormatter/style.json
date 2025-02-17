@@ -8,8 +8,11 @@
     bordertop: 20,
     borderbottom: 50,
     
-    titleheight: 100,
+    titleheight: 40,
     
     laneborder: 20,
-    lanes: 4
+    lanes: 4,
+    
+    headerFontSize: 12,
+    bodyFontSize: 8
 }

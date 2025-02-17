@@ -12,6 +12,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
@@ -22,10 +23,22 @@ public class CheatsheetFormatter {
 	JSONObject content;
 	String output;
 
-	public CheatsheetFormatter( String _style, String _content ) throws JSONException, IOException
+	RenderContext ctx;
+
+	public CheatsheetFormatter( String _style, String _content )
 	{
-		style = new JSONObject( Files.readString(Path.of(_style)) );
-		content = new JSONObject( Files.readString(Path.of(_content)) );
+		String currentFile = null;
+		try {
+			currentFile = _style;
+			style = new JSONObject( Files.readString(Path.of(currentFile)) );
+			currentFile = _content;
+			content = new JSONObject( Files.readString(Path.of(currentFile)) );
+		} catch (Exception e) {
+			System.out.println( "Error Parsing: " + currentFile );
+			e.printStackTrace();
+			System.exit(1);
+		}
+
 		output = _content + ".pdf";
 	}
 
@@ -47,8 +60,75 @@ public class CheatsheetFormatter {
 		return (int)json.getLong(key);
 	}
 
-	public void format() throws IOException {
-		PDDocument document = new PDDocument();
+	public static float getTextWidth(String text, PDFont font, float fontSize) throws IOException {
+	    float widthInUnits = font.getStringWidth(text);
+	    return (widthInUnits / 1000) * fontSize; // Convert to user space
+	}
+
+	public TextItem makeItem( String text, float inset, float paragraphWidth) {
+		TextItem item = new TextItem();
+		float scale = (float)1.3;
+		item.bullet = new TextFormatted( "\u2022" , ctx.body.bold, ctx.body.size*scale);
+		item.bullet.yOffset = -ctx.body.size*(scale-1)*(float)0.5;
+		item.bulletSpacing = 3;
+		item.spacing = ctx.body.size * (float)0.2;
+		item.inset = inset;
+		item.layoutBullet();
+
+		item.paragraph = new TextParagraph( text, ctx.body, paragraphWidth - item.bulletWidth, ctx.body.size*ctx.lineSpacing );
+		item.layout();
+		return item;
+	}
+
+	public void addItems(TextBlock block, JSONArray items, float inset, float paragraphWidth  ) {
+		float bulletWidth = 0;
+		for ( Object _item: items) {
+			if (_item instanceof String ) {
+				String text = (String)_item;
+				TextItem item = makeItem(text, inset, paragraphWidth);
+				bulletWidth = item.bulletWidth;
+				block.add(item);
+			}
+
+			//A nested list of items, adding recursively with indentation
+			if (_item instanceof JSONObject ) {
+				//Iterate Items
+				JSONObject itemList = (JSONObject)_item;
+				JSONArray _items = itemList.getJSONArray("items");
+				addItems( block, _items, inset + bulletWidth, paragraphWidth - bulletWidth );
+			}
+		}
+	}
+
+	public TextBlock parseBlock( Object _json, RenderContext ctx ) {
+		TextBlock block = new TextBlock();
+		JSONObject json = (JSONObject)_json;
+
+		String title = get(json, "title", null );
+		if ( title != null) {
+			 block.add( new TextParagraph( title, ctx.header, ctx.lanewidth,  ctx.header.size*(float)0.1  ) );
+
+			 TextGraphics underline = new TextGraphics( "underline.png", ctx.document );
+			 underline.yBorder =  ctx.header.size * (float)0.1;
+			 underline.gWidth = ctx.lanewidth;
+			 underline.gHeight = ctx.header.size * (float)0.2;
+
+			 block.add(underline);
+		}
+
+		//Iterate Items
+		JSONArray items = json.getJSONArray("items");
+		addItems( block, items, 0, ctx.lanewidth );
+
+		return block;
+	}
+
+	public void format() throws Exception {
+
+		//Define render context from style
+		ctx = new RenderContext();
+
+		ctx.document = new PDDocument();
 		PDPage page;
 		PDRectangle r  = PDRectangle.A4;
 		if ( get(style, "orientation", "potrait" ).equals("landscape")) {
@@ -56,53 +136,79 @@ public class CheatsheetFormatter {
 		}
 		page = new PDPage( r);
 
-		document.addPage(page);
+		ctx.document.addPage(page);
 
-		float borderTop = get(style,"bordertop",0.0);
-		float borderbottom = get(style,"borderbottom",0.0);
-		float borderleft = get(style,"borderleft",0.0);
-		float borderright = get(style,"borderright",0.0);
-		float titleheight = get(style,"titleheight",0.0);
+		ctx.contentStream = new PDPageContentStream(ctx.document, page);
 
-		float viewHeight = r.getHeight() - borderTop - borderbottom - titleheight;
-		float viewWidth = r.getWidth() - borderleft - borderright;
+		ctx.titleFontSize = get(style,"titleFontSize",24);
+		ctx.headerFontSize = get(style,"headerFontSize",12);
+		ctx.bodyFontSize = get(style,"bodyFontSize",8);
 
-		int lanes = get( style, "lanes", 1 );
-		float laneborder = get(style,"laneborder",0.0);
-		float lanewidth = (viewWidth - (lanes-1)*laneborder) /lanes;
+		ctx.borderTop = get(style,"bordertop",0.0);
+		ctx.borderbottom = get(style,"borderbottom",0.0);
+		ctx.borderleft = get(style,"borderleft",0.0);
+		ctx.borderright = get(style,"borderright",0.0);
+		ctx.titleheight = get(style,"titleheight",0.0);
 
+		ctx.viewHeight = r.getHeight() - ctx.borderTop - ctx.borderbottom - ctx.titleheight;
+		ctx.viewWidth = r.getWidth() - ctx.borderleft - ctx.borderright;
 
-		PDPageContentStream contentStream = new PDPageContentStream(document, page);
-		PDFont fontHeader = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-		PDFont fontBody = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+		ctx.lanes = get( style, "lanes", 1 );
+		ctx.laneborder = get(style,"laneborder",0.0);
+		ctx.lanewidth = (ctx.viewWidth - (ctx.lanes-1)*ctx.laneborder) /ctx.lanes;
+		ctx.laneHeight = ctx.viewHeight;
 
-		float xPos = borderleft;
-		float yPos = r.getHeight() - borderTop - titleheight;
-		float headerFontSize = 12;
-		float bodyFontSize = 12;
+		ctx.makeFonts();
 
+		//General TODO
+		/*
+		 */
 
-		yPos -= headerFontSize;
-		contentStream.beginText();
-		contentStream.setFont( fontHeader, headerFontSize);
-		contentStream.newLineAtOffset(xPos,yPos);
-		contentStream.showText("Hello");
-		contentStream.endText();
+		//Get Header
+		//TODO
 
-		yPos -= headerFontSize;
-		contentStream.beginText();
-		contentStream.setFont( fontHeader, headerFontSize);
-		contentStream.newLineAtOffset(xPos,yPos);
-		contentStream.showText("World!");
-		contentStream.endText();
+		//TextBlock of TextBlock
+		TextBlock textBlocks = new TextBlock();
+		textBlocks.spacing = ctx.blockSpacing;
 
-		contentStream.close();
+		//Iterate over content blocks
+		JSONArray blocks = content.getJSONArray("blocks");
+		for ( Object item: blocks )
+		{
+			textBlocks.add( parseBlock( item, ctx ) );
+		}
+		textBlocks.layout();
 
+		//Layout block into lanes
+		TextBlock[] lanes = new TextBlock[ctx.lanes];
+		for ( int i=0; i<ctx.lanes; i++) {
+			lanes[i] = new TextBlock();
+		}
 
+		//Distribute blocks over lanes
+		int lanePos = 0;
+		float laneHeightRemaining = ctx.laneHeight;
+		for ( Text block: textBlocks.texts )
+		{
+			if ( block.height > laneHeightRemaining ) {
+				laneHeightRemaining = ctx.laneHeight;
+				lanePos = (lanePos+1)%lanes.length;
+			}
+			lanes[lanePos].add(block);
+			laneHeightRemaining -= block.height;
+		}
 
+		//Render lanes
+		for ( int i=0; i<ctx.lanes; i++) {
+			ctx.xPos = ctx.borderleft + (ctx.lanewidth + ctx.laneborder) * i;
+			ctx.yPos = r.getHeight() - ctx.borderTop - ctx.titleheight;
+			lanes[i].render(ctx);
+		}
 
-		document.save(output);
-		document.close();
+		ctx.contentStream.close();
+
+		ctx.document.save(output);
+		ctx.document.close();
 		System.out.println("Done writing to: " + output);
 	}
 
