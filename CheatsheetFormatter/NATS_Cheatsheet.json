@@ -2,7 +2,7 @@
     
     style: style.json,
     styleoverride: {
-        lanewidthRel: [ 0.28, 0.23, 0.25, 0.24 ],
+        laneWidthRel: [ 0.30, 0.20, 0.25, 0.20 ],
     },
     "pageHeader": "Cheatsheet",
     

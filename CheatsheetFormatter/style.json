@@ -6,7 +6,7 @@
     borderleft: 50,
     borderright: 50,
     bordertop: 10,
-    borderbottom: 50,
+    borderbottom: 60,
     
     backgroundTLLogo: wave_top.png,
     backgroundBRLogo: wave_bottom.png,
@@ -24,7 +24,7 @@
     
     laneborder: 15,
     lanes: 4,
-    lanewidthRel: [ 0.28, 0.23, 0.25, 0.24 ],
+    laneWidthRel: [ 0.25, 0.25, 0.25, 0.25 ],
     
     titleFontSize: 13,
     titleLineSpacingRel: 0.2,

@@ -6,28 +6,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
+
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 
 public class CheatsheetFormatter {
 
 	/*
 	 * OK - Config object with inheritance
-	 * Reference style in content
-	 * Override of style in content
-	 * Organize content into folder prefixed with cs_
+	 * .Reference style in content
+	 * .Override of style in content
+	 *
 	 *
 	 * Lane width adjustment - allow for explicit specification
 	 *
+	 * Organize content into folder prefixed with cs_
 	 * CLI cheatsheet - start with nats cheat
 	 *
 	 * Create Readme.md
@@ -35,8 +31,8 @@ public class CheatsheetFormatter {
 	 */
 
 	Config cStyle;
-	JSONObject style;
-	JSONObject content;
+	//JSONObject style;
+	Config content;
 	String output;
 
 	RenderContext ctx;
@@ -46,12 +42,15 @@ public class CheatsheetFormatter {
 		String currentFile = null;
 		try {
 			currentFile = _content;
-			content = new JSONObject( Files.readString(Path.of(currentFile)) );
-			currentFile = _style;
-			style = new JSONObject( Files.readString(Path.of(currentFile)) );
+			content = new Config( new JSONObject( Files.readString(Path.of(currentFile)) ) , null );
+
+			currentFile = content.get("style", _style);
+			JSONObject style = new JSONObject( Files.readString(Path.of(currentFile)) );
 			JSONObject override = new JSONObject();
+
 			if ( !content.isNull("styleoverride") )
 				override = content.getJSONObject("styleoverride");
+
 			Config root = new Config( style, null );
 			cStyle = new Config( override, root);
 
@@ -123,7 +122,7 @@ public class CheatsheetFormatter {
 		TextBlock block = new TextBlock();
 		JSONObject json = (JSONObject)_json;
 
-		String title = ctx.get(json, "title", null );
+		String title = content.get(json, "title", null );
 		info( title);
 		block.name = title;
 		if ( title != null) {
@@ -148,7 +147,7 @@ public class CheatsheetFormatter {
 	public void format() throws Exception {
 
 		//Define render context from style
-		ctx = new RenderContext( style );
+		ctx = new RenderContext( cStyle );
 		PDPage page = ctx.addPAge();
 		ctx.setupStyle();
 		ctx.makeFonts();
@@ -205,7 +204,7 @@ public class CheatsheetFormatter {
 			headerLogo.gHeight = ctx.headerLogoHeight;
 			headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
 			headerLogo.xBorder = 5;
-			TextFormatted headerText = new TextFormatted( ctx.get(content,  "pageHeader", ""), ctx.header.bold, ctx.header.size );
+			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.bold, ctx.header.size );
 			headerText.yOffset = ctx.headerYOffset;
 
 			header.add( headerLogo );

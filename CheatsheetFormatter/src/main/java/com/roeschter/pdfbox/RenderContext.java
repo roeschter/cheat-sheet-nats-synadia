@@ -14,7 +14,7 @@ import org.json.JSONObject;
 public class RenderContext {
 	boolean render = false;
 
-	JSONObject style;
+	Config style;
 
 	PDPageContentStream contentStream;
 	PDDocument document;
@@ -45,6 +45,7 @@ public class RenderContext {
 
 	int lanes;
 	float laneborder;
+	float[] laneWidthRel;
 	float lanewidth;
 	float laneTop;
 
@@ -78,11 +79,12 @@ public class RenderContext {
 
 
 
-	public RenderContext( JSONObject _style ) {
+	public RenderContext( Config _style ) {
 		style = _style;
 		document = new PDDocument();
 	}
 
+	/*
 	public String get( JSONObject json, String key, String _default) {
 		if ( json.isNull(key))
 			return _default;
@@ -103,13 +105,13 @@ public class RenderContext {
 
 		return (int)json.getLong(key);
 	}
-
+	*/
 
 	public PDPage addPAge( ) throws Exception {
 		PDPage page;
 		rectangle  = PDRectangle.A4;
 
-		if ( get(style, "orientation", "potrait" ).equals("landscape")) {
+		if ( style.get( "orientation", "potrait" ).equals("landscape")) {
 			rectangle = new PDRectangle( PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth() ) ;
 		}
 		page = new PDPage( rectangle);
@@ -120,55 +122,57 @@ public class RenderContext {
 
 	public void setupStyle( ) throws IOException {
 
-		borderTop = get(style,"bordertop",0.0);
-		borderbottom = get(style,"borderbottom",0.0);
-		borderleft = get(style,"borderleft",0.0);
-		borderright = get(style,"borderright",0.0);
+		borderTop = style.get("bordertop",0.0);
+		borderbottom = style.get("borderbottom",0.0);
+		borderleft = style.get("borderleft",0.0);
+		borderright = style.get("borderright",0.0);
 
-		backgroundTLLogo = get( style, "backgroundTLLogo", null );
-		backgroundBRLogo = get( style, "backgroundBRLogo", null );
-		backgroundTLWidth =  get(style,"backgroundTLWidth", 150.0);
-		backgroundTLHeight = get(style,"backgroundTLHeight", 40.0);
-		backgroundBRWidth =  get(style,"backgroundBRWidth", 150.0);
-		backgroundBRHeight = get(style,"backgroundBRHeight", 40.0);
+		backgroundTLLogo = style.get( "backgroundTLLogo", null );
+		backgroundBRLogo = style.get( "backgroundBRLogo", null );
+		backgroundTLWidth =  style.get("backgroundTLWidth", 150.0);
+		backgroundTLHeight = style.get("backgroundTLHeight", 40.0);
+		backgroundBRWidth =  style.get("backgroundBRWidth", 150.0);
+		backgroundBRHeight = style.get("backgroundBRHeight", 40.0);
 
 
-		headerFontSize = get(style,"headerFontSize",30);
-		headerYOffset = get(style,"headerYOffset",0);
-		headerHeight = get(style,"headerHeight",40);
-		headerLogoHeight = get(style,"headerLogoHeight",40);
-		headerLogo = get(style,"headerLogo", null );
+		headerFontSize = style.get("headerFontSize",30);
+		headerYOffset = style.get("headerYOffset",0);
+		headerHeight = style.get("headerHeight",40);
+		headerLogoHeight = style.get("headerLogoHeight",40);
+		headerLogo = style.get("headerLogo", null );
 
 		viewHeight = rectangle.getHeight() - borderTop - borderbottom - headerHeight;
 		viewWidth = rectangle.getWidth() - borderleft - borderright;
 
-		lanes = get( style, "lanes", 1 );
-		laneborder = get(style,"laneborder",0.0);
+		lanes = style.get( "lanes", 1 );
+		laneborder = style.get("laneborder",0.0);
+		laneWidthRel = style.getFloatArray("laneWidthRel");
+
 		lanewidth = (viewWidth - (lanes-1)*laneborder) /lanes;
 		laneHeight = viewHeight;
 		laneTop = rectangle.getHeight() - borderTop - headerHeight;
 
 
-		titleFontSize = get(style,"titleFontSize",24);
-		titleLineSpacingRel = get(style,"titleSpacingRel",0.0);
-		titleParagraphSpacingRel = get(style,"titleParagraphSpacingRel",0.0);
-		blockSpacing = get(style,"blockSpacing",4);
+		titleFontSize = style.get("titleFontSize",24);
+		titleLineSpacingRel = style.get("titleSpacingRel",0.0);
+		titleParagraphSpacingRel = style.get("titleParagraphSpacingRel",0.0);
+		blockSpacing = style.get("blockSpacing",4);
 
 
-		underLineLogo = get( style, "underLineLogo", "underline.png" );
-		underlineHeightRel = get(style,"underlineHeightRel",0.0);
-		underlineBorderRel = get(style,"underlineBorderRel",0.0);
+		underLineLogo = style.get( "underLineLogo", "underline.png" );
+		underlineHeightRel = style.get("underlineHeightRel",0.0);
+		underlineBorderRel = style.get("underlineBorderRel",0.0);
 
 
-		bullet = get( style, "bullet", "\u2022" );
-		bulletSizeRel = get(style,"bulletSizeRel",1.3);
-		bulletOffetRel = get(style,"bulletOffetRel",0.5);
-		bulletSpacingRel = get(style,"bulletSpacingRel",0.3);
+		bullet = style.get( "bullet", "\u2022" );
+		bulletSizeRel = style.get("bulletSizeRel",1.3);
+		bulletOffetRel = style.get("bulletOffetRel",0.5);
+		bulletSpacingRel = style.get("bulletSpacingRel",0.3);
 
 
-		bodyFontSize = get(style,"bodyFontSize",8);
-		bodyLineSpacingRel = get(style,"bodyLineSpacingRel",(float)0);
-		bodyParagraphSpacingRel = get(style,"bodyParagraphSpacingRel",(float)0);
+		bodyFontSize = style.get("bodyFontSize",8);
+		bodyLineSpacingRel = style.get("bodyLineSpacingRel",(float)0);
+		bodyParagraphSpacingRel = style.get("bodyParagraphSpacingRel",(float)0);
 	}
 
 	public void makeFonts() {
