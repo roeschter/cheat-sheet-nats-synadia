@@ -1,49 +1,54 @@
 {
-    pageHeader: "Cheatsheet",
     
-    blocks: [
+    style: style.json,
+    styleoverride: {
+        lanewidthRel: [ 0.28, 0.23, 0.25, 0.24 ],
+    },
+    "pageHeader": "Cheatsheet",
+    
+    "blocks": [
         {
-            title: "**A Brief History of NATS**",
-            items: [
-                "**2010:** Created by Derek Colison as 4 lightweight messaging system for Cloud Foundry.",
+            "title": "**A Brief History of NATS**",
+            "items": [
+                "**2010:** Created by Derek Colison as a lightweight messaging system for Cloud Foundry.",
                 "**2012:** Open-sourced under the Apache 2.0 license.",
                 "**2016:** Joined the Cloud Native Computing Foundation (CNCF) as a sandbox project.",
-                "**2018:** Introduction of NATS JetStream for message persistance and streaming.",
-                "**2017:** Graduated to a CNCF incubation project, gaining recognition as & cloud-native messaging solution.",
-                "**2024 and Beyond:** Continued adoption im edge computing, IoT, and microservices. Architectures, with ongoing enhancements to Jetstream and clustering capabilities.",
-                "**Widespread Deployment:** NATS is trusted by leading enterprises and platters, including Schaeffler, Mastercard, Alibaba Group, VMware, Cloud Foundry, Baidu, Siemens, Walmart, and GE."
+                "**2018:** Introduction of NATS JetStream for message persistence and streaming.",
+                "**2017:** Graduated to a CNCF incubation project, gaining recognition as a cloud-native messaging solution.",
+                "**2024 and Beyond:** Continued adoption in edge computing, IoT, and microservices. Architectures, with ongoing enhancements to Jetstream and clustering capabilities.",
+                "**Widespread Deployment:** NATS is trusted by leading enterprises and platforms, including Schaeffler, Mastercard, Alibaba Group, VMware, Cloud Foundry, Baidu, Siemens, Walmart, and GE."
             ]
         },
         {
-            title: "**Server (NATS Server or NATS Core)**",
-            items: [
+            "title": "**Server (NATS Server or NATS Core)**",
+            "items": [
                 "The central system that manages message routing between clients. A very long text that will certainly not fit.",
                 "Written in **Go** for simplicity, performance and scalability.",
-                "Supports **publish/subscribe, requests/reply and point-to-point (queueing) messaging patterns.**",
+                "Supports **publish/subscribe, requests/reply and point-to-point (queueing) messaging patterns.**"
             ]    
         },
         {
-            title: "**Client**",
-            items: [
-            "Applications use NATS client libraries to connect to the server.",
-            "Can **publish messages, subscribe to subjects**, or **both**.",
-            "Supports mulliple programming languages, including Go, Java, Python and JavaScript."
+            "title": "**Client**",
+            "items": [
+                "Applications use NATS client libraries to connect to the server.",
+                "Can **publish messages, subscribe to subjects**, or **both**.",
+                "Supports multiple programming languages, including Go, Java, Python and JavaScript."
             ]
         },
         {
-            title: "**Subject addressing**",
-            items: [
-                    "Subject are topic/channels for message exchange.",
-                    "Support **hierarchical namepaces** and **wildcard subscriptions** for flexible message routing."
+            "title": "**Subject addressing**",
+            "items": [
+                "Subjects are topic/channels for message exchange.",
+                "Support **hierarchical namespaces** and **wildcard subscriptions** for flexible message routing."
             ]
         },
         {
-            title: "**Message**",
-            items: [
+            "title": "**Message**",
+            "items": [
                 "Unit of data transmission. Everything is a message in NATS.",
-                "Composed off:",
+                "Composed of:",
                 {
-                    items: [                        
+                    "items": [                        
                         "**Subject:** The channel to which the Message is published.",
                         "**Payload:** The binary content of the Message.",
                         "**Headers:** Map with metadata.",
@@ -53,27 +58,27 @@
             ]
         },
         {
-            title: "**Queue Groups**",
-            items: [
+            "title": "**Queue Groups**",
+            "items": [
                 "Used for **load balancing** among multiple subscribers.",
-                "**Each message ls delivered to only one subscriber** in the queue group."
+                "**Each message is delivered to only one subscriber** in the queue group."
             ]
         },
         {
-            title: "**Wildcard Subscriptions**",
-            items: [
+            "title": "**Wildcard Subscriptions**",
+            "items": [
                 "**Single-level (\\*):** Matches one token in the subject hierarchy.",
-                "**Multi-level (>):** Matches one or mone tokens at the and of the subject hierarchy.",
-                "Used for **subscription, filtering, security and transformation.**"
+                "**Multi-level (>):** Matches one or more tokens at the end of the subject hierarchy.",
+                "Used for **subscription, filtering, security, and transformation.**"
             ]
         },
         {
-            title: "**JetStream (Persistence Layer)**",
-            items: [
+            "title": "**JetStream (Persistence Layer)**",
+            "items": [
                 "**Built-in persistence layer in NATS**. Replicated and resilient.",
                 "Adds advanced capabilities like:",
                 {
-                    items: [
+                    "items": [
                         "**Streaming:** Store and replay Messages.",
                         "**Queues:** Manages message delivery to multiple consumers.",
                         "**Delivery Guarantees:** Supports at least once and exactly-once delivery.",
@@ -85,15 +90,15 @@
             ]
         },
         {
-            title: "**Consistent Replication**",
-            items: [
-                "**Clustered NATS servers** reclicate messages for **high availability**.",
+            "title": "**Consistent Replication**",
+            "items": [
+                "**Clustered NATS servers** replicate messages for **high availability**.",
                 "JetStream enables **persistent storage with fault tolerance.**"
             ]
         },
         {
-            title: "**Key Features**",
-            items: [
+            "title": "**Key Features**",
+            "items": [
                 "**Lightweight:** Minimal resource consumption, ideal for microservices and edge computing.",
                 "**Low Latency:** Optimized for high performance low-latency messaging.",
                 "**Persistence:** JetStream enables reliable message storage and delivery.",
@@ -102,23 +107,22 @@
             ]
         },
         {
-            title: "**Use Cases**",
-            items: [
-                "**Microgervices:** Communication: Lightweight and fast inter-service messaging.",
-                "**loT and Edge Computing:** Low latency messaging for distributed Systemss.",
+            "title": "**Use Cases**",
+            "items": [
+                "**Microservices:** Communication: Lightweight and fast inter-service messaging.",
+                "**IoT and Edge Computing:** Low latency messaging for distributed Systems.",
                 "**Real-time Analytics:** Stream processing and event-driven architectures.",
                 "**Event Streaming:** Reliable message delivery with JetStream.",
                 "**Financial Services: High-Performance messaging for real-time trading systems."
             ]
         },
         {
-            title: "**NATS Governance**",
-            items: [
-                "**Synadia** - Founded by **Derek Collison**, who is the primary maintainer of MATS, driving core develoament, enterprise support, and the long-ferm roadmap. Synadia also manages the nats.io ecosystem, including the client libraries and NATS Connect.",
-                "**Open-Source Community** — NATS is developed openty under the **nats-io organization** on GitHub, with contributions from companies like **Siemens, VMware, and Cisco**, as well as independent developers worldwide.",
-                "**Cloud Native Computing Foundation (ONCF)** - As a **CNCF incubating Project**, NATS benefits from CNCF governance, security audits, and com#¢manity-drivan callaboration, ensuring neutrality and langterm sustednability."
+            "title": "**NATS Governance**",
+            "items": [
+                "**Synadia** - Founded by **Derek Collison**, who is the primary maintainer of NATS, driving core development, enterprise support, and the long-term roadmap. Synadia also manages the nats.io ecosystem, including the client libraries and NATS Connect.",
+                "**Open-Source Community** — NATS is developed openly under the **nats-io organization** on GitHub, with contributions from companies like **Siemens, VMware, and Cisco**, as well as independent developers worldwide.",
+                "**Cloud Native Computing Foundation (CNCF)** - As a **CNCF incubating Project**, NATS benefits from CNCF governance, security audits, and community-driven collaboration, ensuring neutrality and long-term sustainability."
             ]
-        },
-        
+        }
     ]
 }

@@ -21,10 +21,20 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 public class CheatsheetFormatter {
 
 	/*
+	 * OK - Config object with inheritance
+	 * Reference style in content
+	 * Override of style in content
+	 * Organize content into folder prefixed with cs_
+	 *
 	 * Lane width adjustment - allow for explicit specification
+	 *
+	 * CLI cheatsheet - start with nats cheat
+	 *
+	 * Create Readme.md
 	 *
 	 */
 
+	Config cStyle;
 	JSONObject style;
 	JSONObject content;
 	String output;
@@ -35,10 +45,16 @@ public class CheatsheetFormatter {
 	{
 		String currentFile = null;
 		try {
-			currentFile = _style;
-			style = new JSONObject( Files.readString(Path.of(currentFile)) );
 			currentFile = _content;
 			content = new JSONObject( Files.readString(Path.of(currentFile)) );
+			currentFile = _style;
+			style = new JSONObject( Files.readString(Path.of(currentFile)) );
+			JSONObject override = new JSONObject();
+			if ( !content.isNull("styleoverride") )
+				override = content.getJSONObject("styleoverride");
+			Config root = new Config( style, null );
+			cStyle = new Config( override, root);
+
 		} catch (Exception e) {
 			System.out.println( "Error Parsing: " + currentFile );
 			e.printStackTrace();
@@ -47,6 +63,7 @@ public class CheatsheetFormatter {
 
 		output = _content + ".pdf";
 	}
+
 
 
 	static boolean trace = false;

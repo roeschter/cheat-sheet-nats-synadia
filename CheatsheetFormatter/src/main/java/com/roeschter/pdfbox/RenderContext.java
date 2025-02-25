@@ -86,18 +86,21 @@ public class RenderContext {
 	public String get( JSONObject json, String key, String _default) {
 		if ( json.isNull(key))
 			return _default;
+
 		return json.getString(key);
 	}
 
 	public float get( JSONObject json, String key, double _default) {
 		if ( json.isNull(key))
 			return (float)_default;
+
 		return (float)json.getDouble(key);
 	}
 
 	public int get( JSONObject json, String key, int _default) {
 		if ( json.isNull(key))
 			return _default;
+
 		return (int)json.getLong(key);
 	}
 
@@ -147,20 +150,20 @@ public class RenderContext {
 
 
 		titleFontSize = get(style,"titleFontSize",24);
-		titleLineSpacingRel = get(style,"titleSpacingRel",(float)0);
-		titleParagraphSpacingRel = get(style,"titleParagraphSpacingRel",(float)0);
+		titleLineSpacingRel = get(style,"titleSpacingRel",0.0);
+		titleParagraphSpacingRel = get(style,"titleParagraphSpacingRel",0.0);
 		blockSpacing = get(style,"blockSpacing",4);
 
 
 		underLineLogo = get( style, "underLineLogo", "underline.png" );
-		underlineHeightRel = get(style,"underlineHeightRel",(float)0);
-		underlineBorderRel = get(style,"underlineBorderRel",(float)0);
+		underlineHeightRel = get(style,"underlineHeightRel",0.0);
+		underlineBorderRel = get(style,"underlineBorderRel",0.0);
 
 
 		bullet = get( style, "bullet", "\u2022" );
-		bulletSizeRel = get(style,"bulletSizeRel",(float)1.3);
-		bulletOffetRel = get(style,"bulletOffetRel",(float)0.5);
-		bulletSpacingRel = get(style,"bulletSpacingRel",(float)0.3);
+		bulletSizeRel = get(style,"bulletSizeRel",1.3);
+		bulletOffetRel = get(style,"bulletOffetRel",0.5);
+		bulletSpacingRel = get(style,"bulletSpacingRel",0.3);
 
 
 		bodyFontSize = get(style,"bodyFontSize",8);
