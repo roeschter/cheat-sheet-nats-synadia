@@ -1,0 +1,36 @@
+{
+    orientation: landscape,
+    background: white,
+    textcolor: black,
+    
+    borderleft: 50,
+    borderright: 50,
+    bordertop: 10,
+    borderbottom: 50,
+    
+    backgroundTLLogo: wave_left.png,
+    backgroundBRLogo: wave_right.png,
+    backgroundWidth: 250,
+    backgroundHeight: 60,
+    
+ 
+    headerFontSize: 24,
+    headerYOffset: -6,
+    headerHeight: 50,
+    headerLogoHeight: 40, 
+    headerLogo: NATS.png ,
+    
+    laneborder: 20,
+    lanes: 4,
+    
+    titleFontSize: 12,
+    titleSpacingRel: 0.1,
+    
+    underLineLogo: underline.png, 
+    underlineHeightRel: 0.2, 
+    underlineBorderRel: 0.1,
+    
+    blockSpacing: 4,
+    
+    bodyFontSize: 8
+}

@@ -5,14 +5,45 @@
     
     borderleft: 50,
     borderright: 50,
-    bordertop: 20,
+    bordertop: 10,
     borderbottom: 50,
     
-    titleheight: 40,
+    backgroundTLLogo: wave_top.png,
+    backgroundBRLogo: wave_bottom.png,
+    backgroundTLWidth: 250,
+    backgroundTLHeight: 60,
+    backgroundBRWidth: 400,
+    backgroundBRHeight: 60,
     
-    laneborder: 20,
+ 
+    headerFontSize: 24,
+    headerYOffset: -6,
+    headerHeight: 50,
+    headerLogoHeight: 40, 
+    headerLogo: NATS.png ,
+    
+    laneborder: 15,
     lanes: 4,
+    lanewidthRel: [ 0.28, 0.23, 0.25, 0.24 ],
     
-    headerFontSize: 12,
-    bodyFontSize: 8
+    titleFontSize: 13,
+    titleLineSpacingRel: 0.2,
+    titleParagraphSpacingRel: 0.3,
+    
+    underLineLogo: underline.png, 
+    underlineHeightRel: 0.2, 
+    underlineBorderRel: 0.1,
+    
+    bullet: "\u2022",
+    bulletSizeRel: 1.3,
+    bulletSpacingRel: 0.3,
+    bulletOffetRel: -0.2,
+    
+    
+    bodyFontSize: 9,
+    bodyLineSpacingRel: 0.1,
+    bodyParagraphSpacingRel: 0.1,
+    
+    
+    blockSpacing: 4,
 }

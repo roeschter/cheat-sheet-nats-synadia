@@ -15,10 +15,10 @@ public class TextParagraph extends Text {
 		line = _line;
 	}
 
-	public TextParagraph( String text, FontContext ctx, float _maxWidth, float _spacing) {
-		this( new TextLine( text, ctx ) );
+	public TextParagraph( String text, FontContext ctx, float _maxWidth, float lineSpacing, float _paragraphSpacing) {
+		this( new TextLine( text, ctx, lineSpacing ) );
 		maxWidth = _maxWidth;
-		spacing = _spacing;
+		spacing = _paragraphSpacing;
 	}
 
 	@Override
@@ -39,8 +39,8 @@ public class TextParagraph extends Text {
 			text.layout();
 			width = Math.max(width, text.width);
 			height += text.height;
-			height += spacing;
 		}
+		height += spacing;
 	}
 
 	@Override
@@ -48,9 +48,9 @@ public class TextParagraph extends Text {
 		float xPos = ctx.xPos;
 		for( TextLine text: texts ) {
 			text.render(ctx);
-			ctx.yPos -= spacing;
 			//Reset horizontal after line
 			ctx.xPos = xPos;
 		}
+		ctx.yPos -= spacing;
 	}
 }

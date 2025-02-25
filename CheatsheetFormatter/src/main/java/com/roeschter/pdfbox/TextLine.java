@@ -7,7 +7,9 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 
 public class TextLine extends Text {
+
 	ArrayList<TextFormatted> texts = new ArrayList<TextFormatted>();
+	public float spacing;
 
 	public TextLine() {
 	}
@@ -90,7 +92,8 @@ public class TextLine extends Text {
 		} while ( spos!=-1 );
 	}
 
-	public TextLine( String text, FontContext ctx ) {
+	public TextLine( String text, FontContext ctx, float _spacing ) {
+		spacing = _spacing;
 		parseMarkDown( text, ctx);
 	}
 
@@ -99,6 +102,7 @@ public class TextLine extends Text {
 	public TextLine takeSubTextline( float width )  {
 		layout();
 		TextLine subLine = new TextLine();
+		subLine.spacing = spacing;
 		float widthRemaining = width;
 
 		boolean canFit = false;
@@ -189,6 +193,7 @@ public class TextLine extends Text {
 			width += text.width;
 			height = Math.max(height, text.height);
 		}
+		height += spacing;
 	}
 
 	@Override

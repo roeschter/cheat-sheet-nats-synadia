@@ -1,6 +1,5 @@
 {
-    titlelogo: "NATS.png",
-    pagetitle: "Cheatsheet",
+    pageHeader: "Cheatsheet",
     
     blocks: [
         {

@@ -7,7 +7,23 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 public class TextBlock extends Text {
 	public ArrayList<Text> texts = new ArrayList<Text>();
 
-	float spacing = 0;
+	public boolean renderVertical = true;
+	public boolean alignCenter = false;
+
+	public float spacing = 0;
+
+	public TextBlock()
+	{
+		this(true, 0 );
+	}
+
+	public TextBlock( boolean _renderVertical, float _spacing )
+	{
+		spacing = _spacing;
+		renderVertical = _renderVertical;
+	}
+
+
 	public void add( Text text ) {
 		texts.add(text);
 	}
@@ -18,23 +34,42 @@ public class TextBlock extends Text {
 		height = -spacing;
 		for( Text text: texts ) {
 			text.layout();
-			width = Math.max(width, text.width);
-			height += text.height;
-			height += spacing;
+			if ( renderVertical ) {
+				width = Math.max(width, text.width);
+				height += text.height;
+				height += spacing;
+			} else {
+				height = Math.max(height, text.height);
+				width += text.width;
+				width += spacing;
+			}
+
 		}
 	}
 
 	@Override
 	public void render( RenderContext ctx ) throws Exception {
-		//Render vertically
+
 		float xPos = ctx.xPos;
+		float yPos = ctx.yPos;
 		for( Text text: texts ) {
-			//Reset horizontally before each text
-			ctx.xPos = xPos;
+
+			if ( renderVertical ) {
+				//Reset horizontally
+				ctx.xPos = xPos;
+				if ( alignCenter )
+					ctx.xPos += (width-text.width)/2;
+			} else {
+				//Reset vertically
+				ctx.yPos = yPos;
+				if ( alignCenter )
+					ctx.yPos -= (height-text.height)/2;
+			}
 			text.render(ctx);
 			ctx.yPos -= spacing;
 		}
 		ctx.yPos += spacing;
+		ctx.yPos -= ctx.blockSpacing;
 	}
 
 }

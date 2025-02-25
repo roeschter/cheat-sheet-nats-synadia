@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -18,6 +19,11 @@ import org.json.JSONObject;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 public class CheatsheetFormatter {
+
+	/*
+	 * Lane width adjustment - allow for explicit specification
+	 *
+	 */
 
 	JSONObject style;
 	JSONObject content;
@@ -42,23 +48,20 @@ public class CheatsheetFormatter {
 		output = _content + ".pdf";
 	}
 
-	public String get( JSONObject json, String key, String _default) {
-		if ( json.isNull(key))
-			return _default;
-		return json.getString(key);
+
+	static boolean trace = false;
+	static boolean info = true;
+
+	static public void trace(float x, float y, String text) {
+		if (trace)
+			System.out.println("("+x+","+y+"):"+text);
 	}
 
-	public float get( JSONObject json, String key, double _default) {
-		if ( json.isNull(key))
-			return (float)_default;
-		return (float)json.getDouble(key);
+	static public void info( String text) {
+		if (info)
+			System.out.println(text);
 	}
 
-	public int get( JSONObject json, String key, int _default) {
-		if ( json.isNull(key))
-			return _default;
-		return (int)json.getLong(key);
-	}
 
 	public static float getTextWidth(String text, PDFont font, float fontSize) throws IOException {
 	    float widthInUnits = font.getStringWidth(text);
@@ -67,15 +70,14 @@ public class CheatsheetFormatter {
 
 	public TextItem makeItem( String text, float inset, float paragraphWidth) {
 		TextItem item = new TextItem();
-		float scale = (float)1.3;
-		item.bullet = new TextFormatted( "\u2022" , ctx.body.bold, ctx.body.size*scale);
-		item.bullet.yOffset = -ctx.body.size*(scale-1)*(float)0.5;
-		item.bulletSpacing = 3;
-		item.spacing = ctx.body.size * (float)0.2;
+		float scale = ctx.bulletSizeRel;
+		item.bullet = new TextFormatted( ctx.bullet , ctx.body.bold, ctx.body.size*scale);
+		item.bullet.yOffset = ctx.body.size*ctx.bulletOffetRel;
+		item.bulletSpacing = ctx.body.size*ctx.bulletSpacingRel;
 		item.inset = inset;
 		item.layoutBullet();
 
-		item.paragraph = new TextParagraph( text, ctx.body, paragraphWidth - item.bulletWidth, ctx.body.size*ctx.lineSpacing );
+		item.paragraph = new TextParagraph( text, ctx.body, paragraphWidth - item.bulletWidth, ctx.body.size*ctx.bodyLineSpacingRel,  ctx.body.size*ctx.bodyParagraphSpacingRel );
 		item.layout();
 		return item;
 	}
@@ -104,14 +106,17 @@ public class CheatsheetFormatter {
 		TextBlock block = new TextBlock();
 		JSONObject json = (JSONObject)_json;
 
-		String title = get(json, "title", null );
+		String title = ctx.get(json, "title", null );
+		info( title);
+		block.name = title;
 		if ( title != null) {
-			 block.add( new TextParagraph( title, ctx.header, ctx.lanewidth,  ctx.header.size*(float)0.1  ) );
+			 block.add( new TextParagraph( title, ctx.title, ctx.lanewidth, ctx.title.size*ctx.titleLineSpacingRel, ctx.title.size*ctx.titleParagraphSpacingRel  ) );
 
+			 //Add underline graphics
 			 TextGraphics underline = new TextGraphics( "underline.png", ctx.document );
-			 underline.yBorder =  ctx.header.size * (float)0.1;
+			 underline.yBorder =  ctx.title.size * ctx.underlineBorderRel;
 			 underline.gWidth = ctx.lanewidth;
-			 underline.gHeight = ctx.header.size * (float)0.2;
+			 underline.gHeight = ctx.title.size * ctx.underlineHeightRel;
 
 			 block.add(underline);
 		}
@@ -126,46 +131,15 @@ public class CheatsheetFormatter {
 	public void format() throws Exception {
 
 		//Define render context from style
-		ctx = new RenderContext();
-
-		ctx.document = new PDDocument();
-		PDPage page;
-		PDRectangle r  = PDRectangle.A4;
-		if ( get(style, "orientation", "potrait" ).equals("landscape")) {
-			r = new PDRectangle( PDRectangle.A4.getHeight(), PDRectangle.A4.getWidth() ) ;
-		}
-		page = new PDPage( r);
-
-		ctx.document.addPage(page);
-
-		ctx.contentStream = new PDPageContentStream(ctx.document, page);
-
-		ctx.titleFontSize = get(style,"titleFontSize",24);
-		ctx.headerFontSize = get(style,"headerFontSize",12);
-		ctx.bodyFontSize = get(style,"bodyFontSize",8);
-
-		ctx.borderTop = get(style,"bordertop",0.0);
-		ctx.borderbottom = get(style,"borderbottom",0.0);
-		ctx.borderleft = get(style,"borderleft",0.0);
-		ctx.borderright = get(style,"borderright",0.0);
-		ctx.titleheight = get(style,"titleheight",0.0);
-
-		ctx.viewHeight = r.getHeight() - ctx.borderTop - ctx.borderbottom - ctx.titleheight;
-		ctx.viewWidth = r.getWidth() - ctx.borderleft - ctx.borderright;
-
-		ctx.lanes = get( style, "lanes", 1 );
-		ctx.laneborder = get(style,"laneborder",0.0);
-		ctx.lanewidth = (ctx.viewWidth - (ctx.lanes-1)*ctx.laneborder) /ctx.lanes;
-		ctx.laneHeight = ctx.viewHeight;
-
+		ctx = new RenderContext( style );
+		PDPage page = ctx.addPAge();
+		ctx.setupStyle();
 		ctx.makeFonts();
 
 		//General TODO
 		/*
+		    - Insert content
 		 */
-
-		//Get Header
-		//TODO
 
 		//TextBlock of TextBlock
 		TextBlock textBlocks = new TextBlock();
@@ -179,33 +153,85 @@ public class CheatsheetFormatter {
 		}
 		textBlocks.layout();
 
-		//Layout block into lanes
-		TextBlock[] lanes = new TextBlock[ctx.lanes];
-		for ( int i=0; i<ctx.lanes; i++) {
-			lanes[i] = new TextBlock();
-		}
+		//We are done preparing the context now layout into lanes
 
-		//Distribute blocks over lanes
-		int lanePos = 0;
-		float laneHeightRemaining = ctx.laneHeight;
+		//Layout block into lanes
+		ArrayList<TextBlock> lanes = new ArrayList<TextBlock>();
+		TextBlock currentLane = null;;
+		float laneHeightRemaining = 0;;
 		for ( Text block: textBlocks.texts )
 		{
 			if ( block.height > laneHeightRemaining ) {
-				laneHeightRemaining = ctx.laneHeight;
-				lanePos = (lanePos+1)%lanes.length;
+				currentLane = null;
 			}
-			lanes[lanePos].add(block);
+			if ( currentLane==null ) {
+				currentLane = new TextBlock();
+				lanes.add(currentLane);
+				laneHeightRemaining = ctx.laneHeight;
+			}
+
+			info( "Adding to lane: " + lanes.size() + " : "  + block.name );
+			currentLane.add(block);
 			laneHeightRemaining -= block.height;
+
 		}
 
-		//Render lanes
-		for ( int i=0; i<ctx.lanes; i++) {
-			ctx.xPos = ctx.borderleft + (ctx.lanewidth + ctx.laneborder) * i;
-			ctx.yPos = r.getHeight() - ctx.borderTop - ctx.titleheight;
-			lanes[i].render(ctx);
-		}
+		////Done with layout, now render lanes onto üages
 
-		ctx.contentStream.close();
+		while( lanes.size() > 0) {
+			if (page == null)
+				page = ctx.addPAge();
+			//Render header
+			TextBlock header = new TextBlock(false, 0);
+			header.alignCenter = true;
+			TextGraphics headerLogo = new TextGraphics(ctx.headerLogo, ctx.document);
+			headerLogo.gHeight = ctx.headerLogoHeight;
+			headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
+			headerLogo.xBorder = 5;
+			TextFormatted headerText = new TextFormatted( ctx.get(content,  "pageHeader", ""), ctx.header.bold, ctx.header.size );
+			headerText.yOffset = ctx.headerYOffset;
+
+			header.add( headerLogo );
+			header.add( headerText );
+
+			header.layout();
+
+			ctx.yPos = ctx.rectangle.getHeight() - ctx.borderTop;
+			ctx.xPos = (ctx.rectangle.getWidth() - header.width)/2;
+			header.render(ctx);
+
+			//Render background
+			TextGraphics backgroundTL = new TextGraphics(ctx.backgroundTLLogo, ctx.document);
+			TextGraphics backgroundBR = new TextGraphics(ctx.backgroundBRLogo, ctx.document);
+			backgroundTL.gWidth = ctx.backgroundTLWidth;
+			backgroundTL.gHeight = ctx.backgroundTLHeight;
+			backgroundBR.gWidth = ctx.backgroundBRWidth;
+			backgroundBR.gHeight = ctx.backgroundBRHeight;
+
+			backgroundTL.layout();
+			backgroundBR.layout();
+
+			ctx.xPos = 0;
+			ctx.yPos = ctx.rectangle.getHeight() ;
+			backgroundTL.render(ctx);
+
+			ctx.xPos = ctx.rectangle.getWidth()-backgroundBR.width;
+			ctx.yPos = backgroundBR.height;
+			backgroundBR.render(ctx);
+
+			//Render lanes
+			for ( int i=0; i<ctx.lanes; i++) {
+				ctx.xPos = ctx.borderleft + (ctx.lanewidth + ctx.laneborder) * i;
+				ctx.yPos = ctx.laneTop;
+				if ( lanes.size() > 0) {
+					currentLane = lanes.remove(0);
+					currentLane.render(ctx);
+				}
+			}
+
+			ctx.contentStream.close();
+			page = null;
+		}
 
 		ctx.document.save(output);
 		ctx.document.close();
@@ -219,6 +245,7 @@ public class CheatsheetFormatter {
 		String _style = null;
 		String _content = null;
 		String output = null;
+		boolean view = false;
 
 
 		while ( arg.length > i)
@@ -238,7 +265,15 @@ public class CheatsheetFormatter {
 				i++;
 				output = arg[i];
 				i++;
-			}  else if (arg[i].equals("--")) { //Terminate parameter processing
+			} else if ( arg[i].equals("-trace") )
+			{
+				i++;
+				trace = true;
+			} else if ( arg[i].equals("-view") || arg[i].equals("-v"))
+			{
+				i++;
+				view = true;
+			} else if (arg[i].equals("--")) { //Terminate parameter processing
 				i = arg.length;
 			}  else {
 				System.out.println("Unknown command line parameter: " + arg[i]);
@@ -259,6 +294,17 @@ public class CheatsheetFormatter {
 			csf.output = output;
 
 		csf.format();
+
+		if (view ) {
+			ProcessBuilder processBuilder = new ProcessBuilder(
+					"C:\\Program Files\\IrfanView\\i_view64.exe",
+					csf.output,
+					"/fs",
+					"/one"
+		        );
+		        Process process = processBuilder.start();
+		}
+
 
 		System.out.println("Exiting");
 

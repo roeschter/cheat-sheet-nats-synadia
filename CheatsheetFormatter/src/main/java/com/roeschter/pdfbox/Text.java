@@ -8,6 +8,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 
 public abstract class Text {
 
+	public String name;  //Optional for debugging
 	public float width = 0;
 	public float height = 0;
 

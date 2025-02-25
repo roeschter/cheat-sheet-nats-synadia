@@ -4,14 +4,15 @@ import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import static com.roeschter.pdfbox.CheatsheetFormatter.*;
+
 
 public class TextFormatted extends Text {
 
 	PDFont font;
 	float fontSize;
 	public String text;
-
-	float yOffset = 0;
+	public float yOffset;
 
 	public TextFormatted( String _text, PDFont _font, float size) {
 		font = _font;
@@ -37,9 +38,7 @@ public class TextFormatted extends Text {
 
 	}
 
-	public void trace(float x, float y, String text) {
-		System.out.println("("+x+","+y+"):"+text);
-	}
+
 
 	@Override
 	public void render( RenderContext ctx ) throws Exception {

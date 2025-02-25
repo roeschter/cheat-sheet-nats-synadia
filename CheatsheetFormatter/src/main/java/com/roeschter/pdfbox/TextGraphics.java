@@ -31,15 +31,19 @@ public class TextGraphics extends Text {
 		if ( width != 0 )
 			return;
 
-		if ( gWidth != 0 )
-			width = gWidth;
-		else
+		if ( gWidth==0 && gHeight==0) {
 			width = gWidth = image.getWidth();
-
-		if ( gHeight != 0)
-			height =  gHeight;
-		else
 			height = gHeight = image.getHeight();
+		} else if ( gWidth!=0 && gHeight!=0 ) {
+			width = gWidth;
+			height = gHeight;
+		} else if (  gWidth!=0 ) {
+			width = gWidth;
+			height = gHeight = image.getHeight()/image.getWidth()*width;
+		} else if (  gHeight!=0 ) {
+			height =  gHeight;
+			width = gWidth = image.getWidth()/image.getHeight()*height;
+		}
 
 		width += 2*xBorder;
 		height += 2*yBorder;
