@@ -16,12 +16,7 @@ import org.json.JSONObject;
 public class CheatsheetFormatter {
 
 	/*
-	 * OK - Config object with inheritance
-	 * .Reference style in content
-	 * .Override of style in content
-	 *
-	 *
-	 * Lane width adjustment - allow for explicit specification
+	 * Synadia Messaging.10.04.24 - Slide 25 add picture
 	 *
 	 * Organize content into folder prefixed with cs_
 	 * CLI cheatsheet - start with nats cheat
@@ -133,6 +128,7 @@ public class CheatsheetFormatter {
 			 underline.yBorder =  ctx.title.size * ctx.underlineBorderRel;
 			 underline.gWidth = ctx.lanewidth;
 			 underline.gHeight = ctx.title.size * ctx.underlineHeightRel;
+			 underline.fixedHeight = true;
 
 			 block.add(underline);
 		}
@@ -167,23 +163,33 @@ public class CheatsheetFormatter {
 		{
 			textBlocks.add( parseBlock( item, ctx ) );
 		}
-		textBlocks.layout();
 
 		//We are done preparing the context now layout into lanes
 
 		//Layout block into lanes
 		ArrayList<TextBlock> lanes = new ArrayList<TextBlock>();
-		TextBlock currentLane = null;;
-		float laneHeightRemaining = 0;;
+		TextBlock currentLane = null;
+		float laneHeightRemaining = 0;
+		float lanewidth = ctx.lanewidth;
 		for ( Text block: textBlocks.texts )
 		{
+			//Do we fit in the old lane?
+			block.setWidth(lanewidth);
+			block.layout();
 			if ( block.height > laneHeightRemaining ) {
 				currentLane = null;
 			}
 			if ( currentLane==null ) {
 				currentLane = new TextBlock();
+
+				lanewidth = ctx.getLaneWidthForLane( lanes.size());
+
 				lanes.add(currentLane);
 				laneHeightRemaining = ctx.laneHeight;
+
+				//New lane new layout
+				block.setWidth(lanewidth);
+				block.layout();
 			}
 
 			info( "Adding to lane: " + lanes.size() + " : "  + block.name );
@@ -194,9 +200,11 @@ public class CheatsheetFormatter {
 
 		////Done with layout, now render lanes onto üages
 
+		int laneCount = 0;
 		while( lanes.size() > 0) {
 			if (page == null)
 				page = ctx.addPAge();
+
 			//Render header
 			TextBlock header = new TextBlock(false, 0);
 			header.alignCenter = true;
@@ -235,14 +243,22 @@ public class CheatsheetFormatter {
 			ctx.yPos = backgroundBR.height;
 			backgroundBR.render(ctx);
 
+
 			//Render lanes
+			float xPos = ctx.borderleft;
 			for ( int i=0; i<ctx.lanes; i++) {
-				ctx.xPos = ctx.borderleft + (ctx.lanewidth + ctx.laneborder) * i;
+
+				ctx.xPos = xPos;
 				ctx.yPos = ctx.laneTop;
 				if ( lanes.size() > 0) {
 					currentLane = lanes.remove(0);
 					currentLane.render(ctx);
 				}
+
+				float lw =ctx.getLaneWidthForLane(laneCount);
+				xPos += lw + ctx.laneborder;
+
+				laneCount++;
 			}
 
 			ctx.contentStream.close();

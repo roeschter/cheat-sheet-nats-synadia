@@ -28,6 +28,11 @@ public class TextItem extends Text {
 	}
 
 	@Override
+	public void setWidth(float _width) {
+		paragraph.setWidth(_width - inset - bulletWidth);
+	}
+
+	@Override
 	public void render( RenderContext ctx ) throws Exception {
 		float yPos = ctx.yPos;
 		ctx.xPos += inset;

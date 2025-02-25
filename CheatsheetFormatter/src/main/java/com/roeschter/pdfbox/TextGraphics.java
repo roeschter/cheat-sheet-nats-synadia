@@ -17,6 +17,8 @@ public class TextGraphics extends Text {
 	float xBorder = 0;
 	float yBorder = 0;
 
+	boolean fixedHeight = false;
+
 	public TextGraphics( String imagePath, PDDocument document) {
 		try {
 			image = PDImageXObject.createFromFile(imagePath, document);
@@ -25,6 +27,16 @@ public class TextGraphics extends Text {
 			System.exit(1);
 		}
 	}
+
+	@Override
+	public void setWidth(float _width) {
+		//Scale to new width, respecting borders
+		float nWidth = _width - 2*xBorder;
+		if (!fixedHeight)
+			gHeight = gHeight / gWidth * nWidth;
+		gWidth = nWidth;
+	}
+
 
 	@Override
 	public void layout() {
@@ -47,7 +59,6 @@ public class TextGraphics extends Text {
 
 		width += 2*xBorder;
 		height += 2*yBorder;
-
 	}
 
 

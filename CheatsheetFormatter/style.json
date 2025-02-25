@@ -24,7 +24,7 @@
     
     laneborder: 15,
     lanes: 4,
-    laneWidthRel: [ 0.25, 0.25, 0.25, 0.25 ],
+    laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
     
     titleFontSize: 13,
     titleLineSpacingRel: 0.2,

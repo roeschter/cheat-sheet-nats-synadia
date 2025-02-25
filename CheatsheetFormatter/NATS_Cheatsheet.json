@@ -2,7 +2,7 @@
     
     style: style.json,
     styleoverride: {
-        laneWidthRel: [ 0.30, 0.20, 0.25, 0.20 ],
+        laneWidthRel: [ 1.1, 0.9, 1.0, 1.0 ],
     },
     "pageHeader": "Cheatsheet",
     
@@ -12,9 +12,8 @@
             "items": [
                 "**2010:** Created by Derek Colison as a lightweight messaging system for Cloud Foundry.",
                 "**2012:** Open-sourced under the Apache 2.0 license.",
-                "**2016:** Joined the Cloud Native Computing Foundation (CNCF) as a sandbox project.",
-                "**2018:** Introduction of NATS JetStream for message persistence and streaming.",
                 "**2017:** Graduated to a CNCF incubation project, gaining recognition as a cloud-native messaging solution.",
+                "**2021 :** Introduction of NATS JetStream for message persistence and streaming.",
                 "**2024 and Beyond:** Continued adoption in edge computing, IoT, and microservices. Architectures, with ongoing enhancements to Jetstream and clustering capabilities.",
                 "**Widespread Deployment:** NATS is trusted by leading enterprises and platforms, including Schaeffler, Mastercard, Alibaba Group, VMware, Cloud Foundry, Baidu, Siemens, Walmart, and GE."
             ]
@@ -22,7 +21,8 @@
         {
             "title": "**Server (NATS Server or NATS Core)**",
             "items": [
-                "The central system that manages message routing between clients. A very long text that will certainly not fit.",
+                "**Single executable** that manages message routing between clients.",
+                "**Self clustering**",
                 "Written in **Go** for simplicity, performance and scalability.",
                 "Supports **publish/subscribe, requests/reply and point-to-point (queueing) messaging patterns.**"
             ]    

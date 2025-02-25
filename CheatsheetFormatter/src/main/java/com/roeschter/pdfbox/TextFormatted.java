@@ -26,6 +26,12 @@ public class TextFormatted extends Text {
 	}
 
 	@Override
+	public void setWidth(float _width) {
+		//Ignore
+	}
+
+
+	@Override
 	public void layout() {
 		if ( width != 0 )
 			return;
@@ -37,8 +43,6 @@ public class TextFormatted extends Text {
 		}
 
 	}
-
-
 
 	@Override
 	public void render( RenderContext ctx ) throws Exception {

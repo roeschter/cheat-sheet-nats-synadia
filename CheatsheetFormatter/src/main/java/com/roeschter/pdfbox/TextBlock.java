@@ -48,6 +48,13 @@ public class TextBlock extends Text {
 	}
 
 	@Override
+	public void setWidth(float _width) {
+		for( Text text: texts ) {
+			text.setWidth(_width);
+		}
+	}
+
+	@Override
 	public void render( RenderContext ctx ) throws Exception {
 
 		float xPos = ctx.xPos;
@@ -71,6 +78,8 @@ public class TextBlock extends Text {
 		ctx.yPos += spacing;
 		ctx.yPos -= ctx.blockSpacing;
 	}
+
+
 
 }
 

@@ -20,4 +20,8 @@ public abstract class Text {
 
 	abstract public void render( RenderContext ctx ) throws Exception;
 	abstract public void layout();
+
+	//Should only be respected by elements which can adjust their width
+	abstract public void setWidth( float _width);
+
 }

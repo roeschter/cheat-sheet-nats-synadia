@@ -23,15 +23,13 @@ public class TextParagraph extends Text {
 
 	@Override
 	public void layout() {
-		if ( width != 0)
-			return;
-
+		TextLine _line = line.clone();
+		texts.clear();
 		if ( line != null ) {
 			do {
-				TextLine nline = line.takeSubTextline(maxWidth) ;
+				TextLine nline = _line.takeSubTextline(maxWidth) ;
 				texts.add(nline);
-			} while (line.texts.size() > 0);
-			line = null;
+			} while (_line.texts.size() > 0);
 		}
 		width = 0;
 		height = 0;
@@ -42,6 +40,12 @@ public class TextParagraph extends Text {
 		}
 		height += spacing;
 	}
+
+	@Override
+	public void setWidth(float _width) {
+		maxWidth = _width;
+	}
+
 
 	@Override
 	public void render( RenderContext ctx ) throws Exception {

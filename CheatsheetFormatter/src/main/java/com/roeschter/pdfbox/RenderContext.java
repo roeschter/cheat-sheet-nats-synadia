@@ -120,6 +120,15 @@ public class RenderContext {
 		return page;
 	}
 
+	public float getLaneWidthForLane( int n ) {
+		if ( laneWidthRel != null) {
+			n = Math.min(n, laneWidthRel.length );
+			return ( lanewidth *  laneWidthRel[n]);
+		} else {
+			return lanewidth;
+		}
+	}
+
 	public void setupStyle( ) throws IOException {
 
 		borderTop = style.get("bordertop",0.0);

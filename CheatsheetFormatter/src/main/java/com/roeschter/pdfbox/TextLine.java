@@ -14,6 +14,16 @@ public class TextLine extends Text {
 	public TextLine() {
 	}
 
+	@Override
+	public TextLine clone() {
+		TextLine line = new TextLine();
+		line.spacing = spacing;
+		for ( TextFormatted text: texts ) {
+			line.add(text);
+		}
+		return line;
+	}
+
 	char[] markup = {'*', '\\'};
 
 	int countChar( String s, int pos, char c) {
@@ -195,6 +205,12 @@ public class TextLine extends Text {
 		}
 		height += spacing;
 	}
+
+	@Override
+	public void setWidth(float _width) {
+		//Ignore
+	}
+
 
 	@Override
 	public void render( RenderContext ctx ) throws Exception {
