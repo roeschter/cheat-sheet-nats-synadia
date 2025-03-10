@@ -1,6 +1,7 @@
 package com.roeschter.pdfbox;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -67,7 +68,6 @@ public class RenderContext {
 	float underlineBorderRel;
 	String underLineLogo;
 
-
 	String bullet;
 	float bulletSizeRel;
 	float bulletOffetRel;
@@ -77,12 +77,13 @@ public class RenderContext {
 	float bodyLineSpacingRel;
 	float bodyParagraphSpacingRel;
 
-
-
 	public RenderContext( Config _style ) {
 		style = _style;
 		document = new PDDocument();
 	}
+
+    HashMap<Integer,Float> laneReservedTop = new HashMap<Integer,Float> ();
+    HashMap<Integer,Float> laneReservedBottom = new HashMap<Integer,Float> ();
 
 	/*
 	public String get( JSONObject json, String key, String _default) {
@@ -120,41 +121,104 @@ public class RenderContext {
 		return page;
 	}
 
+    public void setLaneReservedTop( int lane, float reserved ) {
+        laneReservedTop.put(-lane, reserved );
+    }
+    public void setLaneReservedBottom( int lane, float reserved ) {
+        laneReservedBottom.put( lane, reserved );
+    }
+
+    public float getLaneReservedTop( int lane) {
+        Float reserved = laneReservedTop.get( -lane );
+        return (reserved==null)?0:reserved.floatValue();
+    }
+    public float getLaneReservedBottom( int lane) {
+        Float reserved = laneReservedBottom.get( lane );
+        return (reserved==null)?0:reserved.floatValue();
+    }
+
 	public float getLaneWidthForLane( int n ) {
 		if ( laneWidthRel != null) {
-			n = Math.min(n, laneWidthRel.length );
+			n = Math.min(n, laneWidthRel.length-1 );
 			return ( lanewidth *  laneWidthRel[n]);
 		} else {
 			return lanewidth;
 		}
 	}
 
+	public float getLaneTotalWidth( int lane, int count ) {
+		float width = 0;
+		for ( int i=lane; i<lane+count; i++) {
+			if ( i != lane)
+				width += this.laneborder;
+			width += getLaneWidthForLane(i);
+		}
+		return width;
+	}
+
+	public float getLaneXPos( int lane )
+	{
+		int page =lane / lanes;
+		float xPos = borderleft;;
+		for ( int i=page*lanes; i< lane; i++ ) {
+			xPos += getLaneWidthForLane(i);
+			xPos += laneborder;
+		}
+		return xPos;
+	}
+
+	public float getLaneYPos( int lane )
+	{
+		return laneTop - getLaneReservedTop(lane);
+	}
+
+	public float getLaneHeight( int lane )
+	{
+		return laneHeight - getLaneReservedTop(lane) - getLaneReservedBottom(lane);
+	}
+
+    public int[] getFilter(JSONObject json) {
+    	Config conf = new Config(json, null);
+    	return conf.getIntArray("exclude");
+    }
+
+    public boolean isFiltered(int[] filter, int pos) {
+        if ( filter == null )
+            return false;
+
+        for (int i: filter )
+            if ( i==pos ) return true;
+
+        return false;
+    }
+
+
 	public void setupStyle( ) throws IOException {
 
-		borderTop = style.get("bordertop",0.0);
-		borderbottom = style.get("borderbottom",0.0);
-		borderleft = style.get("borderleft",0.0);
-		borderright = style.get("borderright",0.0);
+		borderTop = style.getFloat("bordertop",0.0);
+		borderbottom = style.getFloat("borderbottom",0.0);
+		borderleft = style.getFloat("borderleft",0.0);
+		borderright = style.getFloat("borderright",0.0);
 
 		backgroundTLLogo = style.get( "backgroundTLLogo", null );
 		backgroundBRLogo = style.get( "backgroundBRLogo", null );
-		backgroundTLWidth =  style.get("backgroundTLWidth", 150.0);
-		backgroundTLHeight = style.get("backgroundTLHeight", 40.0);
-		backgroundBRWidth =  style.get("backgroundBRWidth", 150.0);
-		backgroundBRHeight = style.get("backgroundBRHeight", 40.0);
+		backgroundTLWidth =  style.getFloat("backgroundTLWidth", 150.0);
+		backgroundTLHeight = style.getFloat("backgroundTLHeight", 40.0);
+		backgroundBRWidth =  style.getFloat("backgroundBRWidth", 150.0);
+		backgroundBRHeight = style.getFloat("backgroundBRHeight", 40.0);
 
 
-		headerFontSize = style.get("headerFontSize",30);
-		headerYOffset = style.get("headerYOffset",0);
-		headerHeight = style.get("headerHeight",40);
-		headerLogoHeight = style.get("headerLogoHeight",40);
+		headerFontSize = style.getFloat("headerFontSize",30);
+		headerYOffset = style.getFloat("headerYOffset",0);
+		headerHeight = style.getFloat("headerHeight",40);
+		headerLogoHeight = style.getFloat("headerLogoHeight",40);
 		headerLogo = style.get("headerLogo", null );
 
 		viewHeight = rectangle.getHeight() - borderTop - borderbottom - headerHeight;
 		viewWidth = rectangle.getWidth() - borderleft - borderright;
 
-		lanes = style.get( "lanes", 1 );
-		laneborder = style.get("laneborder",0.0);
+		lanes = style.getInt( "lanes", 1 );
+		laneborder = style.getFloat("laneborder",0.0);
 		laneWidthRel = style.getFloatArray("laneWidthRel");
 
 		lanewidth = (viewWidth - (lanes-1)*laneborder) /lanes;
@@ -162,26 +226,26 @@ public class RenderContext {
 		laneTop = rectangle.getHeight() - borderTop - headerHeight;
 
 
-		titleFontSize = style.get("titleFontSize",24);
-		titleLineSpacingRel = style.get("titleSpacingRel",0.0);
-		titleParagraphSpacingRel = style.get("titleParagraphSpacingRel",0.0);
-		blockSpacing = style.get("blockSpacing",4);
+		titleFontSize = style.getFloat("titleFontSize",24);
+		titleLineSpacingRel = style.getFloat("titleSpacingRel",0.0);
+		titleParagraphSpacingRel = style.getFloat("titleParagraphSpacingRel",0.0);
+		blockSpacing = style.getFloat("blockSpacing",4);
 
 
 		underLineLogo = style.get( "underLineLogo", "underline.png" );
-		underlineHeightRel = style.get("underlineHeightRel",0.0);
-		underlineBorderRel = style.get("underlineBorderRel",0.0);
+		underlineHeightRel = style.getFloat("underlineHeightRel",0.0);
+		underlineBorderRel = style.getFloat("underlineBorderRel",0.0);
 
 
 		bullet = style.get( "bullet", "\u2022" );
-		bulletSizeRel = style.get("bulletSizeRel",1.3);
-		bulletOffetRel = style.get("bulletOffetRel",0.5);
-		bulletSpacingRel = style.get("bulletSpacingRel",0.3);
+		bulletSizeRel = style.getFloat("bulletSizeRel",1.3);
+		bulletOffetRel = style.getFloat("bulletOffetRel",0.5);
+		bulletSpacingRel = style.getFloat("bulletSpacingRel",0.3);
 
 
-		bodyFontSize = style.get("bodyFontSize",8);
-		bodyLineSpacingRel = style.get("bodyLineSpacingRel",(float)0);
-		bodyParagraphSpacingRel = style.get("bodyParagraphSpacingRel",(float)0);
+		bodyFontSize = style.getFloat("bodyFontSize",8);
+		bodyLineSpacingRel = style.getFloat("bodyLineSpacingRel",0);
+		bodyParagraphSpacingRel = style.getFloat("bodyParagraphSpacingRel",0);
 	}
 
 	public void makeFonts() {

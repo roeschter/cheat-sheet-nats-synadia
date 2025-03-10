@@ -25,7 +25,7 @@ public class TextParagraph extends Text {
 	public void layout() {
 		TextLine _line = line.clone();
 		texts.clear();
-		if ( line != null ) {
+		if ( _line != null ) {
 			do {
 				TextLine nline = _line.takeSubTextline(maxWidth) ;
 				texts.add(nline);

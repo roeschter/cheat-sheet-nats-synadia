@@ -115,8 +115,8 @@ public class TextLine extends Text {
 		subLine.spacing = spacing;
 		float widthRemaining = width;
 
-		boolean canFit = false;
-		do {
+		boolean canFit = true;
+		while ( canFit && texts.size() >0 && widthRemaining>0) {
 			canFit = false;
 			TextFormatted text = texts.get(0);
 			if ( text.width <= widthRemaining )

@@ -1,8 +1,8 @@
 {
     
-    style: NATS_style.json,
+    style: style.json,
     styleoverride: {
-        laneWidthRel: [ 1.1, 1.0, 1.0, 1.0 ],
+        laneWidthRel: [ 1.1, 0.9, 1.0, 1.0 ],
         
     },
     "pageHeader": "Cheatsheet",
@@ -22,6 +22,17 @@
     ],
     "blocks": [
         {
+            "title": "**A Brief History of NATS**",
+            "items": [
+                "**2010:** Created by Derek Colison as a lightweight messaging system for Cloud Foundry.",
+                "**2012:** Open-sourced under the Apache 2.0 license.",
+                "**2017:** Graduated to a CNCF incubation project, gaining recognition as a cloud-native messaging solution.",
+                "**2021 :** Introduction of NATS JetStream for message persistence and streaming.",
+                "**2024 and Beyond:** Continued adoption in edge computing, IoT, and microservices. Architectures, with ongoing enhancements to Jetstream and clustering capabilities.",
+                "**Widespread Deployment:** NATS is trusted by leading enterprises and platforms, including Schaeffler, Mastercard, Alibaba Group, VMware, Cloud Foundry, Baidu, Siemens, Walmart, and GE."
+            ]
+        },
+        {
             "exclude": [-1],
             "title": "**Filtered should not be visible**",
             "items": [
@@ -40,7 +51,7 @@
             ]    
         },
         {
-            "title": "**Client/Server architecture**",
+            "title": "**Client**",
             "items": [
                 "Applications use NATS client libraries to connect to the server.",
                 "Can **publish messages, subscribe to subjects**, or **both**.",
@@ -77,6 +88,14 @@
             ]
         },
         {
+            "title": "**Wildcard Subscriptions**",
+            "items": [
+                "**Single-level (\\*):** Matches one token in the subject hierarchy.",
+                "**Multi-level (>):** Matches one or more tokens at the end of the subject hierarchy.",
+                "Used for **subscription, filtering, security, and transformation.**"
+            ]
+        },
+        {
             "title": "**JetStream (Persistence Layer)**",
             "items": [
                 "**Built-in persistence layer in NATS**. Replicated and resilient.",
@@ -92,7 +111,7 @@
                     ]
                 }
             ]
-        }, 
+        },
         {
             "title": "**Consistent Replication**",
             "items": [
@@ -100,15 +119,6 @@
                 "JetStream enables **persistent storage with fault tolerance.**"
             ]
         },
-        {
-            "title": "**Wildcard Subscriptions**",
-            "items": [
-                "**Single-level (\\*):** Matches one token in the subject hierarchy.",
-                "**Multi-level (>):** Matches one or more tokens at the end of the subject hierarchy.",
-                "Used for **subscription, filtering, security, and transformation.**"
-            ]
-        },
-       
         {
             "title": "**Key Features**",
             "items": [
@@ -130,22 +140,10 @@
             ]
         },
         {
-            "title": "**A Brief History of NATS**",
-            "items": [
-                "**2010:** Created by Derek Colison as a lightweight messaging system for Cloud Foundry.",
-                "**2012:** Open-sourced under the Apache 2.0 license.",
-                "**2017:** Founded Synadia to drive enterprise support, and a long-term roadmap. Synadia also manages the nats.io ecosystem, including the client libraries and NATS Connect.",
-                "**2021:** Introduction of NATS JetStream for message persistence and streaming.",
-                "**2025 and Beyond:** Continued adoption in edge computing, IoT, and microservices. Architectures, with ongoing enhancements to Jetstream and clustering capabilities.",
-                "**Open-Source Community** — NATS is developed openly under the **nats-io organization** on GitHub, with contributions from companies like **Siemens, VMware, and Cisco**, as well as independent developers worldwide.",
-                "**Widespread Deployment:** NATS is trusted by leading enterprises and platforms, including Mastercard, VMware, Cloud Foundry, Siemens, Schaeffler, Walmart, Alibaba and GE.",
-            ]
-        },
-        {
             "title": "**NATS Governance**",
-            "exclude": [-1],
             "items": [
                 "**Synadia** - Founded by **Derek Collison**, who is the primary maintainer of NATS, driving core development, enterprise support, and the long-term roadmap. Synadia also manages the nats.io ecosystem, including the client libraries and NATS Connect.",
+                "**Open-Source Community** — NATS is developed openly under the **nats-io organization** on GitHub, with contributions from companies like **Siemens, VMware, and Cisco**, as well as independent developers worldwide.",
                 "**Cloud Native Computing Foundation (CNCF)** - As a **CNCF incubating Project**, NATS benefits from CNCF governance, security audits, and community-driven collaboration, ensuring neutrality and long-term sustainability."
             ]
         }

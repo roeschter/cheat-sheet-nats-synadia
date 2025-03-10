@@ -5,33 +5,42 @@ import java.util.ArrayList;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 
 public class TextBlock extends Text {
+
+	static Padding NoPadding = new Padding();
+
 	public ArrayList<Text> texts = new ArrayList<Text>();
 
 	public boolean renderVertical = true;
 	public boolean alignCenter = false;
 
-	public float spacing = 0;
+    public boolean fixed = false;
+    public float xPos = 0;
+    public float yPos = 0;
+    public int page = 0;
+
+    public Padding padding = NoPadding;
+    public float spacing;
 
 	public TextBlock()
 	{
-		this(true, 0 );
+		this(true);
 	}
 
-	public TextBlock( boolean _renderVertical, float _spacing )
+	public TextBlock( boolean _renderVertical )
 	{
-		spacing = _spacing;
 		renderVertical = _renderVertical;
 	}
 
 
 	public void add( Text text ) {
-		texts.add(text);
+        if ( text != null )
+            texts.add(text);
 	}
 
 	@Override
 	public void layout() {
-		width = 0;
-		height = -spacing;
+		width = padding.left + padding.right;
+		height = padding.top + padding.bottom;
 		for( Text text: texts ) {
 			text.layout();
 			if ( renderVertical ) {
@@ -43,40 +52,63 @@ public class TextBlock extends Text {
 				width += text.width;
 				width += spacing;
 			}
-
 		}
+		if (texts.size() != 0) {
+			if ( renderVertical )
+				height -= spacing;
+			else
+				width -= spacing;
+		}
+
 	}
 
 	@Override
 	public void setWidth(float _width) {
 		for( Text text: texts ) {
-			text.setWidth(_width);
+			text.setWidth(_width - padding.left - padding.right);
 		}
 	}
 
 	@Override
 	public void render( RenderContext ctx ) throws Exception {
 
-		float xPos = ctx.xPos;
-		float yPos = ctx.yPos;
+        if ( fixed) {
+        	ctx.xPos = xPos;
+            ctx.yPos = yPos;
+        }
+        ctx.yPos -= padding.top;
+        ctx.xPos += padding.left;
+
+        float _xPos = ctx.xPos;
+        float _yPos = ctx.yPos;
+
 		for( Text text: texts ) {
 
 			if ( renderVertical ) {
 				//Reset horizontally
-				ctx.xPos = xPos;
+				ctx.xPos = _xPos;
 				if ( alignCenter )
 					ctx.xPos += (width-text.width)/2;
 			} else {
 				//Reset vertically
-				ctx.yPos = yPos;
+				ctx.yPos = _yPos;
 				if ( alignCenter )
 					ctx.yPos -= (height-text.height)/2;
 			}
 			text.render(ctx);
 			ctx.yPos -= spacing;
 		}
-		ctx.yPos += spacing;
-		ctx.yPos -= ctx.blockSpacing;
+
+		if (texts.size() != 0) {
+			if ( renderVertical )
+				ctx.yPos += spacing;
+			else
+				ctx.xPos += spacing;
+		}
+
+		ctx.yPos -= padding.bottom;
+        ctx.xPos += padding.right;
+
 	}
 
 

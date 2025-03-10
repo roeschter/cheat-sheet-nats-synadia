@@ -20,6 +20,7 @@ public class TextGraphics extends Text {
 	boolean fixedHeight = false;
 
 	public TextGraphics( String imagePath, PDDocument document) {
+		name = imagePath;
 		try {
 			image = PDImageXObject.createFromFile(imagePath, document);
 		} catch (IOException e) {
@@ -33,15 +34,13 @@ public class TextGraphics extends Text {
 		//Scale to new width, respecting borders
 		float nWidth = _width - 2*xBorder;
 		if (!fixedHeight)
-			gHeight = gHeight / gWidth * nWidth;
+			gHeight = gHeight * nWidth / gWidth ;
 		gWidth = nWidth;
 	}
 
 
 	@Override
 	public void layout() {
-		if ( width != 0 )
-			return;
 
 		if ( gWidth==0 && gHeight==0) {
 			width = gWidth = image.getWidth();
@@ -51,10 +50,11 @@ public class TextGraphics extends Text {
 			height = gHeight;
 		} else if (  gWidth!=0 ) {
 			width = gWidth;
-			height = gHeight = image.getHeight()/image.getWidth()*width;
+			height = image.getHeight();
+			height = gHeight = image.getHeight()*width/image.getWidth();
 		} else if (  gHeight!=0 ) {
 			height =  gHeight;
-			width = gWidth = image.getWidth()/image.getHeight()*height;
+			width = gWidth = image.getWidth()*height/image.getHeight();
 		}
 
 		width += 2*xBorder;
@@ -66,7 +66,11 @@ public class TextGraphics extends Text {
 	@Override
 	public void render( RenderContext ctx ) throws Exception {
 		PDPageContentStream contentStream = ctx.contentStream;
-		contentStream.drawImage(image, ctx.xPos + xBorder, ctx.yPos - yBorder - gHeight , gWidth, gHeight);
+
+		float x = ctx.xPos + xBorder;
+		float y = ctx.yPos - yBorder - gHeight;
+		CheatsheetFormatter.info( "image " + name + " at: " + x+"/"+y + " size: " + gWidth + "/" + gHeight );
+		contentStream.drawImage(image, x, y, gWidth, gHeight );
 
 		ctx.yPos -= height;
 		ctx.xPos += width;

@@ -3,10 +3,10 @@
     background: white,
     textcolor: black,
     
-    borderleft: 50,
-    borderright: 50,
-    bordertop: 10,
-    borderbottom: 60,
+    borderleft: 35,
+    borderright: 35,
+    bordertop: 0,
+    borderbottom: 40,
     
     backgroundTLLogo: wave_top.png,
     backgroundBRLogo: wave_bottom.png,
@@ -18,7 +18,7 @@
  
     headerFontSize: 24,
     headerYOffset: -6,
-    headerHeight: 50,
+    headerHeight: 70,
     headerLogoHeight: 40, 
     headerLogo: NATS.png ,
     

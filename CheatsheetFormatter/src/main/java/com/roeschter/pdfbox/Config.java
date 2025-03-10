@@ -15,6 +15,24 @@ public class Config {
 		json = _json;
 	}
 
+	public Config( JSONObject _json ) {
+		json = _json;
+	}
+
+
+	/*
+	public String get( JSONObject json, String key, String _default) {
+		String ret = null;
+
+		if ( !json.isNull(key) )
+			ret = json.getString(key);
+		else
+			ret = _default;
+
+		return ret;
+	}
+	*/
+
 	public String get( String key, String _default) {
 		String ret = null;
 
@@ -29,11 +47,25 @@ public class Config {
 		return ret;
 	}
 
-	public float get(  String key, double _default) {
+	/*
+	public float get( JSONObject json, String key, float _default) {
+		float ret = 0;
+
+		if ( !json.isNull(key) )
+			ret = (float)json.getDouble(key);
+		else
+			ret = _default;
+
+		return ret;
+	}
+	*/
+
+
+	public float getFloat(  String key, double _default) {
 		float ret = 0;
 
 		if ( parent!=null)
-			ret = parent.get( key, _default );
+			ret = parent.getFloat( key, _default );
 		else
 			ret = (float) _default;
 
@@ -43,11 +75,27 @@ public class Config {
 		return ret;
 	}
 
-	public int get( String key, int _default) {
+
+	/*
+	public int getInt( JSONObject json, String key, int _default) {
+		int ret = 0;
+
+		if ( !json.isNull(key) )
+			ret = (int)json.getLong(key);
+		else
+			ret = _default;
+
+		return ret;
+	}
+	*/
+
+
+
+	public int getInt( String key, int _default) {
 		int ret = 0;
 
 		if ( parent!=null)
-			ret = parent.get( key, _default );
+			ret = parent.getInt( key, _default );
 		else
 			ret = _default;
 
@@ -67,6 +115,21 @@ public class Config {
 			{
 				BigDecimal dec = (BigDecimal)obj;
 				ret[n++] = dec.floatValue();
+			}
+		}
+		return ret;
+	}
+
+    public int[] getIntArray( String key) {
+		JSONArray array = getJSONArray(key);
+		int[] ret = null;
+		if ( array != null) {
+			ret = new int[array.length()];
+			int n=0;
+			for ( Object obj: array)
+			{
+				Integer dec = (Integer)obj;
+				ret[n++] = dec.intValue();
 			}
 		}
 		return ret;
@@ -100,20 +163,6 @@ public class Config {
 
 		return ret;
 	}
-
-	public String get( JSONObject json, String key, String _default) {
-		String ret = null;
-
-		if ( !json.isNull(key) )
-			ret = json.getString(key);
-		else
-			ret = _default;
-
-		return ret;
-	}
-
-
-
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

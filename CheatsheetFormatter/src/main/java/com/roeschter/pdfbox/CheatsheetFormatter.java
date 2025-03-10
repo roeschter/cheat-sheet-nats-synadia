@@ -16,17 +16,10 @@ import org.json.JSONObject;
 public class CheatsheetFormatter {
 
 	/*
-	 * Synadia Messaging.10.04.24 - Slide 25 add picture
-	 *
-	 * Organize content into folder prefixed with cs_
-	 * CLI cheatsheet - start with nats cheat
-	 *
-	 * Create Readme.md
 	 *
 	 */
 
 	Config cStyle;
-	//JSONObject style;
 	Config content;
 	String output;
 
@@ -93,9 +86,14 @@ public class CheatsheetFormatter {
 		return item;
 	}
 
-	public void addItems(TextBlock block, JSONArray items, float inset, float paragraphWidth  ) {
+	public void addItems(TextBlock block, JSONArray items, int[] filter, float inset, float paragraphWidth  ) {
 		float bulletWidth = 0;
+		int count = -1;
 		for ( Object _item: items) {
+			count++;
+			if ( ctx.isFiltered(filter, count))
+				continue;
+
 			if (_item instanceof String ) {
 				String text = (String)_item;
 				TextItem item = makeItem(text, inset, paragraphWidth);
@@ -108,19 +106,25 @@ public class CheatsheetFormatter {
 				//Iterate Items
 				JSONObject itemList = (JSONObject)_item;
 				JSONArray _items = itemList.getJSONArray("items");
-				addItems( block, _items, inset + bulletWidth, paragraphWidth - bulletWidth );
+				int[] _filter = ctx.getFilter( itemList );
+				addItems( block, _items, _filter, inset + bulletWidth, paragraphWidth - bulletWidth );
 			}
+
 		}
 	}
 
-	public TextBlock parseBlock( Object _json, RenderContext ctx ) {
+	public TextBlock parseBlock( JSONObject _json, RenderContext ctx ) {
 		TextBlock block = new TextBlock();
-		JSONObject json = (JSONObject)_json;
+		Config json = new Config(_json);
+        int[] filter = ctx.getFilter( _json );
 
-		String title = content.get(json, "title", null );
+        if ( ctx.isFiltered(filter,-1) )
+            return null;
+
+		String title = json.get( "title", null );
 		info( title);
 		block.name = title;
-		if ( title != null) {
+		if ( title != null && title.length()>0) {
 			 block.add( new TextParagraph( title, ctx.title, ctx.lanewidth, ctx.title.size*ctx.titleLineSpacingRel, ctx.title.size*ctx.titleParagraphSpacingRel  ) );
 
 			 //Add underline graphics
@@ -135,10 +139,85 @@ public class CheatsheetFormatter {
 
 		//Iterate Items
 		JSONArray items = json.getJSONArray("items");
-		addItems( block, items, 0, ctx.lanewidth );
+		addItems( block, items, filter, 0, ctx.lanewidth );
 
 		return block;
 	}
+
+
+    public TextBlock parseImage( JSONObject _json, RenderContext ctx ) {
+
+    	Config image = new Config(_json);
+        TextBlock block = new TextBlock();
+
+        int[] filter = ctx.getFilter( _json );
+        if ( ctx.isFiltered(filter,-1) )
+            return null;
+
+        String title = image.get( "title", null );
+        String imageName = image.get("image", null );
+
+        block.padding = new Padding(image);
+
+        float lineSpacing = ctx.body.size*(float)0.2;
+        float paragraphSpacing = ctx.body.size*(float)0.2;
+
+        //TODO set padding on block
+
+        if (title != null && title.length()>0 ) {
+        	block.add(new TextParagraph( title, ctx.body, 100, lineSpacing, paragraphSpacing ) );
+        	block.name = title;
+        } else {
+        	block.name = imageName;
+        }
+
+        TextGraphics imageBlock = new TextGraphics( imageName, ctx.document );
+        block.add(imageBlock);
+
+        block.layout();
+
+        return block;
+    }
+
+    public TextBlock parseImageFixedPos( JSONObject _json, RenderContext ctx ) {
+
+    	Config image = new Config(_json);
+        TextBlock block = parseImage( _json, ctx );
+
+        if ( block==null )
+            return null;
+
+        int startlane = image.getInt( "startlane", 0 );
+        int lanes = image.getInt("lanes", 0 );
+        String position = image.get( "position", "top" );
+
+        //Efective width adjust for spacing and scaling down the image
+        float rawSpace = ctx.getLaneTotalWidth( startlane, lanes);
+
+        block.setWidth(rawSpace);
+        block.layout();
+
+        //Set block position
+        block.fixed = true;
+        block.page = startlane / ctx.lanes;
+        block.xPos = ctx.getLaneXPos(startlane);
+        block.yPos = ctx.getLaneYPos(startlane);
+
+        //Adjust ypos and reserve space in lanes
+        block.yPos =ctx.getLaneYPos(startlane);
+        if (position.equals("bottom")) {
+        	block.yPos -= (ctx.laneHeight - block.height);
+        	for ( int i=startlane; i<startlane+lanes; i++) {
+        		ctx.setLaneReservedBottom(i, block.height );
+        	}
+        } else {
+        	for ( int i=startlane; i<startlane+lanes; i++) {
+        		ctx.setLaneReservedTop(i, block.height );
+        	}
+        }
+
+        return block;
+    }
 
 	public void format() throws Exception {
 
@@ -148,27 +227,39 @@ public class CheatsheetFormatter {
 		ctx.setupStyle();
 		ctx.makeFonts();
 
-		//General TODO
+
+		//Test code
 		/*
-		    - Insert content
+		ctx.setLaneReservedTop(0, 50);
+		ctx.setLaneReservedTop(2, 80);
+		ctx.setLaneReservedBottom(1, 150);
 		 */
+
+		//Iterate over images
+        JSONArray images = content.getJSONArray("images");
+        TextBlock imageBlocks = new TextBlock();
+		for ( Object item: images )
+		{
+			imageBlocks.add( parseImageFixedPos( (JSONObject)item, ctx ) );
+		}
 
 		//TextBlock of TextBlock
 		TextBlock textBlocks = new TextBlock();
-		textBlocks.spacing = ctx.blockSpacing;
 
 		//Iterate over content blocks
 		JSONArray blocks = content.getJSONArray("blocks");
 		for ( Object item: blocks )
 		{
-			textBlocks.add( parseBlock( item, ctx ) );
+			textBlocks.add( parseBlock( (JSONObject)item, ctx ) );
 		}
 
 		//We are done preparing the context now layout into lanes
 
-		//Layout block into lanes
+		//Layout blocks into lanes
 		ArrayList<TextBlock> lanes = new ArrayList<TextBlock>();
+
 		TextBlock currentLane = null;
+        int laneCount = -1;
 		float laneHeightRemaining = 0;
 		float lanewidth = ctx.lanewidth;
 		for ( Text block: textBlocks.texts )
@@ -180,12 +271,14 @@ public class CheatsheetFormatter {
 				currentLane = null;
 			}
 			if ( currentLane==null ) {
+                laneCount++;
 				currentLane = new TextBlock();
+				currentLane.spacing = ctx.blockSpacing;
 
 				lanewidth = ctx.getLaneWidthForLane( lanes.size());
 
 				lanes.add(currentLane);
-				laneHeightRemaining = ctx.laneHeight;
+				laneHeightRemaining = ctx.getLaneHeight(laneCount);
 
 				//New lane new layout
 				block.setWidth(lanewidth);
@@ -194,24 +287,28 @@ public class CheatsheetFormatter {
 
 			info( "Adding to lane: " + lanes.size() + " : "  + block.name );
 			currentLane.add(block);
-			laneHeightRemaining -= block.height;
+			laneHeightRemaining -= block.height + ctx.blockSpacing;
 
 		}
 
-		////Done with layout, now render lanes onto üages
-
-		int laneCount = 0;
+		System.out.println("Lanes: " + (laneCount+1));
+		////Done with layout, now render lanes onto pages
+		laneCount = 0;
+		int pageCount = (page!=null)?0:-1;  //We have a page alreay
 		while( lanes.size() > 0) {
-			if (page == null)
+			if (page == null) {
 				page = ctx.addPAge();
+				pageCount++;
+			}
 
 			//Render header
-			TextBlock header = new TextBlock(false, 0);
+			TextBlock header = new TextBlock(false);
 			header.alignCenter = true;
 			TextGraphics headerLogo = new TextGraphics(ctx.headerLogo, ctx.document);
 			headerLogo.gHeight = ctx.headerLogoHeight;
 			headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
 			headerLogo.xBorder = 5;
+
 			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.bold, ctx.header.size );
 			headerText.yOffset = ctx.headerYOffset;
 
@@ -243,20 +340,26 @@ public class CheatsheetFormatter {
 			ctx.yPos = backgroundBR.height;
 			backgroundBR.render(ctx);
 
+			//Render images
+			for ( Text text: imageBlocks.texts) {
+				TextBlock block = (TextBlock)text;
+				if ( block.page == pageCount) {
+					info( "Adding image to page: " + pageCount + " : " + block.name);
+					block.render(ctx);
+				}
+			}
 
 			//Render lanes
-			float xPos = ctx.borderleft;
 			for ( int i=0; i<ctx.lanes; i++) {
 
-				ctx.xPos = xPos;
-				ctx.yPos = ctx.laneTop;
+				ctx.xPos = ctx.getLaneXPos(laneCount);
+				ctx.yPos = ctx.getLaneYPos(laneCount);
 				if ( lanes.size() > 0) {
 					currentLane = lanes.remove(0);
 					currentLane.render(ctx);
 				}
 
 				float lw =ctx.getLaneWidthForLane(laneCount);
-				xPos += lw + ctx.laneborder;
 
 				laneCount++;
 			}
@@ -267,6 +370,7 @@ public class CheatsheetFormatter {
 
 		ctx.document.save(output);
 		ctx.document.close();
+		System.out.println("Pages: " + (pageCount+1));
 		System.out.println("Done writing to: " + output);
 	}
 
@@ -313,7 +417,7 @@ public class CheatsheetFormatter {
 			}
 		}
 
-		if ( _style == null || _content == null) {
+		if ( _content == null) {
 			System.out.println("Options: ");
 			System.out.println("-style  <json style template>");
 			System.out.println("-content <json content template>");
@@ -327,7 +431,7 @@ public class CheatsheetFormatter {
 
 		csf.format();
 
-		if (view ) {
+		if ( view ) {
 			ProcessBuilder processBuilder = new ProcessBuilder(
 					"C:\\Program Files\\IrfanView\\i_view64.exe",
 					csf.output,
