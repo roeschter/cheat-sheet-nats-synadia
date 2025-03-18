@@ -1,5 +1,6 @@
 package com.roeschter.pdfbox;
 
+import java.awt.Color;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -11,18 +12,20 @@ public class TextFormatted extends Text {
 
 	PDFont font;
 	float fontSize;
+	Color color;
 	public String text;
 	public float yOffset;
 
-	public TextFormatted( String _text, PDFont _font, float size) {
+	public TextFormatted( String _text, PDFont _font, float size, Color _color) {
 		font = _font;
 		fontSize = size;
 		text = _text;
+		color = _color;
 	}
 
 	@Override
 	public TextFormatted clone() {
-		return new TextFormatted( text, font, fontSize);
+		return new TextFormatted( text, font, fontSize, color);
 	}
 
 	@Override
@@ -48,6 +51,7 @@ public class TextFormatted extends Text {
 	public void render( RenderContext ctx ) throws Exception {
 		PDPageContentStream contentStream = ctx.contentStream;
 		contentStream.beginText();
+		contentStream.setNonStrokingColor(color);
 		contentStream.setFont( font, fontSize);
 		float yPos = ctx.yPos - height - yOffset;
 		trace(ctx.xPos, yPos, text );

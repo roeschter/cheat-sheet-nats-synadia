@@ -60,6 +60,7 @@
                 "Unit of data transmission. Everything is a message in NATS.",
                 "Composed of:",
                 {
+                
                     "items": [                        
                         "**Subject:** The channel to which the Message is published.",
                         "**Payload:** The binary content of the Message.",
@@ -77,7 +78,7 @@
             ]
         },
         {
-            "title": "**JetStream (Persistence Layer)**",
+            "title": "**JetStream (Persistence)**",
             "items": [
                 "**Built-in persistence layer in NATS**. Replicated and resilient.",
                 "Adds advanced capabilities like:",

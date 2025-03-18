@@ -1,5 +1,6 @@
 package com.roeschter.pdfbox;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -24,6 +25,8 @@ public class RenderContext {
 	FontContext title;
 	FontContext header;
 	FontContext body;
+	FontContext fixed;
+
 
 	float xPos = 0;
 	float yPos = 0;
@@ -55,12 +58,14 @@ public class RenderContext {
 	public float laneHeight;
 
 	float headerFontSize;
+	Color headerFontColor;
 	float headerYOffset;
 	String headerLogo;
 	float headerHeight;
 	float headerLogoHeight;
 
 	float titleFontSize;
+	Color titleFontColor;
 	float titleLineSpacingRel;
 	float titleParagraphSpacingRel;
 
@@ -74,8 +79,12 @@ public class RenderContext {
 	float bulletSpacingRel;
 
 	float bodyFontSize;
+	Color bodyFontColor;
 	float bodyLineSpacingRel;
 	float bodyParagraphSpacingRel;
+
+	float bodyFixedFontSize;
+	Color bodyFixedFontColor;
 
 	public RenderContext( Config _style ) {
 		style = _style;
@@ -209,6 +218,7 @@ public class RenderContext {
 
 
 		headerFontSize = style.getFloat("headerFontSize",30);
+		headerFontColor = style.getColor("headerFontColor",Color.black);
 		headerYOffset = style.getFloat("headerYOffset",0);
 		headerHeight = style.getFloat("headerHeight",40);
 		headerLogoHeight = style.getFloat("headerLogoHeight",40);
@@ -227,6 +237,7 @@ public class RenderContext {
 
 
 		titleFontSize = style.getFloat("titleFontSize",24);
+		titleFontColor = style.getColor("titleFontColor",Color.black);
 		titleLineSpacingRel = style.getFloat("titleSpacingRel",0.0);
 		titleParagraphSpacingRel = style.getFloat("titleParagraphSpacingRel",0.0);
 		blockSpacing = style.getFloat("blockSpacing",4);
@@ -244,27 +255,55 @@ public class RenderContext {
 
 
 		bodyFontSize = style.getFloat("bodyFontSize",8);
+		bodyFontColor = style.getColor("bodyFontColor",Color.black);
 		bodyLineSpacingRel = style.getFloat("bodyLineSpacingRel",0);
 		bodyParagraphSpacingRel = style.getFloat("bodyParagraphSpacingRel",0);
+
+		bodyFixedFontSize = style.getFloat("bodyFixedFontSize",8);
+		bodyFixedFontColor = style.getColor("bodyFixedFontColor",Color.black);
+	}
+
+
+	HashMap<String,Font> fonts = new HashMap<String,Font>();
+
+	public Font pickFont( String type ) {
+		String name =style.get( type+"Font", "times").toLowerCase();
+		Font ret =fonts.get(name);
+
+		if ( ret == null)
+			throw new RuntimeException("Font not found: " + name);
+
+		return ret;
 	}
 
 	public void makeFonts() {
-		FontContext baseFont = new FontContext();
-		baseFont.regular = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
-		baseFont.bold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
-		baseFont.cursive = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
-		baseFont.cursiveBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD_OBLIQUE);
+		Font helvetica = new Font();
+		helvetica.regular = new PDType1Font(Standard14Fonts.FontName.HELVETICA);
+		helvetica.bold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD);
+		helvetica.cursive = new PDType1Font(Standard14Fonts.FontName.HELVETICA_OBLIQUE);
+		helvetica.cursiveBold = new PDType1Font(Standard14Fonts.FontName.HELVETICA_BOLD_OBLIQUE);
+		fonts.put("helvetica", helvetica);
 
-		FontContext courier = new FontContext();
-		courier.regular = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD);
+		Font times = new Font();
+		times.regular = new PDType1Font(Standard14Fonts.FontName.TIMES_ROMAN);
+		times.bold = new PDType1Font(Standard14Fonts.FontName.TIMES_BOLD);
+		times.cursive = new PDType1Font(Standard14Fonts.FontName.TIMES_ITALIC);
+		times.cursiveBold = new PDType1Font(Standard14Fonts.FontName.TIMES_BOLD_ITALIC);
+		fonts.put("times", times);
+
+		Font courier = new Font();
+		//Standard14Fonts.FontName.
+		courier.regular = new PDType1Font(Standard14Fonts.FontName.COURIER);
 		courier.bold = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD);
 		courier.cursive = new PDType1Font(Standard14Fonts.FontName.COURIER_OBLIQUE);
 		courier.cursiveBold = new PDType1Font(Standard14Fonts.FontName.COURIER_BOLD_OBLIQUE);
+		fonts.put("courier", courier);
 
-		header = new FontContext( baseFont, headerFontSize );
-		title = new FontContext( baseFont, titleFontSize );
-		body = new FontContext( baseFont, bodyFontSize );
+		header = new FontContext( pickFont("header"), headerFontSize,  headerFontColor, courier,  headerFontSize, headerFontColor );
+		title = new FontContext( pickFont("title"), titleFontSize, titleFontColor, courier,  titleFontSize, titleFontColor );
+		body = new FontContext( pickFont("body"), bodyFontSize, bodyFontColor, courier,  bodyFixedFontSize, bodyFixedFontColor );
 	}
+
 
 }
 

@@ -1,5 +1,6 @@
 package com.roeschter.pdfbox;
 
+import java.awt.Color;
 import java.math.BigDecimal;
 
 import org.json.JSONArray;
@@ -20,18 +21,7 @@ public class Config {
 	}
 
 
-	/*
-	public String get( JSONObject json, String key, String _default) {
-		String ret = null;
 
-		if ( !json.isNull(key) )
-			ret = json.getString(key);
-		else
-			ret = _default;
-
-		return ret;
-	}
-	*/
 
 	public String get( String key, String _default) {
 		String ret = null;
@@ -47,18 +37,7 @@ public class Config {
 		return ret;
 	}
 
-	/*
-	public float get( JSONObject json, String key, float _default) {
-		float ret = 0;
 
-		if ( !json.isNull(key) )
-			ret = (float)json.getDouble(key);
-		else
-			ret = _default;
-
-		return ret;
-	}
-	*/
 
 
 	public float getFloat(  String key, double _default) {
@@ -75,23 +54,68 @@ public class Config {
 		return ret;
 	}
 
+	public boolean getBool( String key, boolean _default) {
+		boolean ret = false;
 
-	/*
-	public int getInt( JSONObject json, String key, int _default) {
-		int ret = 0;
-
-		if ( !json.isNull(key) )
-			ret = (int)json.getLong(key);
+		if ( parent!=null)
+			ret = parent.getBool( key, _default );
 		else
 			ret = _default;
 
+		if ( !json.isNull(key) )
+			ret = json.getBoolean(key);
+
 		return ret;
 	}
-	*/
 
 
+	public Color getColor( String key, Color _default)  {
+		Color ret;
 
-	public int getInt( String key, int _default) {
+		if ( parent!=null)
+			ret = parent.getColor( key, _default );
+		else
+			ret = _default;
+
+		if ( !json.isNull(key) ) {
+			int[] c = getIntArray(key);
+			ret = new Color(c[0],c[1],c[2]);
+		}
+
+		return ret;
+	}
+
+    public int[] getIntArray( String key) {
+		JSONArray array = getJSONArray(key, null);
+		int[] ret = null;
+		if ( array != null) {
+			ret = new int[array.length()];
+			int n=0;
+			for ( Object obj: array)
+			{
+				Integer dec = (Integer)obj;
+				ret[n++] = dec.intValue();
+			}
+		}
+		return ret;
+	}
+
+    public float[] getFloatArray( String key) {
+		JSONArray array = getJSONArray(key, null);
+		float[] ret = null;
+		if ( array != null) {
+			ret = new float[array.length()];
+			int n=0;
+			for ( Object obj: array)
+			{
+				BigDecimal dec = (BigDecimal)obj;
+				ret[n++] = dec.floatValue();
+			}
+		}
+		return ret;
+    }
+
+    public int getInt( String key, int _default) {
 		int ret = 0;
 
 		if ( parent!=null)
@@ -105,35 +129,7 @@ public class Config {
 		return ret;
 	}
 
-	public float[] getFloatArray( String key) {
-		JSONArray array = getJSONArray(key);
-		float[] ret = null;
-		if ( array != null) {
-			ret = new float[array.length()];
-			int n=0;
-			for ( Object obj: array)
-			{
-				BigDecimal dec = (BigDecimal)obj;
-				ret[n++] = dec.floatValue();
-			}
-		}
-		return ret;
-	}
 
-    public int[] getIntArray( String key) {
-		JSONArray array = getJSONArray(key);
-		int[] ret = null;
-		if ( array != null) {
-			ret = new int[array.length()];
-			int n=0;
-			for ( Object obj: array)
-			{
-				Integer dec = (Integer)obj;
-				ret[n++] = dec.intValue();
-			}
-		}
-		return ret;
-	}
 
 	public boolean isNull( String key ) {
 		return json.isNull(key);
@@ -152,11 +148,10 @@ public class Config {
 	}
 
 
-	public JSONArray getJSONArray( String key) {
-		JSONArray ret = null;
+	public JSONArray getJSONArray( String key, JSONArray ret) {
 
 		if ( parent!=null)
-			ret = parent.getJSONArray( key );
+			ret = parent.getJSONArray( key, ret );
 
 		if ( !json.isNull(key) )
 			ret = json.getJSONArray(key);

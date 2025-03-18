@@ -24,7 +24,7 @@ public class TextLine extends Text {
 		return line;
 	}
 
-	char[] markup = {'*', '\\'};
+	char[] markup = {'*', '\\', '`'};
 
 	int countChar( String s, int pos, char c) {
 		int count = 0;
@@ -42,13 +42,15 @@ public class TextLine extends Text {
 	static int NOMARKUP = 0;
 	static int INMARKUP = 1;
 
-	public void parseMarkDown( String text, FontContext ctx ) {
+	public void parseMarkDown( String text, FontContext ctx) {
 		StringBuilder b = new StringBuilder();
 		int lpos = 0;
 		int spos = -1;
 		char markchar = ' ';
 		int state = NOMARKUP;
 		int markupcount = 0;
+		Font currentFont = ctx.regular;
+
 		do {
 			int pos = lpos;
 			spos = -1;
@@ -62,7 +64,9 @@ public class TextLine extends Text {
 				}
 				pos++;
 			}
-			if ( spos!=-1) { //Found markup
+			 //Found markup
+			if ( spos!=-1) {
+				//Grab text up to markup into buffer
 				b.append( text.subSequence(lpos, spos ));
 				lpos = spos;
 				//Its an escape
@@ -70,34 +74,55 @@ public class TextLine extends Text {
 					b.append(text.charAt(spos+1));
 					lpos = spos+2;
 				}
-				//Its asterix
+				//Its asterix - bold/cursive marking
 				if ( markchar=='*') {
 					markupcount = countChar(text,spos,markchar);
 					if ( state==NOMARKUP) {
-						texts.add(new TextFormatted(b.toString(), ctx.regular, ctx.size));
+						//There was no markup so add the buffered text as regular
+						if ( b.length() != 0)
+							texts.add(new TextFormatted(b.toString(), currentFont.regular, currentFont.size, currentFont.color));
 						b.setLength(0);
 						lpos += markupcount;
 						state = INMARKUP;
 					} else {
 						PDFont font = null;
 						if ( markupcount==1 ) {
-							font=ctx.cursive;
+							font=currentFont.cursive;
 						} else if ( markupcount==2 ) {
-							font=ctx.bold;
+							font=currentFont.bold;
 						} else  {
-							font=ctx.cursiveBold;
+							font=currentFont.cursiveBold;
 						}
-						texts.add(new TextFormatted(b.toString(), font, ctx.size));
+						//Adding the text
+						if ( b.length() != 0)
+							texts.add(new TextFormatted(b.toString(), font, currentFont.size, currentFont.color));
 						b.setLength(0);
 						lpos += markupcount;
 						state = NOMARKUP;
 					}
 				}
-			} else { //Rest of the string
+				//Its an apostrophe
+				if ( markchar=='`') {
+					markupcount = countChar(text,spos,markchar);
+					//Current font is body - start fixed
+					if ( currentFont == ctx.regular ) {
+						currentFont = ctx.fixed;
+					//End of fixed font markup
+					} else {
+						//Adding text
+						if ( b.length() != 0)
+							texts.add(new TextFormatted(b.toString(), currentFont.regular, currentFont.size, currentFont.color));
+						b.setLength(0);
+						currentFont = ctx.regular;
+					}
+					lpos += markupcount;
+				}
+			//No markup found - Handle rest of the string
+			} else {
 				b.append( text.subSequence(lpos, text.length()));
 				lpos = text.length();
 				if (b.length() != 0)
-				texts.add(new TextFormatted(b.toString(), ctx.regular, ctx.size));
+				texts.add(new TextFormatted(b.toString(), currentFont.regular, currentFont.size, currentFont.color));
 			}
 		} while ( spos!=-1 );
 	}
@@ -151,7 +176,7 @@ public class TextLine extends Text {
 						canFit = true;
 					}
 
-				} else { //OK we have token
+				} else { //OK we have a token
 					//Take the token and check if it fits
 					String token = s.substring(0,spos+1);
 					TextFormatted ntext = text.clone();

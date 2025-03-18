@@ -5,8 +5,8 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 
 public class TextItem extends Text {
 
-	TextFormatted bullet;
-	float bulletSpacing;
+	TextFormatted bullet = null;
+	float bulletSpacing = 0;
 	float bulletWidth;
 	float inset;
 	float spacing;
@@ -15,13 +15,16 @@ public class TextItem extends Text {
 
 
 	public void layoutBullet() {
-		bullet.layout();
-		bulletWidth = 2*bulletSpacing + bullet.width;
+		if ( bullet != null) {
+			bullet.layout();
+			bulletWidth = 2*bulletSpacing + bullet.width;
+		}
 	}
 
 	@Override
 	public void layout() {
-		bullet.layout();
+		if ( bullet != null)
+			bullet.layout();
 		paragraph.layout();
 		width = inset + bulletWidth + paragraph.width;
 		height = paragraph.height + spacing;
@@ -37,7 +40,10 @@ public class TextItem extends Text {
 		float yPos = ctx.yPos;
 		ctx.xPos += inset;
 		ctx.xPos += bulletSpacing;
-		bullet.render(ctx);
+
+		if ( bullet != null)
+			bullet.render(ctx);
+
 		ctx.xPos += bulletSpacing;
 
 		paragraph.render(ctx);

@@ -16,7 +16,12 @@ import org.json.JSONObject;
 public class CheatsheetFormatter {
 
 	/*
+	 + Arial?
+	 * Spacin?
 	 *
+	 * ReTest nats cheatsheet
+	 *
+	 * Test CLI cheatsheet (courier)
 	 */
 
 	Config cStyle;
@@ -34,10 +39,12 @@ public class CheatsheetFormatter {
 
 			currentFile = content.get("style", _style);
 			JSONObject style = new JSONObject( Files.readString(Path.of(currentFile)) );
-			JSONObject override = new JSONObject();
+			JSONObject override;
 
 			if ( !content.isNull("styleoverride") )
 				override = content.getJSONObject("styleoverride");
+			else
+				override = new JSONObject();
 
 			Config root = new Config( style, null );
 			cStyle = new Config( override, root);
@@ -72,23 +79,29 @@ public class CheatsheetFormatter {
 	    return (widthInUnits / 1000) * fontSize; // Convert to user space
 	}
 
-	public TextItem makeItem( String text, float inset, float paragraphWidth) {
+	public TextItem makeItem( String text, float inset, float paragraphWidth, boolean hasBUllets) {
 		TextItem item = new TextItem();
 		float scale = ctx.bulletSizeRel;
-		item.bullet = new TextFormatted( ctx.bullet , ctx.body.bold, ctx.body.size*scale);
-		item.bullet.yOffset = ctx.body.size*ctx.bulletOffetRel;
-		item.bulletSpacing = ctx.body.size*ctx.bulletSpacingRel;
+
+		if ( hasBUllets ) {
+			item.bullet = new TextFormatted( ctx.bullet , ctx.body.regular.bold, ctx.body.regular.size*scale, ctx.body.regular.color);
+			item.bullet.yOffset = ctx.body.regular.size*ctx.bulletOffetRel;
+			item.bulletSpacing = ctx.body.regular.size*ctx.bulletSpacingRel;
+		}
 		item.inset = inset;
 		item.layoutBullet();
 
-		item.paragraph = new TextParagraph( text, ctx.body, paragraphWidth - item.bulletWidth, ctx.body.size*ctx.bodyLineSpacingRel,  ctx.body.size*ctx.bodyParagraphSpacingRel );
+		item.paragraph = new TextParagraph( text, ctx.body, paragraphWidth - item.bulletWidth, ctx.body.regular.size*ctx.bodyLineSpacingRel,  ctx.body.regular.size*ctx.bodyParagraphSpacingRel );
 		item.layout();
 		return item;
 	}
 
-	public void addItems(TextBlock block, JSONArray items, int[] filter, float inset, float paragraphWidth  ) {
+	public void addItems(TextBlock block, JSONObject json, Config config , int[] filter, float inset, float paragraphWidth  ) {
 		float bulletWidth = 0;
 		int count = -1;
+		JSONArray items = json.getJSONArray("items");
+		boolean hasBullets = config.getBool("bullets", true );
+
 		for ( Object _item: items) {
 			count++;
 			if ( ctx.isFiltered(filter, count))
@@ -96,7 +109,8 @@ public class CheatsheetFormatter {
 
 			if (_item instanceof String ) {
 				String text = (String)_item;
-				TextItem item = makeItem(text, inset, paragraphWidth);
+				TextItem item = makeItem(text, inset, paragraphWidth, hasBullets);
+
 				bulletWidth = item.bulletWidth;
 				block.add(item);
 			}
@@ -104,42 +118,41 @@ public class CheatsheetFormatter {
 			//A nested list of items, adding recursively with indentation
 			if (_item instanceof JSONObject ) {
 				//Iterate Items
-				JSONObject itemList = (JSONObject)_item;
-				JSONArray _items = itemList.getJSONArray("items");
-				int[] _filter = ctx.getFilter( itemList );
-				addItems( block, _items, _filter, inset + bulletWidth, paragraphWidth - bulletWidth );
+				JSONObject item = (JSONObject)_item;
+				int[] _filter = ctx.getFilter( item );
+				addItems( block, item, new Config( item, config), _filter, inset + bulletWidth, paragraphWidth - bulletWidth );
 			}
 
 		}
 	}
 
-	public TextBlock parseBlock( JSONObject _json, RenderContext ctx ) {
+	public TextBlock parseBlock( JSONObject json, RenderContext ctx ) {
 		TextBlock block = new TextBlock();
-		Config json = new Config(_json);
-        int[] filter = ctx.getFilter( _json );
+        int[] filter = ctx.getFilter( json );
 
         if ( ctx.isFiltered(filter,-1) )
             return null;
 
-		String title = json.get( "title", null );
+
+        //Add Title and underline unless empty
+		String title = new Config(json).get( "title", null );
 		info( title);
 		block.name = title;
 		if ( title != null && title.length()>0) {
-			 block.add( new TextParagraph( title, ctx.title, ctx.lanewidth, ctx.title.size*ctx.titleLineSpacingRel, ctx.title.size*ctx.titleParagraphSpacingRel  ) );
+			 block.add( new TextParagraph( title, ctx.title, ctx.lanewidth, ctx.title.regular.size*ctx.titleLineSpacingRel, ctx.title.regular.size*ctx.titleParagraphSpacingRel  ) );
 
 			 //Add underline graphics
 			 TextGraphics underline = new TextGraphics( "underline.png", ctx.document );
-			 underline.yBorder =  ctx.title.size * ctx.underlineBorderRel;
+			 underline.yBorder =  ctx.title.regular.size * ctx.underlineBorderRel;
 			 underline.gWidth = ctx.lanewidth;
-			 underline.gHeight = ctx.title.size * ctx.underlineHeightRel;
+			 underline.gHeight = ctx.title.regular.size * ctx.underlineHeightRel;
 			 underline.fixedHeight = true;
 
 			 block.add(underline);
 		}
 
 		//Iterate Items
-		JSONArray items = json.getJSONArray("items");
-		addItems( block, items, filter, 0, ctx.lanewidth );
+		addItems( block, json, new Config(json, cStyle), filter, 0, ctx.lanewidth );
 
 		return block;
 	}
@@ -159,8 +172,8 @@ public class CheatsheetFormatter {
 
         block.padding = new Padding(image);
 
-        float lineSpacing = ctx.body.size*(float)0.2;
-        float paragraphSpacing = ctx.body.size*(float)0.2;
+        float lineSpacing = ctx.body.regular.size*(float)0.2;
+        float paragraphSpacing = ctx.body.regular.size*(float)0.2;
 
         //TODO set padding on block
 
@@ -227,7 +240,6 @@ public class CheatsheetFormatter {
 		ctx.setupStyle();
 		ctx.makeFonts();
 
-
 		//Test code
 		/*
 		ctx.setLaneReservedTop(0, 50);
@@ -236,7 +248,7 @@ public class CheatsheetFormatter {
 		 */
 
 		//Iterate over images
-        JSONArray images = content.getJSONArray("images");
+        JSONArray images = content.getJSONArray("images", new JSONArray());
         TextBlock imageBlocks = new TextBlock();
 		for ( Object item: images )
 		{
@@ -247,7 +259,7 @@ public class CheatsheetFormatter {
 		TextBlock textBlocks = new TextBlock();
 
 		//Iterate over content blocks
-		JSONArray blocks = content.getJSONArray("blocks");
+		JSONArray blocks = content.getJSONArray("blocks", new JSONArray());
 		for ( Object item: blocks )
 		{
 			textBlocks.add( parseBlock( (JSONObject)item, ctx ) );
@@ -309,7 +321,7 @@ public class CheatsheetFormatter {
 			headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
 			headerLogo.xBorder = 5;
 
-			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.bold, ctx.header.size );
+			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.regular.bold, ctx.header.regular.size, ctx.header.regular.color );
 			headerText.yOffset = ctx.headerYOffset;
 
 			header.add( headerLogo );

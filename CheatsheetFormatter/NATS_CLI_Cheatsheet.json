@@ -1,0 +1,32 @@
+{
+    
+    style: NATS_style.json,
+    styleoverride: {
+        laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
+        bullets: false,
+        bodyLineSpacingRel: 0.15,
+        
+    },
+    "pageHeader": "CLI Cheatsheet",
+    
+    "blocks": [
+        {
+            "title": "**Publish/Subscribe**",
+            "items": [
+                "Listen to a subject",
+                "``**nats sub foo**``",
+                "Publish to a subject",
+                "``**nats pub foo Hello**``",
+            ]    
+        },
+        {
+            "title": "**Request/Reply**",
+            "items": [
+                "Simple reply",
+                "``**nats reply bar World**``",
+                "Send a request",
+                "``**nats request bar Hello**``"
+            ]
+        }
+    ]
+}

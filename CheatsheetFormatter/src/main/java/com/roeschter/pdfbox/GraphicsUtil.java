@@ -129,10 +129,10 @@ public class GraphicsUtil {
 
 
 	public static void main(String[] args) {
-		Color c1 = new Color(29, 170, 255);
-		Color c2 = new Color(52, 165, 147);
-		Color c3 = new Color(55, 92, 255);
-		Color c4 = new Color(141, 193, 63);
+		Color c1 = new Color(29, 170, 225);
+		Color c2 = new Color(52, 165, 116);
+		Color c3 = new Color(55, 92, 147);
+		Color c4 = new Color(141, 198, 63);
 		Color[] colors = new Color[] { c1, c2, Color.WHITE, Color.WHITE, Color.WHITE}; // ,Color.WHITE};
 		RenderedImage image = makeColorBand( 512, 16, colors);
 		savePNG( image, "underline.png"  );
