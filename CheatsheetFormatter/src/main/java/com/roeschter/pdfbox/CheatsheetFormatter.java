@@ -16,12 +16,7 @@ import org.json.JSONObject;
 public class CheatsheetFormatter {
 
 	/*
-	 + Arial?
-	 * Spacin?
-	 *
-	 * ReTest nats cheatsheet
-	 *
-	 * Test CLI cheatsheet (courier)
+
 	 */
 
 	Config cStyle;
