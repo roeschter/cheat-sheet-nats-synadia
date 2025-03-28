@@ -1,4 +1,5 @@
 {
+    #Example colors
     cNATSLightBlue: [ 29, 170, 225 ],
     cNATSDarkGreen: [52, 165, 116 ],
     cNATSDarkBlue: [ 55, 92, 147 ],
@@ -20,6 +21,7 @@
     backgroundBRWidth: 400,
     backgroundBRHeight: 60,
     
+    #Page header properties
     headerFont: helvetica,   
     headerFontSize: 24,
     headerFontColor: [0,0,0], 
@@ -27,33 +29,57 @@
     headerHeight: 70,
     headerLogoHeight: 40, 
     headerLogo: NATS.png ,
+        
+    #Footer
+    footerFont: helvetica,   
+    footerFontSize: 8,
+    footerFontColor: [0,0,0], 
+    footerDate: true,
+    footerPadding: {
+        "pad.top": 5,
+        "pad.bottom": 5,
+        "pad.left": 6,
+        "pad.right": 6,
+    },
     
+    #Number of lines and border between them
     laneborder: 15,
     lanes: 4,
+    
+    #Adjust relative lane width
+    #1.0 is default. Should balance out to number of lanes
     laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
 
+
+    #Block title properties
     titleFont: helvetica,    
     titleFontSize: 13,
     titleFontColor: [0,0,0], 
     titleLineSpacingRel: 0.2,
     titleParagraphSpacingRel: 0.3,
     
+    #Logo to be used under the block title
     underLineLogo: underline.png, 
     underlineHeightRel: 0.2, 
     underlineBorderRel: 0.1,
     
+   
+    #Should bullets be shown on items
     bullets: true,
+    #Bullet symbol and format
     bullet: "\u2022",
     bulletSizeRel: 1.3,
     bulletSpacingRel: 0.3,
     bulletOffetRel: -0.2,
     
+    #Body properties
     bodyFont: Times,
     bodyFontColor: [0,0,0],    
     bodyFontSize: 9,
     bodyLineSpacingRel: 0.1,
     bodyParagraphSpacingRel: 0.1,
     
+    #Fixed width (Courier) properties
     bodyFixedFontColor: [ 55, 92, 147 ],  
     bodyFixedFontSize: 9,
     

@@ -42,6 +42,15 @@ public class TextLine extends Text {
 	static int NOMARKUP = 0;
 	static int INMARKUP = 1;
 
+	public boolean isMarkup( char cc) {
+		for ( char c: markup) {
+			if ( cc==c ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public void parseMarkDown( String text, FontContext ctx) {
 		StringBuilder b = new StringBuilder();
 		int lpos = 0;
@@ -71,8 +80,18 @@ public class TextLine extends Text {
 				lpos = spos;
 				//Its an escape
 				if ( markchar=='\\') {
-					b.append(text.charAt(spos+1));
-					lpos = spos+2;
+					//Check if there is another character and if its markup
+					if ( spos+1<text.length() ) {
+						char c = text.charAt(spos+1);
+						if ( isMarkup(c)) {
+							b.append(c);
+							lpos = spos+2;
+						}
+					//Otherwise append the escape char
+					} else {
+						b.append('\\');
+						lpos = spos+1;
+					}
 				}
 				//Its asterix - bold/cursive marking
 				if ( markchar=='*') {

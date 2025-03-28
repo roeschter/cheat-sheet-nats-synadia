@@ -1,5 +1,7 @@
 package com.roeschter.pdfbox;
 
+import org.json.JSONObject;
+
 public class Padding {
 
 	public Padding() {}
@@ -9,6 +11,17 @@ public class Padding {
 		bottom = config.getInt("pad.bottom", 0 );
 		left = config.getInt("pad.left", 0 );
 		right = config.getInt("pad.right", 0 );
+	}
+
+	public Padding( Config config, String key) {
+		JSONObject json = config.getJSONObject(key);
+		if ( json != null) {
+			config = new Config(json);
+			top = config.getInt("pad.top", 0 );
+			bottom = config.getInt("pad.bottom", 0 );
+			left = config.getInt("pad.left", 0 );
+			right = config.getInt("pad.right", 0 );
+		}
 	}
 
 

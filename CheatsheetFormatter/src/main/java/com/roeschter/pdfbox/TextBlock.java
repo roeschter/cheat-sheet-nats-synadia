@@ -39,8 +39,8 @@ public class TextBlock extends Text {
 
 	@Override
 	public void layout() {
-		width = padding.left + padding.right;
-		height = padding.top + padding.bottom;
+		width = 0;
+		height = 0;
 		for( Text text: texts ) {
 			text.layout();
 			if ( renderVertical ) {
@@ -53,6 +53,8 @@ public class TextBlock extends Text {
 				width += spacing;
 			}
 		}
+		width += padding.left + padding.right;
+		height += padding.top + padding.bottom;
 		if (texts.size() != 0) {
 			if ( renderVertical )
 				height -= spacing;

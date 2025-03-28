@@ -1,19 +1,31 @@
 {
     
+    #Style sheet to use
     style: NATS_style.json,
+    
+    #Override any properties from style sheet
     styleoverride: {
         laneWidthRel: [ 1.1, 1.0, 1.0, 1.0 ],
         
     },
-    "pageHeader": "Cheatsheet",
     
+    #Page header and footer text
+    "pageHeader": "Cheatsheet",
+    "pageFooter": "https://github.com/roeschter/CheatsheetFormatter",
+    
+    #Insert images into lanes
     images: [
         {
+            #Optional image title
             "title": "", 
             "image": "nats_sample_topology_2.png",
+            #First lane to use
             "startlane": 1, 
+            #The image may span more than one lane
             "lanes": 2,
+            #Place at top or bottom
             "position": "bottom",
+            #Padding
             "pad.top": 0,
             "pad.bottom": 0,
             "pad.left": 30,
@@ -22,13 +34,42 @@
     ],
     "blocks": [
         {
+            #Some properties operate at block level and can be nested
+            #bullets
+            #exclude
+            
+            #exclude content - -1 removes the whole block
             "exclude": [-1],
-            "title": "**Filtered should not be visible**",
+            
+            #exclude content - or a list of items to exclude - starting with 0
+            #"exclude": [0,2,3],
+            
+            #Items should have bullets
+            bullets: true,
+            
+            "title": "**Formatting examples**",
+            #For Formatting we use a markdown subset
             "items": [
-                "**Test**",  
+                "*Cursive* \\*Cursive\\* ",  
+                "**Bold** \\*\\*Bold\\*\\*",  
+                "***Cursive Bold*** \\*\\*\\*Cursive Bold\\*\\*\\*", 
+                #We can nest blocks with indentation
+                {
+                    #We can override bullets at any level
+                    bullets: false,
+                    #Exclude first item
+                    "exclude": [0],
+                    "items": [
+                        "Hidden",
+                        "``Use Fixed width e.g. Courier font``  \\`\\`Fixed width\\`\\`",
+                        #Only markdown formatting characters (* `)need extra escaping 
+                        "Escape characters like \\* \\` \\",             
+                    ]
+                }
             ]    
         },
         {
+            #exclude content - List of items to remove
             "exclude": [4],
             "title": "**Server (NATS Server or NATS Core)**",
             "items": [
@@ -133,7 +174,7 @@
         {
             "title": "**A Brief History of NATS**",
             "items": [
-                "**2010:** Created by Derek Colison as a lightweight messaging system for Cloud Foundry.",
+                "**2010:** Created by Derek Collison as a lightweight messaging system for Cloud Foundry.",
                 "**2012:** Open-sourced under the Apache 2.0 license.",
                 "**2017:** Founded Synadia to drive enterprise support, and a long-term roadmap. Synadia also manages the nats.io ecosystem, including the client libraries and NATS Connect.",
                 "**2021:** Introduction of NATS JetStream for message persistence and streaming.",

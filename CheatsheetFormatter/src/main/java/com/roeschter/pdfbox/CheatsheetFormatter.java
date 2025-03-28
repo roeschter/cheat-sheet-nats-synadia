@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Date;
 
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.font.PDFont;
@@ -28,27 +29,20 @@ public class CheatsheetFormatter {
 	public CheatsheetFormatter( String _style, String _content )
 	{
 		String currentFile = null;
-		try {
-			currentFile = _content;
-			content = new Config( new JSONObject( Files.readString(Path.of(currentFile)) ) , null );
 
-			currentFile = content.get("style", _style);
-			JSONObject style = new JSONObject( Files.readString(Path.of(currentFile)) );
-			JSONObject override;
+		currentFile = _content;
+		content = new Config( currentFile );
 
-			if ( !content.isNull("styleoverride") )
-				override = content.getJSONObject("styleoverride");
-			else
-				override = new JSONObject();
+		currentFile = content.get("style", _style);
+		JSONObject override;
 
-			Config root = new Config( style, null );
-			cStyle = new Config( override, root);
+		if ( !content.isNull("styleoverride") )
+			override = content.getJSONObject("styleoverride");
+		else
+			override = new JSONObject();
 
-		} catch (Exception e) {
-			System.out.println( "Error Parsing: " + currentFile );
-			e.printStackTrace();
-			System.exit(1);
-		}
+		Config root = new Config( currentFile, null );
+		cStyle = new Config( override, root);
 
 		output = _content + ".pdf";
 	}
@@ -274,6 +268,8 @@ public class CheatsheetFormatter {
 			//Do we fit in the old lane?
 			block.setWidth(lanewidth);
 			block.layout();
+
+			info( "Lane space: " + laneHeightRemaining + " needed: "  + block.height );
 			if ( block.height > laneHeightRemaining ) {
 				currentLane = null;
 			}
@@ -316,17 +312,35 @@ public class CheatsheetFormatter {
 			headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
 			headerLogo.xBorder = 5;
 
+			//Header
 			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.regular.bold, ctx.header.regular.size, ctx.header.regular.color );
 			headerText.yOffset = ctx.headerYOffset;
 
 			header.add( headerLogo );
 			header.add( headerText );
-
 			header.layout();
 
 			ctx.yPos = ctx.rectangle.getHeight() - ctx.borderTop;
 			ctx.xPos = (ctx.rectangle.getWidth() - header.width)/2;
 			header.render(ctx);
+
+			//footer
+			TextBlock footer = new TextBlock();
+			String _footerText =  content.get( "pageFooter", "");
+			if (ctx.footerDate) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+				_footerText += " - " + sdf.format(new Date());
+			}
+			TextFormatted footerText = new TextFormatted( _footerText , ctx.footer.regular.regular, ctx.footer.regular.size, ctx.footer.regular.color );
+			footer.padding = ctx.footerPadding;
+			footer.add(footerText);
+			footer.layout();
+
+			//Align left bottom
+			ctx.yPos = footer.height;
+			ctx.xPos = 0;
+			footer.render(ctx);
+
 
 			//Render background
 			TextGraphics backgroundTL = new TextGraphics(ctx.backgroundTLLogo, ctx.document);

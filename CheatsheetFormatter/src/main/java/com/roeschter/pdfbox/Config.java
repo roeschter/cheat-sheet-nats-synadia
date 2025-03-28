@@ -2,6 +2,8 @@ package com.roeschter.pdfbox;
 
 import java.awt.Color;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,16 +13,63 @@ public class Config {
 	private JSONObject json;
 	private Config parent;
 
-	public Config( JSONObject _json, Config _parent ) {
+	public Config( String file, Config _parent ) {
 		parent = _parent;
-		json = _json;
+		json = loadJSON(file);;
+	}
+
+	public Config( String file ) {
+		this( file, null );
 	}
 
 	public Config( JSONObject _json ) {
 		json = _json;
 	}
 
+	public Config( JSONObject _json, Config _parent ) {
+		parent = _parent;
+		json = _json;
+	}
 
+
+
+	public JSONObject loadJSON(String file) {
+		JSONObject json = null;
+		String input = "";
+		try {
+			input = Files.readString(Path.of(file));
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+
+		try {
+			json = new JSONObject ( removeHashComments( input) );
+		} catch (Exception e) {
+			System.out.println( "Error Parsing: " + file );
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return json;
+	}
+
+	public static String removeHashComments(String input) {
+	    if (input == null || input.isEmpty()) {
+	        return input;
+	    }
+
+	    StringBuilder result = new StringBuilder();
+	    String[] lines = input.split("\n");
+
+	    for (String line : lines) {
+	        if (line.trim().startsWith("#")) {
+	        	result.append("\n");
+	        } else {
+	        	result.append(line).append("\n");
+	        }
+	    }
+
+	    return result.toString();
+	}
 
 
 	public String get( String key, String _default) {
@@ -148,7 +197,8 @@ public class Config {
 	}
 
 
-	public JSONArray getJSONArray( String key, JSONArray ret) {
+	public JSONArray getJSONArray( String key, JSONArray _default) {
+		JSONArray ret = _default;
 
 		if ( parent!=null)
 			ret = parent.getJSONArray( key, ret );
@@ -159,9 +209,5 @@ public class Config {
 		return ret;
 	}
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 
 }

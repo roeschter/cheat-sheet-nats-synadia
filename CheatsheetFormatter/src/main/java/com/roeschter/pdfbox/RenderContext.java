@@ -24,9 +24,8 @@ public class RenderContext {
 
 	FontContext title;
 	FontContext header;
+	FontContext footer;
 	FontContext body;
-	FontContext fixed;
-
 
 	float xPos = 0;
 	float yPos = 0;
@@ -63,6 +62,11 @@ public class RenderContext {
 	String headerLogo;
 	float headerHeight;
 	float headerLogoHeight;
+
+	float footerFontSize;
+	Color footerFontColor;
+	boolean footerDate;
+	Padding footerPadding;
 
 	float titleFontSize;
 	Color titleFontColor;
@@ -224,6 +228,11 @@ public class RenderContext {
 		headerLogoHeight = style.getFloat("headerLogoHeight",40);
 		headerLogo = style.get("headerLogo", null );
 
+		footerFontSize = style.getFloat("footerFontSize",30);
+		footerFontColor = style.getColor("footerFontColor",Color.black);
+		footerPadding= new Padding(style, "footerPadding");
+		footerDate = style.getBool("footerDate", false);
+
 		viewHeight = rectangle.getHeight() - borderTop - borderbottom - headerHeight;
 		viewWidth = rectangle.getWidth() - borderleft - borderright;
 
@@ -300,6 +309,7 @@ public class RenderContext {
 		fonts.put("courier", courier);
 
 		header = new FontContext( pickFont("header"), headerFontSize,  headerFontColor, courier,  headerFontSize, headerFontColor );
+		footer = new FontContext( pickFont("footer"), footerFontSize,  footerFontColor, courier,  footerFontSize, footerFontColor );
 		title = new FontContext( pickFont("title"), titleFontSize, titleFontColor, courier,  titleFontSize, titleFontColor );
 		body = new FontContext( pickFont("body"), bodyFontSize, bodyFontColor, courier,  bodyFixedFontSize, bodyFixedFontColor );
 	}
