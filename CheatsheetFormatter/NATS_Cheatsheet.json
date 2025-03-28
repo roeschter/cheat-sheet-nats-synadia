@@ -5,8 +5,8 @@
     
     #Override any properties from style sheet
     styleoverride: {
-        laneWidthRel: [ 1.1, 1.0, 1.0, 1.0 ],
-      
+        laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
+         borderbottom: 45,
     },
     
     #Page header and footer text

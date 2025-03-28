@@ -2,9 +2,9 @@
     
     style: NATS_style.json,
     styleoverride: {
-        laneWidthRel: [ 0.9, 0.9, 1.2, 1.0 ],
+        laneWidthRel: [ 0.9, 0.9, 1.1, 1.1 ],
         lanes: 4,
-        borderbottom: 50,
+        borderbottom: 45,
         titleFontSize: 11,
         bullets: false,
         bodyLineSpacingRel: 0.15,
@@ -95,7 +95,7 @@
                 "``**nats kv add <bucket>**``",
                 "Put and get a key",
                 "``**nats kv put <bucket> foo Hello**``",
-                "``**nats kv gut <bucket> foo Hello**``",
+                "``**nats kv get <bucket> foo**``",
                 "Watch for changes",
                 "``**nats kv watch <bucket> '>'**``",
             ]

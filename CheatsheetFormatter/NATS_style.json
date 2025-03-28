@@ -12,7 +12,7 @@
     borderleft: 35,
     borderright: 35,
     bordertop: 0,
-    borderbottom: 60,
+    borderbottom: 50,
     
     backgroundTLLogo: wave_top.png,
     backgroundBRLogo: wave_bottom.png,
