@@ -33,7 +33,9 @@
     #Footer
     footerFont: helvetica,   
     footerFontSize: 8,
+    footerLineSpacingRel: 0.2, 
     footerFontColor: [0,0,0], 
+    footerWidth: 260,
     footerDate: true,
     footerPadding: {
         "pad.top": 5,

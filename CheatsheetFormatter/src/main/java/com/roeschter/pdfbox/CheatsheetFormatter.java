@@ -331,7 +331,8 @@ public class CheatsheetFormatter {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
 				_footerText += " - " + sdf.format(new Date());
 			}
-			TextFormatted footerText = new TextFormatted( _footerText , ctx.footer.regular.regular, ctx.footer.regular.size, ctx.footer.regular.color );
+			//TextFormatted footerText = new TextFormatted( _footerText , ctx.footer.regular.regular, ctx.footer.regular.size, ctx.footer.regular.color );
+			TextParagraph footerText = new TextParagraph( _footerText, ctx.footer, ctx.footerWidth, ctx.footerLineSpacingRel, 0 );
 			footer.padding = ctx.footerPadding;
 			footer.add(footerText);
 			footer.layout();

@@ -63,6 +63,8 @@ public class RenderContext {
 	float headerHeight;
 	float headerLogoHeight;
 
+	float footerWidth;
+	float footerLineSpacingRel;
 	float footerFontSize;
 	Color footerFontColor;
 	boolean footerDate;
@@ -228,6 +230,8 @@ public class RenderContext {
 		headerLogoHeight = style.getFloat("headerLogoHeight",40);
 		headerLogo = style.get("headerLogo", null );
 
+		footerWidth = style.getFloat("footerWidth",150);
+		footerLineSpacingRel = style.getFloat("footerLineSpacingRel",0.2);
 		footerFontSize = style.getFloat("footerFontSize",30);
 		footerFontColor = style.getColor("footerFontColor",Color.black);
 		footerPadding= new Padding(style, "footerPadding");

@@ -10,11 +10,12 @@
         
     },
     "pageHeader": "CLI Cheatsheet",
-    "pageFooter": "https://github.com/roeschter/CheatsheetFormatter",
+    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
 
 # bench
 # auth
-
+# stream
+# kv
 
     "blocks": [
         {
@@ -24,14 +25,14 @@
                 "**Download:** https://github.com/nats-io/natscli",
                 "**One stop command line utility** to interact with and manage NATS.",
                 "**Independent from NATS-server version.** Uses only public Golang API.",          
-                "Please update regularely or compile the github main branch.",
+                "Please update regularly or compile the GitHub main branch.",
             ]    
         },
         {
            
             "title": "**Getting started**",
             "items": [
-                "In-built cheat sheet",
+                "Built-in cheat sheet",
                 "``**nats cheat**``",
                  "Always check help for additional options",
                 "``**nats server info --help**``",
@@ -107,9 +108,9 @@
             ]
         },
         {
-            "title": "**Jetstream Monitoring**",
+            "title": "**JetStream Monitoring**",
             "items": [
-                "Show jetstream and meta status (SYS)",
+                "Show JetStream and meta status (SYS)",
                 "``**nats server report jetstream**``",
                 "List all streams",
                 "``**nats stream report**``",
@@ -118,7 +119,7 @@
             ]
         },
         {
-            "title": "**Jetstream backup, restore and purge**",
+            "title": "**JetStream backup, restore and purge**",
             "items": [
                 "Backup a stream with consumer state",
                 "``**nats stream backup <stream> <dir>**``",

@@ -6,12 +6,12 @@
     #Override any properties from style sheet
     styleoverride: {
         laneWidthRel: [ 1.1, 1.0, 1.0, 1.0 ],
-        
+      
     },
     
     #Page header and footer text
     "pageHeader": "Cheatsheet",
-    "pageFooter": "https://github.com/roeschter/CheatsheetFormatter",
+    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
     
     #Insert images into lanes
     images: [
@@ -103,8 +103,8 @@
                 {
                 
                     "items": [                        
-                        "**Subject:** The channel to which the Message is published.",
-                        "**Payload:** The binary content of the Message.",
+                        "**Subject:** The channel to which the message is published.",
+                        "**Payload:** The binary content of the message.",
                         "**Headers:** Map with metadata.",
                         "**Reply-Subject:** Reply channel for RPC style communication"                    
                     ]
@@ -125,12 +125,12 @@
                 "Adds advanced capabilities like:",
                 {
                     "items": [
-                        "**Streaming:** Store and replay Messages.",
+                        "**Streaming:** Store and replay messages.",
                         "**Queues:** Manages message delivery to multiple consumers.",
                         "**Delivery Guarantees:** Supports at least once and exactly-once delivery.",
                         "**Flow Control:** Decouples message production and consumption.",
                         "**Key/Value Store:** Provides a simple distributed key/value storage system.",
-                        "**Per Message Acks:** Ensures message processing and redelivery."
+                        "**Per message Acks:** Ensures message processing and redelivery."
                     ]
                 }
             ]
@@ -178,7 +178,7 @@
                 "**2012:** Open-sourced under the Apache 2.0 license.",
                 "**2017:** Founded Synadia to drive enterprise support, and a long-term roadmap. Synadia also manages the nats.io ecosystem, including the client libraries and NATS Connect.",
                 "**2021:** Introduction of NATS JetStream for message persistence and streaming.",
-                "**2025 and Beyond:** Continued adoption in edge computing, IoT, and microservices. Architectures, with ongoing enhancements to Jetstream and clustering capabilities.",
+                "**2025 and Beyond:** Continued adoption in edge computing, IoT, and microservices. Architectures, with ongoing enhancements to JetStream and clustering capabilities.",
                 "**Open-Source Community** — NATS is developed openly under the **nats-io organization** on GitHub, with contributions from companies like **Siemens, VMware, and Cisco**, as well as independent developers worldwide.",
                 "**Widespread Deployment:** NATS is trusted by leading enterprises and platforms, including Mastercard, VMware, Cloud Foundry, Siemens, Schaeffler, Walmart, Alibaba and GE.",
             ]
