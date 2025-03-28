@@ -168,7 +168,7 @@
                 "**IoT and Edge Computing:** Low latency messaging for distributed Systems.",
                 "**Real-time Analytics:** Stream processing and event-driven architectures.",
                 "**Event Streaming:** Reliable message delivery with JetStream.",
-                "**Financial Services: High-Performance messaging for real-time trading systems."
+                "**Financial Services:** High-Performance messaging for real-time trading systems."
             ]
         },
         {
