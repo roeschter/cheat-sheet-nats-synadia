@@ -2,8 +2,9 @@
     
     style: NATS_style.json,
     styleoverride: {
-        laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
+        laneWidthRel: [ 0.9, 0.9, 1.2, 1.0 ],
         lanes: 4,
+        borderbottom: 50,
         titleFontSize: 11,
         bullets: false,
         bodyLineSpacingRel: 0.15,
@@ -12,10 +13,6 @@
     "pageHeader": "CLI Cheatsheet",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
 
-# bench
-# auth
-# stream
-# kv
 
     "blocks": [
         {
@@ -24,7 +21,7 @@
             "items": [
                 "**Download:** https://github.com/nats-io/natscli",
                 "**One stop command line utility** to interact with and manage NATS.",
-                "**Independent from NATS-server version.** Uses only public Golang API.",          
+                "**Independent from NATS server version.** Uses only public Golang API.",          
                 "Please update regularly or compile the GitHub main branch.",
             ]    
         },
@@ -38,7 +35,7 @@
                 "``**nats server info --help**``",
                 "Quick system status",
                 "``**nats server list**``",
-                "Show raw nats cli messages. No secret sauce.",
+                "Show raw nats cli messages. No secret sauce",
                 "``**nats server list --trace**``",
             ]    
         },
@@ -76,12 +73,42 @@
             ]
         },
         {
-            "title": "**Trace and debug message flow**",
+            "title": "**JetStream**",
             "items": [
-                "Trace message without delivering to clients.",
-                "``**nats trace foo Hello**``",
-                "Trace with delivery and timestamps.",
-                "``**nats trace --timestamp --deliver foo**``",
+                "List streams",
+                "``**nats stream list**``",
+                "Create stream interactively and with defaults",
+                "``**nats stream add <stream>**``",
+                "``**nats stream add <stream> --replicas 3 --defaults**``",
+                "Stream view content",
+                "``**nats stream view <stream>**``",
+                "Publish JetStream message with ack",
+                "``**nats pub --jetstream foo Hello**``",
+            ]
+        },
+        {
+            "title": "**Key-Value Store**",
+            "items": [
+                "List Key-Value buckets",
+                "``**nats kv list**``",
+                "Create a KV bucket",
+                "``**nats kv add <bucket>**``",
+                "Put and get a key",
+                "``**nats kv put <bucket> foo Hello**``",
+                "``**nats kv gut <bucket> foo Hello**``",
+                "Watch for changes",
+                "``**nats kv watch <bucket> '>'**``",
+            ]
+        },
+        {
+            "title": "**Distributed security**",
+            "items": [
+                "Create an operator",
+                "``**nats auth operator add my-system**``",
+                "Generate a sample config",
+                "``**nats server generate server.conf**``",
+                "Walkthrough with accounts and users",
+                "``**nats auth cheat**``",
             ]
         },
         {
@@ -119,20 +146,50 @@
             ]
         },
         {
-            "title": "**JetStream backup, restore and purge**",
+            "title": "**JetStream backup and purge**",
             "items": [
                 "Backup a stream with consumer state",
                 "``**nats stream backup <stream> <dir>**``",
+                "Restore stream from backup",
+                "``**nats stream restore <file>**``",
                 "Backup just messages",
                 "``**nats stream backup --no-consumers <stream> <dir>**``",
                 "Backup all streams in current account",
                 "``**nats account backup  <dir>**``",
-                "Restore stream from backup",
-                "``**nats stream restore <file>**``",
                 "Purge a stream",
                 "``**nats stream purge <stream>**``",
                 "Purge a subject in a stream",
                 "``**nats stream purge --subject foo <stream>**``",
+            ]
+        },
+        {
+            "title": "**Trace and debug message flow**",
+            "items": [
+                "Trace message without delivering to clients",
+                "``**nats trace foo Hello**``",
+                "Trace with delivery and timestamps",
+                "``**nats trace --timestamp --deliver foo**``",
+            ]
+        },
+        {
+            "title": "**Benchmarking**",
+            "items": [
+                "Subscribe core NATS for 5 clients",
+                "``**nats bench sub foo --clients 5 --msgs 10000**``",      
+                "Publish core NATS with 10 publishers",
+                "``**nats bench pub foo --clients 10 --msgs 10000 --size 512**``",
+                
+                "Request-reply server for core nats",
+                "``**nats bench service serve --clients 5 testservice**``",
+                "Benchmark core nats subscribe for 5 clients",
+                "``**nats bench service request --clients 5 testservice --msgs 10000**``",
+                
+                "JetStream async acknowledged publishing of batches of 100",
+                "``**nats bench js pub foo --create --batch 100**``",
+                "JetStream sync publishing using 10 clients - purge stream",
+                "``**nats bench js pub foo --purge --batch=1 --clients=10 --msgs 10000**``",
+                "JetStream delivery from a stream through a durable consumer with 4 instances",
+                "``**nats bench js consume --clients 4 --msgs 10000**``",
             ]
         },
         {

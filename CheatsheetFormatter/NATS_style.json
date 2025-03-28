@@ -12,7 +12,7 @@
     borderleft: 35,
     borderright: 35,
     bordertop: 0,
-    borderbottom: 40,
+    borderbottom: 60,
     
     backgroundTLLogo: wave_top.png,
     backgroundBRLogo: wave_bottom.png,
@@ -39,8 +39,8 @@
     footerDate: true,
     footerPadding: {
         "pad.top": 5,
-        "pad.bottom": 5,
-        "pad.left": 6,
+        "pad.bottom": 15,
+        "pad.left": 35,
         "pad.right": 6,
     },
     

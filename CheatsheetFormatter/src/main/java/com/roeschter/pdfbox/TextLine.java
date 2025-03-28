@@ -152,7 +152,7 @@ public class TextLine extends Text {
 	}
 
 
-	char[] delim = {' ', ',', '*', '\\', '/', '-'};
+	char[] delim = {' ', ',', '*', '\\', '/' };
 	public TextLine takeSubTextline( float width )  {
 		layout();
 		TextLine subLine = new TextLine();
