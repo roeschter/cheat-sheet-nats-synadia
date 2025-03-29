@@ -9,6 +9,8 @@
         bullets: false,
         bodyLineSpacingRel: 0.15,
         
+       
+        
     },
     "pageHeader": "CLI Cheatsheet",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",

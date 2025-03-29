@@ -11,22 +11,22 @@
     
     borderleft: 35,
     borderright: 35,
-    bordertop: 0,
+    bordertop: 10,
     borderbottom: 50,
     
     backgroundTLLogo: wave_top.png,
     backgroundBRLogo: wave_bottom.png,
     backgroundTLWidth: 250,
-    backgroundTLHeight: 60,
+    backgroundTLHeight: 70,
     backgroundBRWidth: 400,
-    backgroundBRHeight: 60,
+    backgroundBRHeight: 70,
     
     #Page header properties
     headerFont: helvetica,   
     headerFontSize: 24,
     headerFontColor: [0,0,0], 
     headerYOffset: -6,
-    headerHeight: 70,
+    headerHeight: 60,
     headerLogoHeight: 40, 
     headerLogo: NATS.png ,
         

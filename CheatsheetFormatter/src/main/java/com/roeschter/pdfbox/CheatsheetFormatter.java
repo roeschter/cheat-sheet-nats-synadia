@@ -457,8 +457,8 @@ public class CheatsheetFormatter {
 			ProcessBuilder processBuilder = new ProcessBuilder(
 					"C:\\Program Files\\IrfanView\\i_view64.exe",
 					csf.output,
-					"/fs",
-					"/one"
+					"/fs"
+					//"/one"
 		        );
 		        Process process = processBuilder.start();
 		}
