@@ -1,36 +1,36 @@
 {
     
-    #Style sheet to use
+
     style: Synadia_style.json,
     
-    #Override any properties from style sheet
+
     styleoverride: {
         laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
         borderbottom: 45,
         
        
     },
-    #include directive must be upper case
-    #INCLUDE workinprogess.json
-    ##INCLUDE but it can be commented
+
+"warning": "Work in progress",
+
     
-    #Page header and footer text
+
     "pageHeader": "NATS Value Proposition",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
     
-    #Insert images into lanes
+
     images: [
         {
-            #Optional image title
+
             "title": "", 
             "image": "synadia_ai_workflow_at_the_edge_2.png",
-            #First lane to use
+
             "startlane": 1, 
-            #The image may span more than one lane
+
             "lanes": 2,
-            #Place at top or bottom
+
             "position": "bottom",
-            #Padding
+
             "pad.top": 0,
             "pad.bottom": 15,
             "pad.left": 0,
@@ -39,42 +39,42 @@
     ],
     "blocks": [
         {
-            #Some properties operate at block level and can be nested
-            #bullets
-            #exclude
+
+
+
             
-            #exclude content - -1 removes the whole block
+
             "exclude": [-1],
             
-            #exclude content - or a list of items to exclude - starting with 0
-            #"exclude": [0,2,3],
+
+
             
-            #Items should have bullets
+
             bullets: true,
             
             "title": "**Formatting examples**",
-            #For Formatting we use a markdown subset
+
             "items": [
                 "*Cursive* \\*Cursive\\* ",  
                 "**Bold** \\*\\*Bold\\*\\*",  
                 "***Cursive Bold*** \\*\\*\\*Cursive Bold\\*\\*\\*", 
-                #We can nest blocks with indentation
+
                 {
-                    #We can override bullets at any level
+
                     bullets: false,
-                    #Exclude first item
+
                     "exclude": [0],
                     "items": [
                         "Hidden",
                         "``Use Fixed width e.g. Courier font``  \\`\\`Fixed width\\`\\`",
-                        #Only markdown formatting characters (* `)need extra escaping 
+
                         "Escape characters like \\* \\` \\",             
                     ]
                 }
             ]    
         },
         {
-            #exclude content - List of items to remove
+
             "exclude": [4],
             "title": "**Server (NATS Server or NATS Core)**",
             "items": [

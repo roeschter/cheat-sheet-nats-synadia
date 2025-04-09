@@ -1,0 +1,93 @@
+{
+
+    cSynadiaBlue: [ 79, 70, 229 ],
+    cSynadiaViolet: [182,94, 255 ],
+   
+    
+    orientation: landscape,
+
+    
+    borderleft: 35,
+    borderright: 35,
+    bordertop: 10,
+    borderbottom: 50,
+    
+    backgroundTLLogo: synadia_wave_top.png,
+    backgroundTLWidth: 250,
+    backgroundTLHeight: 70,
+    
+    backgroundTRLogo: synadia_white2.png,
+    backgroundTRWidth: 150,
+    backgroundTRHeight: 42,
+    
+    backgroundBRLogo: synadia_wave_bottom.png,
+    backgroundBRWidth: 400,
+    backgroundBRHeight: 70,
+    
+
+    headerFont: helvetica,   
+    headerFontSize: 30,
+    headerFontColor: [0,0,0], 
+    headerYOffset: 5,
+    headerHeight: 60,
+    headerLogoHeight: 40, 
+    
+    headerLogo: "",
+        
+
+    footerFont: helvetica,   
+    footerFontSize: 8,
+    footerLineSpacingRel: 0.2, 
+    footerFontColor: [0,0,0], 
+    footerWidth: 260,
+    footerDate: true,
+    footerPadding: {
+        "pad.top": 5,
+        "pad.bottom": 15,
+        "pad.left": 35,
+        "pad.right": 6,
+    },
+    
+
+    laneborder: 15,
+    lanes: 4,
+    
+
+
+    laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
+
+
+
+    titleFont: helvetica,    
+    titleFontSize: 13,
+    titleFontColor: [0,0,0], 
+    titleLineSpacingRel: 0.2,
+    titleParagraphSpacingRel: 0.3,
+    
+
+    underLineLogo: synadia_underline.png, 
+    underlineHeightRel: 0.2, 
+    underlineBorderRel: 0.1,
+    
+   
+
+    bullets: true,
+
+    bullet: "\u2022",
+    bulletSizeRel: 1.3,
+    bulletSpacingRel: 0.3,
+    bulletOffetRel: -0.2,
+    
+
+    bodyFont: Times,
+    bodyFontColor: [0,0,0],    
+    bodyFontSize: 9,
+    bodyLineSpacingRel: 0.1,
+    bodyParagraphSpacingRel: 0.1,
+    
+
+    bodyFixedFontColor: [ 55, 92, 147 ],  
+    bodyFixedFontSize: 9,
+    
+    blockSpacing: 4,
+}

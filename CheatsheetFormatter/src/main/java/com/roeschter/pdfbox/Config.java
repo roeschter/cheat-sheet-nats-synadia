@@ -33,26 +33,38 @@ public class Config {
 
 
 
-	public JSONObject loadJSON(String file) {
-		JSONObject json = null;
-		String input = "";
-		try {
-			input = Files.readString(Path.of(file));
-		} catch ( Exception e ) {
-			e.printStackTrace();
-		}
 
+	public JSONObject loadJSON(String file) {
+		String input = loadFile( file);
+		String finalFile = file.replace(".json", "_final.json");
 		try {
-			json = new JSONObject ( removeHashComments( input) );
+
+			Files.writeString(Path.of( finalFile), input);
+			json = new JSONObject ( input );
 		} catch (Exception e) {
-			System.out.println( "Error Parsing: " + file );
+			System.out.println( "Error Parsing: " + finalFile );
 			e.printStackTrace();
 			System.exit(1);
 		}
 		return json;
 	}
 
-	public static String removeHashComments(String input) {
+	public String loadFile(String file) {
+		JSONObject json = null;
+		String input = null;
+		try {
+			input = Files.readString(Path.of(file));
+		} catch ( Exception e ) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+
+		input = preProcess( input);
+		return input;
+	}
+
+
+	public String preProcess(String input) {
 	    if (input == null || input.isEmpty()) {
 	        return input;
 	    }
@@ -60,8 +72,21 @@ public class Config {
 	    StringBuilder result = new StringBuilder();
 	    String[] lines = input.split("\n");
 
+	    //Check for comments and instructions
+	    //We only accept full lines starting with
 	    for (String line : lines) {
-	        if (line.trim().startsWith("#")) {
+	    	String l = line.trim();
+
+	    	//Check for includes
+	        if ( l.startsWith("#INCLUDE")) {
+	        	String file = l.substring(9);
+	        	CheatsheetFormatter.info(l);
+	        	String include = loadFile(file);
+	        	String[] _lines = include.split("\n");
+	        	for (String _line : _lines) {
+	        		result.append(_line).append("\n");
+	        	}
+	        } else if ( l.startsWith("#")) {
 	        	result.append("\n");
 	        } else {
 	        	result.append(line).append("\n");
