@@ -9,7 +9,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 public class TextGraphics extends Text {
 
-	PDImageXObject image;
+	PDImageXObject image = null;
 
 	float gWidth;
 	float gHeight;
@@ -21,6 +21,10 @@ public class TextGraphics extends Text {
 
 	public TextGraphics( String imagePath, PDDocument document) {
 		name = imagePath;
+		if ( imagePath == null || imagePath.length()==0) {
+			return;
+		}
+
 		try {
 			image = PDImageXObject.createFromFile(imagePath, document);
 		} catch (IOException e) {
@@ -65,6 +69,9 @@ public class TextGraphics extends Text {
 
 	@Override
 	public void render( RenderContext ctx ) throws Exception {
+		if (image == null)
+			return;
+
 		PDPageContentStream contentStream = ctx.contentStream;
 
 		float x = ctx.xPos + xBorder;

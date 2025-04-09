@@ -1,32 +1,38 @@
 {
     #Example colors
-    cNATSLightBlue: [ 29, 170, 225 ],
-    cNATSDarkGreen: [52, 165, 116 ],
-    cNATSDarkBlue: [ 55, 92, 147 ],
-    cNATSLightGreen: [ 141, 198, 63 ],
+    cSynadiaBlue: [ 79, 70, 229 ],
+    cSynadiaViolet: [182,94, 255 ],
+   
     
     orientation: landscape,
+    #background: [100, 120 ,240],
     
     borderleft: 35,
     borderright: 35,
     bordertop: 10,
     borderbottom: 50,
     
-    backgroundTLLogo: wave_top.png,
-    backgroundBRLogo: wave_bottom.png,
+    backgroundTLLogo: synadia_wave_top.png,
     backgroundTLWidth: 250,
     backgroundTLHeight: 70,
+    
+    backgroundTRLogo: synadia_white2.png,
+    backgroundTRWidth: 150,
+    backgroundTRHeight: 42,
+    
+    backgroundBRLogo: synadia_wave_bottom.png,
     backgroundBRWidth: 400,
     backgroundBRHeight: 70,
     
     #Page header properties
     headerFont: helvetica,   
-    headerFontSize: 24,
+    headerFontSize: 30,
     headerFontColor: [0,0,0], 
-    headerYOffset: -6,
+    headerYOffset: 5,
     headerHeight: 60,
     headerLogoHeight: 40, 
-    headerLogo: NATS.png ,
+    
+    headerLogo: "",
         
     #Footer
     footerFont: helvetica,   
@@ -59,7 +65,7 @@
     titleParagraphSpacingRel: 0.3,
     
     #Logo to be used under the block title
-    underLineLogo: underline.png, 
+    underLineLogo: synadia_underline.png, 
     underlineHeightRel: 0.2, 
     underlineBorderRel: 0.1,
     

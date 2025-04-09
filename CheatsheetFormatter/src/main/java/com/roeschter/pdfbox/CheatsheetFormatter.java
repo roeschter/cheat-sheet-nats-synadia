@@ -131,7 +131,7 @@ public class CheatsheetFormatter {
 			 block.add( new TextParagraph( title, ctx.title, ctx.lanewidth, ctx.title.regular.size*ctx.titleLineSpacingRel, ctx.title.regular.size*ctx.titleParagraphSpacingRel  ) );
 
 			 //Add underline graphics
-			 TextGraphics underline = new TextGraphics( "underline.png", ctx.document );
+			 TextGraphics underline = new TextGraphics( ctx.underLineLogo, ctx.document );
 			 underline.yBorder =  ctx.title.regular.size * ctx.underlineBorderRel;
 			 underline.gWidth = ctx.lanewidth;
 			 underline.gHeight = ctx.title.regular.size * ctx.underlineHeightRel;
@@ -225,9 +225,12 @@ public class CheatsheetFormatter {
 
 		//Define render context from style
 		ctx = new RenderContext( cStyle );
+
 		PDPage page = ctx.addPAge();
 		ctx.setupStyle();
 		ctx.makeFonts();
+
+
 
 		//Test code
 		/*
@@ -307,16 +310,17 @@ public class CheatsheetFormatter {
 			//Render header
 			TextBlock header = new TextBlock(false);
 			header.alignCenter = true;
-			TextGraphics headerLogo = new TextGraphics(ctx.headerLogo, ctx.document);
-			headerLogo.gHeight = ctx.headerLogoHeight;
-			headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
-			headerLogo.xBorder = 5;
+			if ( ctx.headerLogo.length() > 0) {
+				TextGraphics headerLogo = new TextGraphics(ctx.headerLogo, ctx.document);
+				headerLogo.gHeight = ctx.headerLogoHeight;
+				headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
+				headerLogo.xBorder = 5;
+				header.add( headerLogo );
+			}
 
 			//Header
 			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.regular.bold, ctx.header.regular.size, ctx.header.regular.color );
 			headerText.yOffset = ctx.headerYOffset;
-
-			header.add( headerLogo );
 			header.add( headerText );
 			header.layout();
 
@@ -344,19 +348,30 @@ public class CheatsheetFormatter {
 
 
 			//Render background
+
 			TextGraphics backgroundTL = new TextGraphics(ctx.backgroundTLLogo, ctx.document);
-			TextGraphics backgroundBR = new TextGraphics(ctx.backgroundBRLogo, ctx.document);
 			backgroundTL.gWidth = ctx.backgroundTLWidth;
 			backgroundTL.gHeight = ctx.backgroundTLHeight;
+
+			TextGraphics backgroundTR = new TextGraphics(ctx.backgroundTRLogo, ctx.document);
+			backgroundTR.gWidth = ctx.backgroundTRWidth;
+			backgroundTR.gHeight = ctx.backgroundTRHeight;
+
+			TextGraphics backgroundBR = new TextGraphics(ctx.backgroundBRLogo, ctx.document);
 			backgroundBR.gWidth = ctx.backgroundBRWidth;
 			backgroundBR.gHeight = ctx.backgroundBRHeight;
 
 			backgroundTL.layout();
+			backgroundTR.layout();
 			backgroundBR.layout();
 
 			ctx.xPos = 0;
 			ctx.yPos = ctx.rectangle.getHeight() ;
 			backgroundTL.render(ctx);
+
+			ctx.xPos = ctx.rectangle.getWidth()-backgroundTR.width;
+			ctx.yPos = ctx.rectangle.getHeight() ;
+			backgroundTR.render(ctx);
 
 			ctx.xPos = ctx.rectangle.getWidth()-backgroundBR.width;
 			ctx.yPos = backgroundBR.height;

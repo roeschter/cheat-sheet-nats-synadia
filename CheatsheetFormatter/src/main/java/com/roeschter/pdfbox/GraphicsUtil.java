@@ -129,13 +129,25 @@ public class GraphicsUtil {
 
 
 	public static void main(String[] args) {
+
+		//Nats colorss
 		Color c1 = new Color(29, 170, 225);
 		Color c2 = new Color(52, 165, 116);
 		Color c3 = new Color(55, 92, 147);
 		Color c4 = new Color(141, 198, 63);
+		//Synadia Colors
+		Color c5 = new Color(182,94, 255);
+		Color c6 = new Color(79, 70, 229);
+
+
 		Color[] colors = new Color[] { c1, c2, Color.WHITE, Color.WHITE, Color.WHITE}; // ,Color.WHITE};
 		RenderedImage image = makeColorBand( 512, 16, colors);
 		savePNG( image, "underline.png"  );
+
+
+		colors = new Color[] { c5, c6, Color.WHITE, Color.WHITE, Color.WHITE}; // ,Color.WHITE};
+		image = makeColorBand( 512, 16, colors);
+		savePNG( image, "synadia_underline.png"  );
 
 
 		colors = new Color[] { c2, c1}; // ,Color.WHITE};
@@ -145,6 +157,16 @@ public class GraphicsUtil {
 		colors = new Color[] { c1, c2 }; // ,Color.WHITE};
 		image = makeColorBandWave( 1024, 256, (float)0.2, (float)0.5, false, colors);
 		savePNG( image, "wave_bottom.png"  );
+
+
+		colors = new Color[] { c5, c5, c6, Color.black,  Color.black};
+		image = makeColorBandWave( 1024, 256, (float)0.2, (float)0.5, true, colors);
+		savePNG( image, "synadia_wave_top.png"  );
+
+		colors = new Color[] {  Color.black,  Color.black, c6, c5, c5};
+		image = makeColorBandWave( 1024, 256, (float)0.2, (float)0.5, false, colors);
+		savePNG( image, "synadia_wave_bottom.png"  );
+
 	}
 
 }

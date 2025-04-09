@@ -27,6 +27,8 @@ public class RenderContext {
 	FontContext footer;
 	FontContext body;
 
+	//Color background;
+
 	float xPos = 0;
 	float yPos = 0;
 
@@ -36,10 +38,17 @@ public class RenderContext {
 	float borderleft;
 	float borderright;
 
+
+
 	String backgroundTLLogo;
-	String backgroundBRLogo;
 	float backgroundTLWidth;
 	float backgroundTLHeight;
+
+	String backgroundTRLogo;
+	float backgroundTRWidth;
+	float backgroundTRHeight;
+
+	String backgroundBRLogo;
 	float backgroundBRWidth;
 	float backgroundBRHeight;
 
@@ -133,6 +142,15 @@ public class RenderContext {
 		page = new PDPage( rectangle);
 		document.addPage(page);
 		contentStream = new PDPageContentStream(document, page);
+
+		Color background = style.getColor("background", null );
+		if ( background != null ) {
+			contentStream.setNonStrokingColor(background); // RGB: Orange
+	        // Draw a rectangle filling the whole page
+	        contentStream.addRect(0, 0, rectangle.getWidth(), rectangle.getHeight());
+	        contentStream.fill();
+		}
+
 		return page;
 	}
 
@@ -210,25 +228,32 @@ public class RenderContext {
 
 	public void setupStyle( ) throws IOException {
 
+
+
+
 		borderTop = style.getFloat("bordertop",0.0);
 		borderbottom = style.getFloat("borderbottom",0.0);
 		borderleft = style.getFloat("borderleft",0.0);
 		borderright = style.getFloat("borderright",0.0);
 
 		backgroundTLLogo = style.get( "backgroundTLLogo", null );
-		backgroundBRLogo = style.get( "backgroundBRLogo", null );
 		backgroundTLWidth =  style.getFloat("backgroundTLWidth", 150.0);
 		backgroundTLHeight = style.getFloat("backgroundTLHeight", 40.0);
+
+		backgroundTRLogo = style.get( "backgroundTRLogo", null );
+		backgroundTRWidth =  style.getFloat("backgroundTRWidth", 150.0);
+		backgroundTRHeight = style.getFloat("backgroundTRHeight", 40.0);
+
+		backgroundBRLogo = style.get( "backgroundBRLogo", null );
 		backgroundBRWidth =  style.getFloat("backgroundBRWidth", 150.0);
 		backgroundBRHeight = style.getFloat("backgroundBRHeight", 40.0);
-
 
 		headerFontSize = style.getFloat("headerFontSize",30);
 		headerFontColor = style.getColor("headerFontColor",Color.black);
 		headerYOffset = style.getFloat("headerYOffset",0);
 		headerHeight = style.getFloat("headerHeight",40);
 		headerLogoHeight = style.getFloat("headerLogoHeight",40);
-		headerLogo = style.get("headerLogo", null );
+		headerLogo = style.get("headerLogo", "" );
 
 		footerWidth = style.getFloat("footerWidth",150);
 		footerLineSpacingRel = style.getFloat("footerLineSpacingRel",0.2);
