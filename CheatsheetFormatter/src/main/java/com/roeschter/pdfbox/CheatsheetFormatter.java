@@ -1,5 +1,6 @@
 package com.roeschter.pdfbox;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -230,15 +231,6 @@ public class CheatsheetFormatter {
 		ctx.setupStyle();
 		ctx.makeFonts();
 
-
-
-		//Test code
-		/*
-		ctx.setLaneReservedTop(0, 50);
-		ctx.setLaneReservedTop(2, 80);
-		ctx.setLaneReservedBottom(1, 150);
-		 */
-
 		//Iterate over images
         JSONArray images = content.getJSONArray("images", new JSONArray());
         TextBlock imageBlocks = new TextBlock();
@@ -281,7 +273,7 @@ public class CheatsheetFormatter {
 				currentLane = new TextBlock();
 				currentLane.spacing = ctx.blockSpacing;
 
-				lanewidth = ctx.getLaneWidthForLane( lanes.size());
+				lanewidth = ctx.getLaneWidthForLane(laneCount);
 
 				lanes.add(currentLane);
 				laneHeightRemaining = ctx.getLaneHeight(laneCount);
@@ -401,6 +393,24 @@ public class CheatsheetFormatter {
 				laneCount++;
 			}
 
+			//Render warning if present
+			String warning = content.get( "warning", null);
+			if ( warning != null ) {
+				float fontSize = ctx.header.regular.size;
+				TextFormatted warningText = new TextFormatted(  warning, ctx.header.regular.bold, fontSize, Color.gray );
+				warningText.setAlpha((float) 0.5);
+				warningText.setRotation(-30);
+				warningText.layout();
+				float w = ctx.rectangle.getWidth();
+				warningText.fontSize = (float) (fontSize / warningText.width * w * 0.8);
+				warningText.layout();
+				ctx.xPos = (float) (ctx.rectangle.getWidth()*0.1);
+				ctx.yPos = (float) (ctx.rectangle.getHeight()*0.9);
+
+				warningText.render(ctx);;
+			}
+
+
 			ctx.contentStream.close();
 			page = null;
 		}
@@ -446,6 +456,10 @@ public class CheatsheetFormatter {
 			{
 				i++;
 				view = true;
+			} else if (!arg[i].startsWith("-") )
+			{
+				_content = arg[i];
+				i++;
 			} else if (arg[i].equals("--")) { //Terminate parameter processing
 				i = arg.length;
 			}  else {
@@ -456,8 +470,7 @@ public class CheatsheetFormatter {
 
 		if ( _content == null) {
 			System.out.println("Options: ");
-			System.out.println("-style  <json style template>");
-			System.out.println("-content <json content template>");
+			System.out.println("<json content template>");
 			System.exit(1);
 		}
 
@@ -468,14 +481,28 @@ public class CheatsheetFormatter {
 
 		csf.format();
 
+		String pdfViewerCommand = System.getenv("PDF_VIEWER");
+
+		if ( pdfViewerCommand != null )
+			view = true;
+		else
+			view = false;
+
 		if ( view ) {
+			String finalCommand = pdfViewerCommand.replace("%f", csf.output);
+			ProcessBuilder processBuilder = new ProcessBuilder(
+					finalCommand.split(" ")
+		        );
+
+			/*
 			ProcessBuilder processBuilder = new ProcessBuilder(
 					"C:\\Program Files\\IrfanView\\i_view64.exe",
 					csf.output,
 					"/fs"
 					//"/one"
 		        );
-		        Process process = processBuilder.start();
+		        */
+		    Process process = processBuilder.start();
 		}
 
 

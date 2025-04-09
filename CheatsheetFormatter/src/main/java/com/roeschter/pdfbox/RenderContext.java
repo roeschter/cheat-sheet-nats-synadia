@@ -27,7 +27,6 @@ public class RenderContext {
 	FontContext footer;
 	FontContext body;
 
-	//Color background;
 
 	float xPos = 0;
 	float yPos = 0;

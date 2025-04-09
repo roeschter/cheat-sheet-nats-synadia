@@ -11,8 +11,10 @@
        
     },
     
+    "warning": "Work in progress",
+    
     #Page header and footer text
-    "pageHeader": "Value Proposition",
+    "pageHeader": "NATS Value Proposition",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
     
     #Insert images into lanes

@@ -12,7 +12,8 @@
        
         
     },
-    "pageHeader": "CLI Cheatsheet-Ext",
+    "warning": "Work in progress",
+    "pageHeader": "CLI Extended",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
 
 
@@ -31,7 +32,7 @@
                         "kick",
                         
                     ]    
-                }
+                },
                 "nats auth",
                 "JEtstream health",
                 "Individual stream health",
