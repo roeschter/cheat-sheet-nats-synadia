@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Set PDF Viewer for auto open result PDF
+# Using %f as a placeholder for the file path
+PDF_VIEWER="open %f"
+
+# Get the directory where the script is located
+BATCH_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Call Java with the jar file and pass the first argument
+java -jar "$BATCH_DIR/CheatsheetFormatter-0.0.1-SNAPSHOT-jar-with-dependencies.jar" "$1"

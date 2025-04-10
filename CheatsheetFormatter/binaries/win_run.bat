@@ -1,6 +1,8 @@
 
 REM requires Java 17 or later
-set JAVA=D:\Java\zulu17_64
+if not defined JAVA (
+    set JAVA=D:\Java\zulu17_64
+)
 
 REM Set PDF Viewer for auto open result PDF
 set PDF_VIEWER=C:\Program Files\IrfanView\i_view64.exe "%%f"  /fs
