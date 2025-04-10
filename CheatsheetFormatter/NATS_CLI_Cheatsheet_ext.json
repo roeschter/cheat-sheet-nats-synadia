@@ -1,0 +1,49 @@
+{
+    
+    style: NATS_style.json,
+    styleoverride: {
+        laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
+        lanes: 4,
+        borderbottom: 45,
+        titleFontSize: 11,
+        bullets: false,
+        bodyLineSpacingRel: 0.15,
+        
+       
+        
+    },
+    "warning": "Work in progress",
+    "pageHeader": "CLI Extended",
+    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
+
+
+    "blocks": [
+        { 
+            "title": "**TODO**",
+            "items": [
+                "nats server request variables - server config",
+                "Reload config",
+                "Authenticating with nats cli password, nkey, creds",
+                "Explain nats server report in more detail, including new watch option",
+                
+                "Explain nats server request in more detail",
+                { 
+                    "items": [
+                        "- Subscriptions",
+                        "- kick",
+                        "- ... ", 
+                        
+                    ]    
+                },
+                "nats auth",
+                "JEtstream health",
+                "Individual stream health",
+                "Leaderhsip change",
+                "Removing a node from a cluster - find meta group members?",
+                "Scaling a stream down and up",
+                "Catching a stream create with --trace and creating a stream with --config",
+                "TLS testing",
+            ]    
+        },
+    ]
+}

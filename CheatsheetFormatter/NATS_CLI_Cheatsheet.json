@@ -113,15 +113,7 @@
                 "``**nats auth cheat**``",
             ]
         },
-        {
-            "title": "**Measure roundtrip and latency**",
-            "items": [
-                "Roundtrip time client to server",
-                "``**nats --server srv1:4222 rtt**``",
-                "Measure latency between clients connected to distinct servers in the mesh",
-                "``**nats latency --server srv1:4222 --server-b srv2:4222**``",
-            ]
-        },
+        
         {
             "title": "**Server Health and Monitoring**",
             "items": [
@@ -140,7 +132,7 @@
             "title": "**JetStream Monitoring**",
             "items": [
                 "Show JetStream and meta status (SYS)",
-                "``**nats server report jetstream**``",
+                "``**nats server report jetstream --watch=1**``",
                 "List all streams",
                 "``**nats stream report**``",
                 "Stream details",
@@ -174,6 +166,15 @@
             ]
         },
         {
+            "title": "**Measure roundtrip and latency**",
+            "items": [
+                "Roundtrip single client to server",
+                "``**nats --server srv1:4222 rtt**``",
+                "Measure latency between clients connected to different servers",
+                "``**nats latency --server srv1:4222 --server-b srv2:4222**``",
+            ]
+        },
+        {
             "title": "**Benchmarking**",
             "items": [
                 "Subscribe core NATS for 5 clients",
@@ -200,7 +201,7 @@
                 "Watch all servers (SYS)",
                 "``**nats server watch servers**``",
                 "Watch a single server with statistics (SYS)",
-                "``**nats server top <server>**``",
+                "``**nats top <server-name>**``",
             ]
         },
     ]

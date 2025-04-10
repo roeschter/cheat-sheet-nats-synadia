@@ -1,6 +1,7 @@
 package com.roeschter.pdfbox;
 
 import java.awt.Color;
+import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,13 +14,16 @@ public class Config {
 	private JSONObject json;
 	private Config parent;
 
-	public Config( String file, Config _parent ) {
+	String rootDir;
+
+	public Config( String rootDir, String file, Config _parent ) {
 		parent = _parent;
+		this.rootDir = rootDir;
 		json = loadJSON(file);;
 	}
 
-	public Config( String file ) {
-		this( file, null );
+	public Config(  String rootDir, String file ) {
+		this( rootDir, file, null );
 	}
 
 	public Config( JSONObject _json ) {
@@ -30,9 +34,6 @@ public class Config {
 		parent = _parent;
 		json = _json;
 	}
-
-
-
 
 	public JSONObject loadJSON(String file) {
 		String input = loadFile( file);
@@ -50,7 +51,10 @@ public class Config {
 	}
 
 	public String loadFile(String file) {
-		JSONObject json = null;
+		if (rootDir != null)
+		{
+			file = rootDir + File.separatorChar + file;
+		}
 		String input = null;
 		try {
 			input = Files.readString(Path.of(file));

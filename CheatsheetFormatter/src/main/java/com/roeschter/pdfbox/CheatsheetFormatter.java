@@ -26,26 +26,36 @@ public class CheatsheetFormatter {
 	String output;
 
 	RenderContext ctx;
+	String rootDir = ".";
 
 	public CheatsheetFormatter( String _style, String _content )
 	{
-		String currentFile = null;
+		String contentFile = null;
+		String styleFile = null;
 
-		currentFile = _content;
-		content = new Config( currentFile );
 
-		currentFile = content.get("style", _style);
+		contentFile = _content;
+		rootDir = new File(contentFile).getAbsoluteFile().getParent();
+		contentFile = new File(contentFile).getName();
+
+		content = new Config( rootDir, contentFile );
+
+		File f = new File( "text.html");
+		System.out.println(f.getAbsolutePath());
+
+		styleFile = content.get("style", _style);
 		JSONObject override;
 
+		//Is there a content override section?
 		if ( !content.isNull("styleoverride") )
 			override = content.getJSONObject("styleoverride");
 		else
 			override = new JSONObject();
 
-		Config root = new Config( currentFile, null );
+		Config root = new Config( rootDir, styleFile );
 		cStyle = new Config( override, root);
 
-		output = _content + ".pdf";
+		output = rootDir + File.separatorChar + contentFile + ".pdf";
 	}
 
 
@@ -477,7 +487,9 @@ public class CheatsheetFormatter {
 
 		CheatsheetFormatter csf = new CheatsheetFormatter(_style, _content);
 		if ( output != null)
+		{
 			csf.output = output;
+		}
 
 		csf.format();
 
@@ -489,19 +501,14 @@ public class CheatsheetFormatter {
 			view = false;
 
 		if ( view ) {
+			info("PDF_VIEWER: " + pdfViewerCommand );
 			String finalCommand = pdfViewerCommand.replace("%f", csf.output);
+			info( finalCommand );
 			ProcessBuilder processBuilder = new ProcessBuilder(
 					finalCommand.split(" ")
 		        );
 
-			/*
-			ProcessBuilder processBuilder = new ProcessBuilder(
-					"C:\\Program Files\\IrfanView\\i_view64.exe",
-					csf.output,
-					"/fs"
-					//"/one"
-		        );
-		        */
+
 		    Process process = processBuilder.start();
 		}
 
