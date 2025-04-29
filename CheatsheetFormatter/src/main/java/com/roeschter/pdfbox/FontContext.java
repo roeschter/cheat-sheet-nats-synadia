@@ -5,14 +5,14 @@ import java.awt.Color;
 
 public class FontContext {
 
-	Font regular;
+	Font prop;
 	Font fixed;
 
 	FontContext() {
 	}
 
-	FontContext( Font _regular, float sizeRegular, Color cRegular, Font _fixed, float sizeFixed, Color cFixed) {
-		regular = new Font( _regular, sizeRegular, cRegular);
+	FontContext( Font _proportional, float sizeProportional, Color cProportional, Font _fixed, float sizeFixed, Color cFixed) {
+		prop = new Font( _proportional, sizeProportional, cProportional);
 		fixed = new Font( _fixed, sizeFixed, cFixed);
 	}
 

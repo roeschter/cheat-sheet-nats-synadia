@@ -58,7 +58,7 @@ public class TextLine extends Text {
 		char markchar = ' ';
 		int state = NOMARKUP;
 		int markupcount = 0;
-		Font currentFont = ctx.regular;
+		Font currentFont = ctx.prop;
 
 		do {
 			int pos = lpos;
@@ -93,7 +93,7 @@ public class TextLine extends Text {
 						lpos = spos+1;
 					}
 				}
-				//Its asterix - bold/cursive marking
+				//Its an asterix - bold/cursive marking
 				if ( markchar=='*') {
 					markupcount = countChar(text,spos,markchar);
 					if ( state==NOMARKUP) {
@@ -124,15 +124,22 @@ public class TextLine extends Text {
 				if ( markchar=='`') {
 					markupcount = countChar(text,spos,markchar);
 					//Current font is body - start fixed
-					if ( currentFont == ctx.regular ) {
+					if ( currentFont == ctx.prop ) {
+						//Add the buffered text as regular
+						if ( b.length() != 0)
+							texts.add(new TextFormatted(b.toString(), currentFont.regular, currentFont.size, currentFont.color));
+						b.setLength(0);
+
 						currentFont = ctx.fixed;
+
 					//End of fixed font markup
 					} else {
 						//Adding text
 						if ( b.length() != 0)
 							texts.add(new TextFormatted(b.toString(), currentFont.regular, currentFont.size, currentFont.color));
 						b.setLength(0);
-						currentFont = ctx.regular;
+						//Return to propertional
+						currentFont = ctx.prop;
 					}
 					lpos += markupcount;
 				}

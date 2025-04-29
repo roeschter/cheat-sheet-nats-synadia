@@ -5,6 +5,8 @@ import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,12 +16,15 @@ public class Config {
 	private JSONObject json;
 	private Config parent;
 
-	String rootDir;
+	private String rootDir;
+	private HashMap<JSONObject,JSONObject> parents = new HashMap<JSONObject,JSONObject>();
+
 
 	public Config( String rootDir, String file, Config _parent ) {
 		parent = _parent;
 		this.rootDir = rootDir;
-		json = loadJSON(file);;
+		json = loadJSON(file);
+		buildMaps(json);
 	}
 
 	public Config(  String rootDir, String file ) {
@@ -67,6 +72,33 @@ public class Config {
 		return input;
 	}
 
+	/*
+	 *Build  maps to help finding things
+	 */
+	public void buildMaps( JSONObject json ) {
+		 Iterator<String> keys = json.keys();
+
+	        // Iterate through all keys
+	        while(keys.hasNext()) {
+	        	String key = keys.next();
+	            Object value = json.get(key);
+
+	            // If value is a JSONObject, recursively traverse it
+	            if (value instanceof JSONObject) {
+	            	//Parent mapping
+	            	parents.put((JSONObject) value, json);
+
+	            	//Recursivly traverse
+	                buildMaps((JSONObject) value);
+	            } else {
+	            	//Nothing to do yet
+	            }
+	        }
+	}
+
+	public JSONObject getParent(JSONObject json) {
+		return parents.get(json);
+	}
 
 	public String preProcess(String input) {
 	    if (input == null || input.isEmpty()) {

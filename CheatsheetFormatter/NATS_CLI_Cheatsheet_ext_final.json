@@ -12,7 +12,7 @@
        
         
     },
-    #"warning": "Work in progress",
+
     "pageHeader": "CLI Extended",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
 
@@ -21,7 +21,11 @@
         { 
             "title": "**General**",
             "items": [
-                "Using the context",
+              
+               
+                
+             
+       
                 "Authenticating with nats cli password, nkey, creds",
                 "Explain nats server report in more detail, including new watch option",
                 "Explain nats server request in more detail",

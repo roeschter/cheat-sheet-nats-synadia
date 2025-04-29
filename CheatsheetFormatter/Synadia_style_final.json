@@ -79,6 +79,9 @@
     bulletOffetRel: -0.2,
     
 
+    blockIndentationRel: 0.0,
+    
+
     bodyFont: Times,
     bodyFontColor: [0,0,0],    
     bodyFontSize: 9,

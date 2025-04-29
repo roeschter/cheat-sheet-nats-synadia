@@ -84,14 +84,14 @@ public class CheatsheetFormatter {
 		float scale = ctx.bulletSizeRel;
 
 		if ( hasBUllets ) {
-			item.bullet = new TextFormatted( ctx.bullet , ctx.body.regular.bold, ctx.body.regular.size*scale, ctx.body.regular.color);
-			item.bullet.yOffset = ctx.body.regular.size*ctx.bulletOffetRel;
-			item.bulletSpacing = ctx.body.regular.size*ctx.bulletSpacingRel;
+			item.bullet = new TextFormatted( ctx.bullet , ctx.body.prop.bold, ctx.body.prop.size*scale, ctx.body.prop.color);
+			item.bullet.yOffset = ctx.body.prop.size*ctx.bulletOffetRel;
+			item.bulletSpacing = ctx.body.prop.size*ctx.bulletSpacingRel;
 		}
 		item.inset = inset;
 		item.layoutBullet();
 
-		item.paragraph = new TextParagraph( text, ctx.body, paragraphWidth - item.bulletWidth, ctx.body.regular.size*ctx.bodyLineSpacingRel,  ctx.body.regular.size*ctx.bodyParagraphSpacingRel );
+		item.paragraph = new TextParagraph( text, ctx.body, paragraphWidth - item.bulletWidth, ctx.body.prop.size*ctx.bodyLineSpacingRel,  ctx.body.prop.size*ctx.bodyParagraphSpacingRel );
 		item.layout();
 		return item;
 	}
@@ -120,7 +120,8 @@ public class CheatsheetFormatter {
 				//Iterate Items
 				JSONObject item = (JSONObject)_item;
 				int[] _filter = ctx.getFilter( item );
-				addItems( block, item, new Config( item, config), _filter, inset + bulletWidth, paragraphWidth - bulletWidth );
+				float _inset = hasBullets?bulletWidth:(ctx.body.prop.size*ctx.blockIndentationRel);
+				addItems( block, item, new Config( item, config), _filter, inset + _inset, paragraphWidth - bulletWidth );
 			}
 
 		}
@@ -139,13 +140,13 @@ public class CheatsheetFormatter {
 		info( title);
 		block.name = title;
 		if ( title != null && title.length()>0) {
-			 block.add( new TextParagraph( title, ctx.title, ctx.lanewidth, ctx.title.regular.size*ctx.titleLineSpacingRel, ctx.title.regular.size*ctx.titleParagraphSpacingRel  ) );
+			 block.add( new TextParagraph( title, ctx.title, ctx.lanewidth, ctx.title.prop.size*ctx.titleLineSpacingRel, ctx.title.prop.size*ctx.titleParagraphSpacingRel  ) );
 
 			 //Add underline graphics
 			 TextGraphics underline = new TextGraphics( ctx.underLineLogo, ctx.document );
-			 underline.yBorder =  ctx.title.regular.size * ctx.underlineBorderRel;
+			 underline.yBorder =  ctx.title.prop.size * ctx.underlineBorderRel;
 			 underline.gWidth = ctx.lanewidth;
-			 underline.gHeight = ctx.title.regular.size * ctx.underlineHeightRel;
+			 underline.gHeight = ctx.title.prop.size * ctx.underlineHeightRel;
 			 underline.fixedHeight = true;
 
 			 block.add(underline);
@@ -172,8 +173,8 @@ public class CheatsheetFormatter {
 
         block.padding = new Padding(image);
 
-        float lineSpacing = ctx.body.regular.size*(float)0.2;
-        float paragraphSpacing = ctx.body.regular.size*(float)0.2;
+        float lineSpacing = ctx.body.prop.size*(float)0.2;
+        float paragraphSpacing = ctx.body.prop.size*(float)0.2;
 
         //TODO set padding on block
 
@@ -262,6 +263,7 @@ public class CheatsheetFormatter {
 		//We are done preparing the context now layout into lanes
 
 		//Layout blocks into lanes
+		//The lanes may span multiple pages
 		ArrayList<TextBlock> lanes = new ArrayList<TextBlock>();
 
 		TextBlock currentLane = null;
@@ -299,8 +301,10 @@ public class CheatsheetFormatter {
 
 		}
 
-		System.out.println("Lanes: " + (laneCount+1));
-		////Done with layout, now render lanes onto pages
+		System.out.println("Lanes needed: " + (laneCount+1));
+
+		//Done with layout, now render lanes onto pages
+
 		laneCount = 0;
 		int pageCount = (page!=null)?0:-1;  //We have a page alreay
 		while( lanes.size() > 0) {
@@ -309,48 +313,8 @@ public class CheatsheetFormatter {
 				pageCount++;
 			}
 
-			//Render header
-			TextBlock header = new TextBlock(false);
-			header.alignCenter = true;
-			if ( ctx.headerLogo.length() > 0) {
-				TextGraphics headerLogo = new TextGraphics(ctx.headerLogo, ctx.document);
-				headerLogo.gHeight = ctx.headerLogoHeight;
-				headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
-				headerLogo.xBorder = 5;
-				header.add( headerLogo );
-			}
-
-			//Header
-			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.regular.bold, ctx.header.regular.size, ctx.header.regular.color );
-			headerText.yOffset = ctx.headerYOffset;
-			header.add( headerText );
-			header.layout();
-
-			ctx.yPos = ctx.rectangle.getHeight() - ctx.borderTop;
-			ctx.xPos = (ctx.rectangle.getWidth() - header.width)/2;
-			header.render(ctx);
-
-			//footer
-			TextBlock footer = new TextBlock();
-			String _footerText =  content.get( "pageFooter", "");
-			if (ctx.footerDate) {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
-				_footerText += " - " + sdf.format(new Date());
-			}
-			//TextFormatted footerText = new TextFormatted( _footerText , ctx.footer.regular.regular, ctx.footer.regular.size, ctx.footer.regular.color );
-			TextParagraph footerText = new TextParagraph( _footerText, ctx.footer, ctx.footerWidth, ctx.footerLineSpacingRel, 0 );
-			footer.padding = ctx.footerPadding;
-			footer.add(footerText);
-			footer.layout();
-
-			//Align left bottom
-			ctx.yPos = footer.height;
-			ctx.xPos = 0;
-			footer.render(ctx);
-
 
 			//Render background
-
 			TextGraphics backgroundTL = new TextGraphics(ctx.backgroundTLLogo, ctx.document);
 			backgroundTL.gWidth = ctx.backgroundTLWidth;
 			backgroundTL.gHeight = ctx.backgroundTLHeight;
@@ -379,6 +343,48 @@ public class CheatsheetFormatter {
 			ctx.yPos = backgroundBR.height;
 			backgroundBR.render(ctx);
 
+
+			//Render header
+			TextBlock header = new TextBlock(false);
+			header.alignCenter = true;
+			//Logo
+			if ( ctx.headerLogo.length() > 0) {
+				TextGraphics headerLogo = new TextGraphics(ctx.headerLogo, ctx.document);
+				headerLogo.gHeight = ctx.headerLogoHeight;
+				headerLogo.yBorder = (ctx.headerHeight-ctx.headerLogoHeight)/2;
+				headerLogo.xBorder = 5;
+				header.add( headerLogo );
+			}
+			//Header Text
+			TextFormatted headerText = new TextFormatted( content.get( "pageHeader", ""), ctx.header.prop.bold, ctx.header.prop.size, ctx.header.prop.color );
+			headerText.yOffset = ctx.headerYOffset;
+			header.add( headerText );
+			header.layout();
+
+			ctx.yPos = ctx.rectangle.getHeight() - ctx.borderTop;
+			ctx.xPos = (ctx.rectangle.getWidth() - header.width)/2;
+			header.render(ctx);
+
+			//footer
+			TextBlock footer = new TextBlock();
+			String _footerText =  content.get( "pageFooter", "");
+			if (ctx.footerDate) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+				_footerText += " - " + sdf.format(new Date());
+			}
+			//TextFormatted footerText = new TextFormatted( _footerText , ctx.footer.regular.regular, ctx.footer.regular.size, ctx.footer.regular.color );
+			TextParagraph footerText = new TextParagraph( _footerText, ctx.footer, ctx.footerWidth, ctx.footerLineSpacingRel, 0 );
+			footer.padding = ctx.footerPadding;
+			footer.add(footerText);
+			footer.layout();
+
+			//Align left bottom
+			ctx.yPos = footer.height;
+			ctx.xPos = 0;
+			footer.render(ctx);
+
+
+
 			//Render images
 			for ( Text text: imageBlocks.texts) {
 				TextBlock block = (TextBlock)text;
@@ -406,8 +412,8 @@ public class CheatsheetFormatter {
 			//Render warning if present
 			String warning = content.get( "warning", null);
 			if ( warning != null ) {
-				float fontSize = ctx.header.regular.size;
-				TextFormatted warningText = new TextFormatted(  warning, ctx.header.regular.bold, fontSize, Color.gray );
+				float fontSize = ctx.header.prop.size;
+				TextFormatted warningText = new TextFormatted(  warning, ctx.header.prop.bold, fontSize, Color.gray );
 				warningText.setAlpha((float) 0.5);
 				warningText.setRotation(-30);
 				warningText.layout();

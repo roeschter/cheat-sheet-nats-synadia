@@ -33,7 +33,7 @@
             "items": [
                 "Built-in cheat sheet",
                 "``**nats cheat**``",
-                 "Always check help for additional options",
+                "Always check help for additional options",
                 "``**nats server info --help**``",
                 "Quick system status",
                 "``**nats server list**``",

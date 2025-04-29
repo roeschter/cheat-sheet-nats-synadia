@@ -92,6 +92,8 @@ public class RenderContext {
 	float bulletOffetRel;
 	float bulletSpacingRel;
 
+	float blockIndentationRel;
+
 	float bodyFontSize;
 	Color bodyFontColor;
 	float bodyLineSpacingRel;
@@ -290,6 +292,7 @@ public class RenderContext {
 		bulletOffetRel = style.getFloat("bulletOffetRel",0.5);
 		bulletSpacingRel = style.getFloat("bulletSpacingRel",0.3);
 
+		blockIndentationRel = style.getFloat("blockIndentationRel",0.0);
 
 		bodyFontSize = style.getFloat("bodyFontSize",8);
 		bodyFontColor = style.getColor("bodyFontColor",Color.black);

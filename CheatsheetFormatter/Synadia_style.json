@@ -78,6 +78,9 @@
     bulletSpacingRel: 0.3,
     bulletOffetRel: -0.2,
     
+    #Additional indentation for subblocks. Adds to bullets
+    blockIndentationRel: 0.0,
+    
     #Body properties
     bodyFont: Times,
     bodyFontColor: [0,0,0],    
