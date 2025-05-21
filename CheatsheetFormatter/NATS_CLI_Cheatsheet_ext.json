@@ -15,31 +15,31 @@
     #"warning": "Work in progress",
     "pageHeader": "CLI Extended",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
-
+    
 
     "blocks": [
         { 
-            "title": "**General**",
+            "title": "**Login options**",
             "items": [
-                "Using the context",
-                "Authenticating with nats cli password, nkey, creds",
-                "Explain nats server report in more detail, including new watch option",
-                "Explain nats server request in more detail",
-                { 
-                    "items": [
-                        "- Subscriptions",
-                        "- kick",
-                        "- ... ", 
-                        
-                    ]    
-                },
-                "nats auth",
-
-                "Leaderhsip change",
-                "Removing a node from a cluster - find meta group members?",
-                "Scaling a stream down and up",
-                "Catching a stream create with --trace and creating a stream with --config",
-                "TLS testing",
+                "Login with username and password",
+                "``**nats --user <user> --password <pwd> sub foo**``",
+                "Login with token",
+                "``**nats --token <token> sub foo**``",
+                "Login with nkey file - must not contain line breaks",
+                "``**nats --nkey <file> sub foo**``",
+                "Login with creds file - operator mode - generated with nsc or Synadia Control Plane",
+                "``**nats --creds <file> sub foo**``",
+            ]    
+        },
+        { 
+            "title": "**Storing options in local context**",
+            "items": [
+                "Save connection options to context",
+                "``**nats context add LOCAL --server nats://127.0.0.1:4222 --user <user> --password <pwd>**``",
+                "Select context",
+                "``**nats context select LOCAL**``",
+                "Quick validate all contexts (connect servers)",
+                "``**nats context validate**``",   
             ]    
         },
         { 
@@ -47,7 +47,7 @@
             "items": [
                 "Obtain current server configuration and statistics (SYS)",
                 "``**nats server request variables**``",
-                "Reload server config file (SYS) - server id can be obtained from above",
+                "Reload server config file (SYS) - server id can be obtained with the command above",
                 "``**nats server config reload <server id>**``",
             ]    
         },
@@ -117,10 +117,10 @@
                 { 
                     bullets: true,
                     "items": [
-                        "Ensure all servers respond quickly. This means all expected servers replied.",
-                        "Ensure lag is 0", 
+                        "Ensure all servers respond quickly. This means all expected servers are there.",
                         "Ensure the number of consumers is as expected",  
-                        "Make sure there is a stable meta leader",                            
+                        "Make sure there is a stable meta leader",       
+                        "Compare the number of servers in the RAFT Meta Group with Jetstream summary. Ensure all server are current and show in the Jetstream summary.", 
                     ]    
                 },
             ]    
@@ -165,7 +165,105 @@
                  
             ]    
         },
+        { 
+            "title": "**Advanced Jetstream management**",
+            "items": [
+                "Change the cluster leader of a stream or consumer. Useful when stream or consumer are unresponsive",       
+                "``**nats stream cluster step-down <stream>**``",
+                "``**nats consumer cluster step-down <stream> <consumer>**``",
+                
+                "Change to a preferred leader",
+                "``**nats stream cluster step-down <stream> --preferred <server>**``",            
+            ]    
+        },
+        { 
+            "items": [
+                
+                "Rebalance **all** stream leaders in the account - **Use with caution**",       
+                "``**nats stream cluster balance**``",
+            
+                "Scaling a stream down and up",       
+                "``**nats stream edit <stream> replicas=3**``",
+
+            ]    
+        },
+         { 
+            "items": [
+    
+                "Catching a stream create config json with --json or --trace",
+                "``**nats stream add <stream> --defaults --subject 'foo.>' --json**``",
+                "``**nats stream add <stream> --defaults --subject 'foo.>' --trace**``",
+                
+                "Creating a stream from json config",
+                "``**nats stream add --config <config file>**``",
+    
+            ]    
+        },
+        { 
+            "title": "**Advanced cluster management**",
+            "items": [
+                "Rebalance client connections between server (SYS) - **Use with caution**",       
+                "``**nats server cluster balance**``",
+              
+                "Change meta raft leader (SYS) for repairing a cluster",    
+                "``**nats server cluster step-down**``",
+              
+                "Removing a node from a cluster after a cluster scale down (SYS). NATS cluster will wait for nodes to come back. Streams will not repair their replicas until nodes are removed - **Use with caution**",
+                "``**nats server cluster peer-remove <server>**``",   
+                "If the server name is unknown find and use the server id (SYS)",    
+                "``**nats server report jetstream**``",   
+                "``**nats server cluster peer-remove <server id>**``",   
+            ]    
+        },
+        { 
+            "title": "**Quick Server status reports**",
+            "items": [
+                "**Note:** some reports are accessible from the SYS account only or show a diffrent details level.", 
+                "",
+                "The server helth probe as exposed by the HTTP interface and used by K8S et.al. to report server readiness.",       
+                "``**nats server report health**``",
+                
+                "Jetstream status, including metad raft group status.",       
+                "``**nats server report jetstream**``",
+                
+                "Quick memory and cpu usage report",       
+                "``**nats server report cpu**``",
+                "``**nats server report mem**``",
+               
+            ]    
+        },
+        { 
+            "title": "**Detailed server status and profiling**",
+            "items": [
+                "Server status profiles similar to the **http debug (8222)** interface. Most of those reports are auto collected by ``**nats audit gather**``",  
+                "Detailed status report per server of all streams replicas. (SYS)",       
+                "``**nats server request jetstream**``",
+                "**To be continued**",
+              
+               
+            ]    
+        },
     ]
 }
 
 
+"Explain nats server report in more detail, including new watch option",
+
+ { 
+            "title": "**General**",
+            "items": [
+                
+                "Explain nats server request in more detail",
+                { 
+                    "items": [
+                        "- Subscriptions",
+                        "- kick",
+                        "- ... ", 
+                        
+                    ]    
+                },
+               
+                "nats auth",
+                
+            ]    
+        },
