@@ -52,6 +52,15 @@
             ]    
         },
         { 
+            "title": "**Server and Stream Events**",
+            "items": [
+                "Connect/Disconnect and authentication errors",
+                "``**nats events**``",
+                "Including all Jetstream advisories and events",
+                "``***nats events --all**``",
+            ]    
+        },
+        { 
             "title": "**Graphs - ASCII Dashboard**",
             "items": [
                 "A number of commands have a ``**graph**`` subcommand or ``**--graph**`` option.",
@@ -166,6 +175,37 @@
             ]    
         },
         { 
+            "items": [
+                "**Jetstream queueing/bottlenecks**",
+                "Detecting bottlenecks in Jetstream replications and request routing",
+                "Reports RAFT cluster wide when used in system account. (SYS)",
+                "``**nats server request ipqueue**``",
+                { 
+                    bullets: true,
+                    "items": [
+                        "Check **Routed JS API Requests** for pending API requests.",
+                        "Check RAFT groups for pending operations. Reports account, streams and consumer.",                      
+                    ]    
+                }, 
+            ]    
+        },
+        { 
+            "title": "**Account management**",
+            "items": [
+                "Current account information, connections overview and statistics",       
+                "``**nats account info**``",
+                "``**nats account report connections**``",
+                "``**nats account report statistics**``",
+                
+                "Backup and restore all streams in an account. ",
+                "``**nats account backup <directory>**``",
+                "``**nats account restore <directory>**``",
+                
+                "**Purge/Delete all streams in an account. (SYS)** ",
+                "``**nats server account purge <account>**``",
+            ]    
+        },
+        { 
             "title": "**Advanced Jetstream management**",
             "items": [
                 "Change the cluster leader of a stream or consumer. Useful when stream or consumer are unresponsive",       
@@ -187,7 +227,7 @@
 
             ]    
         },
-         { 
+        { 
             "items": [
     
                 "Catching a stream create config json with --json or --trace",
@@ -202,7 +242,7 @@
         { 
             "title": "**Advanced cluster management**",
             "items": [
-                "Rebalance client connections between server (SYS) - **Use with caution**",       
+                "Rebalance client connections between servers (SYS) - **Use with caution** and check the extended options with --help",       
                 "``**nats server cluster balance**``",
               
                 "Change meta raft leader (SYS) for repairing a cluster",    
@@ -233,14 +273,34 @@
             ]    
         },
         { 
-            "title": "**Detailed server status and profiling**",
+            "title": "**Detailed server status, profiling and connection kick**",
             "items": [
-                "Server status profiles similar to the **http debug (8222)** interface. Most of those reports are auto collected by ``**nats audit gather**``",  
-                "Detailed status report per server of all streams replicas. (SYS)",       
-                "``**nats server request jetstream**``",
-                "**To be continued**",
-              
+                "Most information is also availabe on the **http debug (port 8222)** interface. Most of this information is auto collected by ``**nats audit gather**``. Except for **connections** all commands require a system account.",  
+                "List all connections.",  
+                "``**nats server request connections**``",
+                "List connections and all subscriptions",  
+                "``**nats server request connections --subscriptions**``",
+                "Kick a connection. (SYS)",  
+                "``**nats server request kick <conn id> <server id>**``",
+                
+                "Current server configuration. (SYS)",       
+                "``**nats server request variables**``",
                
+            ]    
+        },
+        { 
+            "items": [
+                "Detailed status report per server of all streams and replicas. (SYS)",       
+                "``**nats server request jetstream**``",
+                "All subscriptions system wide (SYS)",     
+                "``**nats server request subscriptions --detail**``",
+                ".. other reports are **acounts**, **gateways**, **leafnodes**, **routes** and **raft**"
+            ]    
+        },
+        { 
+            "items": [
+                "Various GoLang runtime profiles. (SYS) - Supports: allocs, heap, goroutine, mutex, threadcreate, block, cpu",       
+                "``**nats server request profile <profile>**``",
             ]    
         },
     ]
@@ -253,7 +313,7 @@
             "title": "**General**",
             "items": [
                 
-                "Explain nats server request in more detail",
+                "
                 { 
                     "items": [
                         "- Subscriptions",
