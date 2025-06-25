@@ -3,7 +3,8 @@
 ## Content 
 
 * NATS CLI cheat sheets. 
-    * Common commands and instructions for health checks. From basic to cluster management. 
+    * NATS_CLI_Cheatsheet.json.pdf - Basic usage, benchmarking - one pager
+    * NATS_CLI_Cheatsheet_ext.json.pdf - Extended - health checks, debugging, cluster management
     * Doubles as material for workshops and ad hoc training as there is currently no dedicated documentation for the NATS CLI.
 * NATS cheat sheets. Mostly marketing - product overview. 
 
