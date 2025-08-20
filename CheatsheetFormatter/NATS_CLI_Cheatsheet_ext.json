@@ -190,6 +190,28 @@
             ]    
         },
         { 
+            "title": "**Monitoring with the CLI**",
+            "items": [
+                "**nats server check** provide simple warning rules, suitable to log file based monitoring. For proper monitoring the **NATS Prometheus exporter** or the **NATS Surveyor** should be used in conjunction with Graphana or similar tools.", 
+                
+                "List server check options and available warning rules. Checks one server at a time.",
+                "``**nats server check**``",
+                "``**nats server check server --help**``",
+                "Simple alerts on server CPU and memory usage (SYS)",       
+                "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --mem-warn=100000000 --mem-critical=200000000**``",
+                "Alert on connection count being out of range. The check can be inverted by setting **critical < warn** (SYS)",     
+                "``**nats server check server --name <server> --conn-warn=1000 --conn-critical=2000**``",
+                "``**nats server check server --name <server> --conn-warn=400 --conn-critical=300**``",
+                
+                "Report in prometheus format (or nagios, json, text)",
+                "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --format=prometheus**``",
+                
+                "Watch servers (SYS) and jetstream",
+                "``**nats server watch servers**``",
+                "``**nats server watch jetstream**``",
+            ]    
+        },
+        { 
             "title": "**Account management**",
             "items": [
                 "Current account information, connections overview and statistics",       
@@ -258,12 +280,12 @@
         { 
             "title": "**Quick Server status reports**",
             "items": [
-                "**Note:** some reports are accessible from the SYS account only or show a diffrent details level.", 
+                "**Note:** some reports are accessible from the SYS account only or show diffrent details in SYS and app account", 
                 "",
                 "The server helth probe as exposed by the HTTP interface and used by K8S et.al. to report server readiness.",       
                 "``**nats server report health**``",
                 
-                "Jetstream status, including metad raft group status.",       
+                "Jetstream status, including meta raft group status.",       
                 "``**nats server report jetstream**``",
                 
                 "Quick memory and cpu usage report",       
@@ -303,27 +325,17 @@
                 "``**nats server request profile <profile>**``",
             ]    
         },
+        { 
+            "exclude": [-1],
+            "title": "**Server reports**",
+            "items": [
+                "**Detailed insight into the server"
+            ]    
+        },
     ]
 }
 
-
-"Explain nats server report in more detail, including new watch option",
-
- { 
-            "title": "**General**",
-            "items": [
-                
-                "
-                { 
-                    "items": [
-                        "- Subscriptions",
-                        "- kick",
-                        "- ... ", 
-                        
-                    ]    
-                },
-               
-                "nats auth",
-                
-            ]    
-        },
+{
+"nats auth",
+"nats server generate".
+}
