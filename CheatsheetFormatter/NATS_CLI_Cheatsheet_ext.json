@@ -134,22 +134,6 @@
                 },
             ]    
         },
-        {
-            "items": [
-                "**Exhaustive Stream and consumer status (SYS) WARNING - These reports can be large and impact server performance** ",
-                "``**nats server stream-check**``",
-                "``**nats server consumer-check**``",
-                { 
-                    bullets: true,
-                    "items": [
-                        "Check for out of sync streams and consumers. Use ``**--unsynced**`` to filter.",
-                        "Check for expected replicas count, stream size, message count", 
-                        "Check for offline peers",
-                    ]    
-                },
-            ]    
-        },
-        
         { 
             "items": [
                 "**Gather and analyze information for auditing**",
@@ -166,12 +150,27 @@
                 { 
                     bullets: true,
                     "items": [
-                        "This is not an exhaustive report. Details may change over time.",
-                        "See ``**nats audit checks**`` for a list of checks.",
-                                        
+                        "This is not an exhaustive report. Details may change over time. See ``**nats audit checks**`` for a list of current checks.",                 
                     ]    
                 },
                  
+            ]    
+        },
+        {
+            "items": [
+                "**Exhaustive Stream and consumer status (SYS) WARNING - These reports can be large and impact server performance** ",
+                "``**nats server stream-check**``",
+                "``**nats server consumer-check**``",
+                { 
+                    bullets: true,
+                    "items": [
+                        "Check for out of sync streams and consumers. Use ``**--unsynced**`` to filter.",
+                        "Check for expected replicas count, stream size, message count and offline peers"
+                    ]    
+                },
+                "The output of ``**nats audit gather**`` can be fed into ``**stream-check**`` and ``**consumer-check**`` for offline analysis",
+                "``**cat ./clusters/\\*/\\*/jetstream_info/\\* | jq -c '.' > jsz.json**``",
+                "``**nats server stream-check --stdin --unsynced < jsz.json**``",
             ]    
         },
         { 
@@ -197,8 +196,14 @@
                 "List server check options and available warning rules. Checks one server at a time.",
                 "``**nats server check**``",
                 "``**nats server check server --help**``",
+               
+            ]    
+        },
+        { 
+            "items": [
                 "Simple alerts on server CPU and memory usage (SYS)",       
                 "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --mem-warn=100000000 --mem-critical=200000000**``",
+                
                 "Alert on connection count being out of range. The check can be inverted by setting **critical < warn** (SYS)",     
                 "``**nats server check server --name <server> --conn-warn=1000 --conn-critical=2000**``",
                 "``**nats server check server --name <server> --conn-warn=400 --conn-critical=300**``",
@@ -206,6 +211,12 @@
                 "Report in prometheus format (or nagios, json, text)",
                 "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --format=prometheus**``",
                 
+               
+            ]    
+        },
+        { 
+            "items": [
+
                 "Watch servers (SYS) and jetstream",
                 "``**nats server watch servers**``",
                 "``**nats server watch jetstream**``",
