@@ -2,15 +2,12 @@
 
 ## Content 
 
-* NATS CLI cheat sheets. 
-    * NATS_CLI_Cheatsheet.json.pdf - Basic usage, benchmarking - one pager
-    * NATS_CLI_Cheatsheet_ext.json.pdf - Extended - health checks, debugging, cluster management
-    * Doubles as material for workshops and ad hoc training as there is currently no dedicated documentation for the NATS CLI.
-* NATS cheat sheets. Mostly marketing - product overview. 
+* NATS_CLI_Cheatsheet.json.pdf - Basic usage, benchmarking - one pager
+* NATS_CLI_Cheatsheet_ext.json.pdf - Extended - health checks, debugging, cluster management
+   
+## PDFs are rendered from Json
 
-## The renderer used
-
-Playground - limited re-usability. Will probably transform this to typst when the content is done.
+Playground project - limited re-usability. Will probably transform the content to typst eventually
 
 Design goals:
 * Render structured cheatsheets as PDF using PDFBox
@@ -19,6 +16,6 @@ Design goals:
 
 ## TODO
 
-Once content is done abandon code and move the content to typst. 
+Once content is stable, abandon rendered and move to typst. 
 * https://typst.app/
 * https://github.com/typst/typst
