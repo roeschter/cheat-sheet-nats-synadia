@@ -77,7 +77,7 @@
         {
             "title": "**JetStream**",
             "items": [
-                "List streams",
+                "List streams, including offline and inaccessible streams",
                 "``**nats stream list**``",
                 "Create stream interactively and with defaults",
                 "``**nats stream add <stream>**``",

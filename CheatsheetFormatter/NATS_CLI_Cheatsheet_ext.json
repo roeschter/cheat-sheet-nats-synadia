@@ -175,9 +175,8 @@
         },
         { 
             "items": [
-                "**Jetstream queueing/bottlenecks**",
+                "**Jetstream queueing/bottlenecks (SYS)**",
                 "Detecting bottlenecks in Jetstream replications and request routing",
-                "Reports RAFT cluster wide when used in system account. (SYS)",
                 "``**nats server request ipqueue**``",
                 { 
                     bullets: true,
@@ -186,6 +185,15 @@
                         "Check RAFT groups for pending operations. Reports account, streams and consumer.",                      
                     ]    
                 }, 
+                
+            ]    
+        },
+        { 
+            "items": [
+                "**Detailed RAFT status report (SYS)**",
+                "``**nats server request raftz --account='$G'**``",
+                "Identify suspect streams/consumers from ``**Cluster Group**`` in ``**nats stream info**``",
+                 "``**nats server request raftz --account=<account> --group=<raft group>** ``",
             ]    
         },
         { 
@@ -203,20 +211,23 @@
             "items": [
                 "Simple alerts on server CPU and memory usage (SYS)",       
                 "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --mem-warn=100000000 --mem-critical=200000000**``",
-                
+            ]
+        },   
+        { 
+            "items": [ 
                 "Alert on connection count being out of range. The check can be inverted by setting **critical < warn** (SYS)",     
                 "``**nats server check server --name <server> --conn-warn=1000 --conn-critical=2000**``",
                 "``**nats server check server --name <server> --conn-warn=400 --conn-critical=300**``",
-                
-                "Report in prometheus format (or nagios, json, text)",
-                "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --format=prometheus**``",
-                
-               
             ]    
-        },
+        },   
+        { 
+            "items": [ 
+                "Report in prometheus format (or nagios, json, text)",
+                "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --format=prometheus**``", 
+            ]    
+        },   
         { 
             "items": [
-
                 "Watch servers (SYS) and jetstream",
                 "``**nats server watch servers**``",
                 "``**nats server watch jetstream**``",
