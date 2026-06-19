@@ -50,10 +50,31 @@
         },
         {
             "items": [
-                "**Atomic Counters** in KV Stores - Works across sources",
+                "**Atomic Counters** in KV stores. Works across sources",
                 "``**nats s add S2 --defaults --subjects S2 --allow-counter**``",
             ]    
         },
+        {
+            "items": [
+                "**Scheduled messages** - Send messages with delay or on a repeated schedule",
+                "``**nats s add S3 --defaults --subjects S3 --allow-schedules**``",
+            ]    
+        },
+        {
+            "items": [
+                "**Atomic batch** - Commit a message batch to a stream atomically. Batch size is limited",
+                "``**nats s add S4 --defaults --subjects S4 --allow-batch**``",
+            ]    
+        },
+        {
+            "items": [
+                "**Fast batch** - Send messages in guranteed sequence without waiting for individual acks.",
+                "``**nats s add S5 --defaults --subjects S5 --allow-fast**``",
+            ]    
+        },
+        
+        
+        
         {
             "items": [
                 "**Warning:** Only activate features on streams when you intend to use them.",

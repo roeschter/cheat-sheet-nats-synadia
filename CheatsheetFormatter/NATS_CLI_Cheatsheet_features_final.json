@@ -56,6 +56,27 @@
         },
         {
             "items": [
+                "**Scheduled messages** - Send messages with delay or on a repeated schedule",
+                "``**nats s add S3 --defaults --subjects S3 --allow-schedules**``",
+            ]    
+        },
+        {
+            "items": [
+                "**Atomic batch** send messages - size is limited",
+                "``**nats s add S4 --defaults --subjects S4 --allow-batch**``",
+            ]    
+        },
+        {
+            "items": [
+                "**Fast batch** - send messages in guranteed sequence without waiting for delays",
+                "``**nats s add S5 --defaults --subjects S5 --allow-fast**``",
+            ]    
+        },
+        
+        
+        
+        {
+            "items": [
                 "**Warning:** Only activate features on streams when you intend to use them.",
                 { 
                     bullets: true,
