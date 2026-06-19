@@ -14,7 +14,7 @@
     },
     #"warning": "Work in progress",
     "pageHeader": "CLI Extended",
-    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
+    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   *https://github.com/roeschter/cheat-sheet-nats-synadia*",
     
 
     "blocks": [
@@ -43,12 +43,24 @@
             ]    
         },
         { 
+            "title": "**API Json Schemas**",
+            "items": [
+                "List all supported schemas used by client APIs to communicate with the server"
+                "``**nats schema search**``",
+                "Show the schema for the new ***multi get*** API  "
+                "``**nats schema info io.nats.jetstream.api.v1.stream_msg_get_request**``",
+                "Test ***multi get*** against a stream"
+                "``**nats schema request $JS.API.STREAM.MSG.GET io.nats.jetstream.api.v1.stream_msg_get_request**``",
+            ]    
+        },
+        { 
             "title": "**Server Configuration**",
             "items": [
                 "Obtain current server configuration and statistics (SYS)",
                 "``**nats server request variables**``",
                 "Reload server config file (SYS) - server id can be obtained with the command above",
                 "``**nats server config reload <server id>**``",
+                
             ]    
         },
         { 
@@ -347,13 +359,7 @@
                 "``**nats server request profile <profile>**``",
             ]    
         },
-        { 
-            "exclude": [-1],
-            "title": "**Server reports**",
-            "items": [
-                "**Detailed insight into the server"
-            ]    
-        },
+        
     ]
 }
 

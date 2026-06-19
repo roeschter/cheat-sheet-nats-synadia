@@ -1,0 +1,70 @@
+{
+    
+    style: NATS_style.json,
+    styleoverride: {
+        laneWidthRel: [ 1.0,  1.0, 1.0],
+        lanes: 3,
+        borderbottom: 45,
+        titleFontSize: 11,
+        bullets: false,
+        bodyLineSpacingRel: 0.15,
+        
+       
+        
+    },
+    "pageHeader": "CLI Cheatsheet - New Features",
+    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   *https://github.com/roeschter/cheat-sheet-nats-synadia*",
+
+
+    "blocks": [
+        {
+            "title": "**Overview**",
+            "items": [
+                "Since Nats-server v2.12 and 2.14 a number of features have been added.",
+                "Some have not (yet) been added to the standard API but are published as ***orbit extensions***.",
+                { 
+                    bullets: true,
+                    "items": [
+                        "*https://github.com/synadia-io/orbit.go*",
+                        "*https://github.com/synadia-io/orbit.java*", 
+                        "*https://github.com/synadia-io/orbit.net*", 
+                        "*https://github.com/synadia-io/orbit.js*", 
+                        "*https://github.com/synadia-io/orbit.rs*", 
+                        "*https://github.com/synadia-io/orbit.c*", 
+                        
+                    ]    
+                },
+            ]    
+        },
+        {
+            "title": "**New stream capabilities**",
+            "items": [
+                "See usage detailed examples in the following sections.",
+            ]    
+        },
+        {
+            "items": [
+                "**Per-Message TTL** - Allows for auto cleaning caches and auto removal of delete markers in KVs.",
+                "``**nats s add S1 --defaults --subjects S1 --allow-msg-ttl**``",
+            ]    
+        },
+        {
+            "items": [
+                "**Atomic Counters** in KV Stores - Works across sources",
+                "``**nats s add S2 --defaults --subjects S2 --allow-counter**``",
+            ]    
+        },
+        {
+            "items": [
+                "**Warning:** Only activate features on streams when you intend to use them.",
+                { 
+                    bullets: true,
+                    "items": [
+                        "Some capabilities cannot be disabled once enabled (e.g. schedules)",
+                        "Some capabilities are incompatible with Key Value Store or Source and Mirror (e.g. schedules)", 
+                    ]    
+                },  
+            ]
+        }
+    ]
+}

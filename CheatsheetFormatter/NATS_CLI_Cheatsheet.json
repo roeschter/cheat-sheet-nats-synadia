@@ -13,7 +13,7 @@
         
     },
     "pageHeader": "CLI Cheatsheet",
-    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
+    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   *https://github.com/roeschter/cheat-sheet-nats-synadia*",
 
 
     "blocks": [
@@ -21,7 +21,7 @@
            
             "title": "**Overview**",
             "items": [
-                "**Download:** https://github.com/nats-io/natscli",
+                "**Download:** *https://github.com/nats-io/natscli*",
                 "**One stop command line utility** to interact with and manage NATS.",
                 "**Independent from NATS server version.** Uses only public Golang API.",          
                 "Please update regularly or compile the GitHub main branch.",
