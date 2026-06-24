@@ -12,9 +12,9 @@
        
         
     },
-    #"warning": "Work in progress",
+
     "pageHeader": "CLI Extended",
-    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   https://github.com/roeschter/cheat-sheet-nats-synadia",
+    "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   *https://github.com/roeschter/cheat-sheet-nats-synadia*",
     
 
     "blocks": [
@@ -42,6 +42,32 @@
                 "``**nats context validate**``",   
             ]    
         },
+        
+        { 
+            "title": "**LLM support**",
+            "items": [
+                "Set ``LLMFORMAT=1`` in environment to switch to LLM friendly markdown output.",
+                "``**export LLMFORMAT=1**``",
+            ]    
+        },
+        { 
+            "title": "**API Json Schemas**",
+            "items": [
+                "List all supported schemas used by client APIs to communicate with the server. This may include APIs not (yet) exposed in the standard clients.",
+                "``**nats schema search**``",
+                "Show the schema for the new ***multi get*** API",
+                "``**nats schema info io.nats.jetstream.api.v1. stream_msg_get_request**``",
+            ]    
+        },
+        { 
+            "title": "**List and lookup server errors**",
+            "items": [
+                "List all API error codes emitted by the server",
+                "``**nats errors ls**``",
+                "Lookup details. The returned ``**Go Index Constant**`` is useful for tracing the error in the server code. LLMs in reasoning mode do a good job at identifying code paths leading to the error.",
+                "``**nats errors lookup <code>**``",
+            ]    
+        },
         { 
             "title": "**Server Configuration**",
             "items": [
@@ -49,6 +75,7 @@
                 "``**nats server request variables**``",
                 "Reload server config file (SYS) - server id can be obtained with the command above",
                 "``**nats server config reload <server id>**``",
+                
             ]    
         },
         { 
@@ -193,9 +220,101 @@
                 "**Detailed RAFT status report (SYS)**",
                 "``**nats server request raftz --account='$G'**``",
                 "Identify suspect streams/consumers from ``**Cluster Group**`` in ``**nats stream info**``",
-                 "``**nats server request raftz --account=<account> --group=<raft group>** ``",
+                "``**nats server request raftz --account=<account> --group=<raft group>** ``",
             ]    
         },
+        { 
+            "title": "**Configuring accounts and users in operator mode**",
+            "items": [
+                "The nats cli can now replace the ``nsc``for most use cases.",
+                {
+                bullets: true,
+                "items": [
+                    "Cleaner and more intuitive syntax.",
+                    "More interactive modes for a quick start.",
+                    "Uses the same underlying library - *https://github.com/nats-io/jwt*",
+                    "Uses the same storage format on disk."
+                ]  
+                },    
+                "For details see:",
+                {
+                bullets: true,
+                "items": [
+                    "*https://docs.nats.io/running-a-nats-service/configuration/securing_nats/auth_intro/jwt*",
+                    "*https://docs.nats.io/running-a-nats-service/configuration/sys_accounts/sys_accounts*",
+                ]  
+                },
+               
+               
+            ]    
+        },
+        { 
+            "items": [
+                 "Basic steps for setting up decentralized authentication. All configuration changes are stored locally until ``**nats auth account push**``ed to a nats cluster.",
+            ]    
+        },
+        { 
+            "items": [
+                "Create a new operator with system account",
+                "``**nats auth operator add SYSOP** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Create a new operator with system account",
+                "``**nats auth operator add SYSOP** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Set as default",
+                "``**nats auth operator select SYSOP** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Generate a template server configuration file from an operator",
+                "``**nats server generate server.conf** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Create an application account",
+                "``**nats auth account add MyAccount --defaults** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Create a new user",
+                "``**nats auth account add MyAccount --defaults** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Create an admin user in system account",
+                "``**nats auth user add admin SYSTEM --defaults** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Export credentials for the system user",
+                "``**nats auth user credential sys_admin.creds admin SYSTEM** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Use ``**nats context**`` to set defaults",
+                "``**nats context add sysadmin --description=SYSOP --server=nats://localhost:4222 --creds=sys_admin.creds** ``",
+            ]    
+        },
+        { 
+            "items": [
+                "Push an account or its changes from a specific operator to a specific server, using system account credentials",
+                "``**nats auth account push MyAccount**``",
+            ]    
+        },
+
+
         { 
             "title": "**Monitoring with the CLI**",
             "items": [
@@ -347,17 +466,6 @@
                 "``**nats server request profile <profile>**``",
             ]    
         },
-        { 
-            "exclude": [-1],
-            "title": "**Server reports**",
-            "items": [
-                "**Detailed insight into the server"
-            ]    
-        },
+        
     ]
-}
-
-{
-"nats auth",
-"nats server generate".
 }

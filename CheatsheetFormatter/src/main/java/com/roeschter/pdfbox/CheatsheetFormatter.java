@@ -445,6 +445,7 @@ public class CheatsheetFormatter {
 		String _content = null;
 		String output = null;
 		boolean view = false;
+		String viewPage = "1";
 
 
 		while ( arg.length > i)
@@ -468,10 +469,15 @@ public class CheatsheetFormatter {
 			{
 				i++;
 				trace = true;
-			} else if ( arg[i].equals("-view") || arg[i].equals("-v"))
+			} else if ( arg[i].equals("-view") || arg[i].equals("-v") ||  arg[i].startsWith("-view=") || arg[i].startsWith("-v="))
 			{
-				i++;
+
 				view = true;
+				int pos = arg[i].indexOf("=");
+				if ( pos != -1)
+					viewPage =  arg[i].substring(pos+1);
+
+				i++;
 			} else if (!arg[i].startsWith("-") )
 			{
 				_content = arg[i];
@@ -508,7 +514,8 @@ public class CheatsheetFormatter {
 
 		if ( view ) {
 			info("PDF_VIEWER: " + pdfViewerCommand );
-			String finalCommand = pdfViewerCommand.replace("%f", csf.output);
+			String finalCommand = pdfViewerCommand.replace("%f", csf.output).replace("%p", viewPage);
+
 			info( finalCommand );
 			ProcessBuilder processBuilder = new ProcessBuilder(
 					finalCommand.split(" ")
