@@ -57,7 +57,7 @@
         {
             "items": [
                 "**Scheduled messages** - Send messages with delay or on a repeated schedule",
-                "``**nats s add S3 --defaults --subjects S3 --allow-schedules**``",
+                "``**nats s add S3 --defaults --subjects S3.\\* --allow-schedules --allow-msg-ttl**``",
             ]    
         },
         {
@@ -69,12 +69,9 @@
         {
             "items": [
                 "**Fast batch** - Send messages in guranteed sequence without waiting for individual acks.",
-                "``**nats s add S5 --defaults --subjects S5 --allow-fast**``",
+                "``**nats s add S5 --replicas=3 --defaults --subjects S5 --allow-fast**``",
             ]    
         },
-        
-        
-        
         {
             "items": [
                 "**Warning:** Only activate features on streams when you intend to use them.",
@@ -86,6 +83,83 @@
                     ]    
                 },  
             ]
-        }
+        },
+        {
+            "title": "**Message TTL**",
+            "items": [
+                "Publish a message with diffrent TTLs - see them disappear",
+                "``**nats pub S1 Hi --header=Nats-TTL:5s**``",
+                "``**nats pub S1 Hi --header=Nats-TTL:10s**``",
+                "``**nats pub S1 Hi --header=Nats-TTL:15s**``",
+                "``**watch -n 1 'nats s info S1**``'"
+            ]    
+        },
+        {
+            "title": "**Atomic Counters**",
+            "items": [
+                "Count (add) to a value atomically. Works on regular streams as well as KVs.",
+                "``**nats request S2 '' --header=Nats-Incr:+1**``",
+                "``**nats request S2 '' --header=Nats-Incr:+2**``",
+                "``**nats stream get S2 --last-for=S2**``'"
+            ]    
+        },
+        {
+            "title": "**Scheduled Messages**",
+            "items": [
+                "Schedule messsages to be sent later.",
+                { 
+                    bullets: true,
+                    "items": [
+                        "All scheduling happens in the same stream.",
+                        "The schedule lives in ***unique*** subject it is sent on. The schedule can be deleted, overwritten etc.", 
+                        "The message is send to ``**--schedule-dest=SUBJECT**``", 
+                        "The schedule may copy the last message from``**--schedule-source=SUBJECT**``",                        
+                    ]    
+                },
+            ]    
+        },
+        {
+            "items": [
+                "Schedule **once** with delay.",
+                "``**nats pub S3.1 Hi --schedule-dest=S3.s1 --schedule-at=\"$(date -d '+10 seconds' -Iseconds)\"**``",
+                "``**nats stream get S3 --last-for=S3.s1**``'",
+            ]
+        },
+        {
+            "items": [
+                "Scheduled message has a TTL.",
+                "``**nats pub S3.2 Hi --schedule-ttl=10s --schedule-dest=S3.s2 --schedule-at=\"$(date -d '+10 seconds' -Iseconds)\"**``",
+                "``**nats stream get S3 --last-for=S3.s2**``'",
+            ]
+        },
+        {
+            "items": [
+               "Schedule ``**cron**`` style",
+                "``**nats pub S3.3 Hi --schedule-dest=S3.s3 --schedule-cron='\\*/5 \\* \\* \\* \\* \\*'**``",
+                "``**nats stream get S3 --last-for=S3.s3**``'",
+            ]
+        },
+        {
+            "items": [
+                "Schedule last message from subject",
+                "``**nats pub S3.template Hello**``'",
+                "``**nats pub S3.4 Hi --schedule-dest=S3.s4 --schedule-cron='\\*/5 \\* \\* \\* \\* \\*' --schedule-source=S3.template**``",
+                "``**nats stream get S3 --last-for=S3.s4**``'",
+            ]
+        },
+        {
+            "title": "**Atomic Batch Publish**",
+            "items": [
+                "Publish multiple messages in one atomic, all or nothing, operation. Limited to the same stream.",
+                "``**echo -e 'A\\nB\\nC\\n' | nats pub --atomic --send-on=newline S4**``",
+            ]    
+        },
+        {
+            "title": "**Fast Batch Publish**",
+            "items": [
+                "Allows safe (no dups, no messages lost) fast publishing in order.",
+                "``**nats bench js pub fast S5 --stream S5**``",
+            ]    
+        },
     ]
 }

@@ -7,7 +7,7 @@ public class TestRender {
 		//CheatsheetFormatter.main( new String[] {"NATS_Cheatsheet.json", "-view" }  );
 		//CheatsheetFormatter.main( new String[] {"NATS_CLI_Cheatsheet.json", "-view" }  );
 		CheatsheetFormatter.main( new String[] {"NATS_CLI_Cheatsheet_features.json", "-view" }  );
-		//CheatsheetFormatter.main( new String[] {"NATS_CLI_Cheatsheet_ext.json", "-view" }  );
+		//CheatsheetFormatter.main( new String[] {"NATS_CLI_Cheatsheet_ext.json", "-view=2" }  );
 
 	}
 

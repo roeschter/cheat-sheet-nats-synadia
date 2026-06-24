@@ -81,12 +81,10 @@ public class TextLine extends Text {
 				//Its an escape
 				if ( markchar=='\\') {
 					//Check if there is another character and if its markup
-					if ( spos+1<text.length() ) {
-						char c = text.charAt(spos+1);
-						if ( isMarkup(c)) {
-							b.append(c);
-							lpos = spos+2;
-						}
+					if ( spos+1<text.length() && isMarkup(text.charAt(spos+1))) {
+						b.append(text.charAt(spos+1));
+						lpos = spos+2;
+
 					//Otherwise append the escape char
 					} else {
 						b.append('\\');
