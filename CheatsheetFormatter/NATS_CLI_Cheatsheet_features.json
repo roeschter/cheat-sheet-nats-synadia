@@ -2,8 +2,8 @@
     
     style: NATS_style.json,
     styleoverride: {
-        laneWidthRel: [ 1.0,  1.0, 1.0],
-        lanes: 3,
+        laneWidthRel: [ 1.0,  1.0],
+        lanes: 2,
         borderbottom: 45,
         titleFontSize: 11,
         bullets: false,
@@ -161,5 +161,50 @@
                 "``**nats bench js pub fast S5 --stream S5**``",
             ]    
         },
+        {
+            "title": "**Stream I/O buffer optimizations**",
+            "items": [
+                "Replicated streams do NOT flush their buffers to disk immediately, but rather with a delay or when `sync_interval` triggers. With todays server and OS reliability in memory replication is sufficient guarantee for data persistence over a few seconds interval.",
+                "Non replicated stream will flush to disk by default. If performance wins over data consistency replicas=1 streams can be set to async mode",
+                "``**nats s add S6 --replicas=1 --defaults --subjects S6 --persist-mode=async**``",
+               
+            ]    
+        },
+        {
+            "title": "**Check stream downgrade compatibility**",
+            "items": [
+                "Check the compatibility of streams against past Jetstream API levels. Depends on the feaures actually activated. The command below will show the rquired API level of all streams.",
+                "``**nats server report downgrade 0**``",
+               
+            ]    
+        },
+        {
+            "title": "**Consumer pause, resume and reset**",
+            "items": [
+                "Consumers can now be paused (for an amount of time), resumed or reset to their initial state or a sequence number.",
+                "``**nats consumer create S1 C1 --defaults --pull**``",
+                "``**nats consumer pause S1 C1 10s**``",
+                "``**nats consumer resume S1 C1**``",
+                "You cannot reset a consumer to a sequence number earlier then the one it started on. But you can set a future one, skipping messages for a while.",
+                "``**nats consumer reset S1 C1**``",
+                "``**nats consumer reset S1 C1 --sequence=42**``",
+                "E.g. you can now pause a stuck consumer, find the sequence number of the message it fails to process and then skip over it.",
+               
+            ]    
+        },
+         {
+            "title": "**Source/Mirror with durable consumers**",
+            "items": [
+                "Prevously source/mirror relied on ephemeral consumers to initia message stransport, with replication state stored on the mirror stream only.",
+                "Ephemeral consumers do not works as intended on interest and workqueue streams and do not allow control to the operator controlling the stream from which messages originate.",
+                "2.14 now supports a new flow_control consumer which can be explcitly configured to be used with source and mirror streams.",
+                "Create Origin stream with a durable consumer. The consumer is a push consumer, so we need to set a delivery subject.",
+                "``**nats s add S_ORIGIN --defaults --subjects S_ORIGIN**``",
+                "``**nats consumer create --defaults --ack=flow_control --heartbeat=1s --deliver=all S_ORIGIN C_MIRROR --target mirror.S_ORIGIN.C_MIRROR**``",
+                "Create stream. Mirro config accepts a JSON fragment. The permutation of configuration options have become to complex to support as command line parameters.",
+                "``**nats s create S_MIRROR --defaults --mirror='{\"name\":\"S_ORIGIN\",\"consumer\":{\"name\":\"C_MIRROR\",\"deliver_subject\":\"mirror.S_ORIGIN.C_MIRROR\"}}'**``",
+            ]    
+        },
     ]
 }
+
