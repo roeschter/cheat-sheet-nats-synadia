@@ -1,5 +1,5 @@
 {
-    
+
     style: NATS_style.json,
     styleoverride: {
         laneWidthRel: [ 1.0,  1.0],
@@ -8,9 +8,9 @@
         titleFontSize: 11,
         bullets: false,
         bodyLineSpacingRel: 0.15,
-        
-       
-        
+
+
+
     },
     "pageHeader": "CLI Cheatsheet - New Features",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   *https://github.com/roeschter/cheat-sheet-nats-synadia*",
@@ -22,77 +22,77 @@
             "items": [
                 "Since Nats-server v2.12 and 2.14 a number of features have been added.",
                 "Some have not (yet) been added to the standard API but are published as ***orbit extensions***.",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "*https://github.com/synadia-io/orbit.go*",
-                        "*https://github.com/synadia-io/orbit.java*", 
-                        "*https://github.com/synadia-io/orbit.net*", 
-                        "*https://github.com/synadia-io/orbit.js*", 
-                        "*https://github.com/synadia-io/orbit.rs*", 
-                        "*https://github.com/synadia-io/orbit.c*", 
-                        
-                    ]    
+                        "*https://github.com/synadia-io/orbit.java*",
+                        "*https://github.com/synadia-io/orbit.net*",
+                        "*https://github.com/synadia-io/orbit.js*",
+                        "*https://github.com/synadia-io/orbit.rs*",
+                        "*https://github.com/synadia-io/orbit.c*",
+
+                    ]
                 },
-            ]    
+            ]
         },
         {
             "title": "**New stream capabilities**",
             "items": [
                 "See usage detailed examples in the following sections.",
-            ]    
+            ]
         },
         {
             "items": [
                 "**Per-Message TTL** - Allows for auto cleaning caches and auto removal of delete markers in KVs.",
                 "``**nats s add S1 --defaults --subjects S1 --allow-msg-ttl**``",
-            ]    
+            ]
         },
         {
             "items": [
                 "**Atomic Counters** in KV stores. Works across sources",
                 "``**nats s add S2 --defaults --subjects S2 --allow-counter**``",
-            ]    
+            ]
         },
         {
             "items": [
                 "**Scheduled messages** - Send messages with delay or on a repeated schedule",
                 "``**nats s add S3 --defaults --subjects S3.\\* --allow-schedules --allow-msg-ttl**``",
-            ]    
+            ]
         },
         {
             "items": [
                 "**Atomic batch** - Commit a message batch to a stream atomically. Batch size is limited",
                 "``**nats s add S4 --defaults --subjects S4 --allow-batch**``",
-            ]    
+            ]
         },
         {
             "items": [
-                "**Fast batch** - Send messages in guranteed sequence without waiting for individual acks.",
+                "**Fast batch** - Send messages in guaranteed sequence without waiting for individual acks.",
                 "``**nats s add S5 --replicas=3 --defaults --subjects S5 --allow-fast**``",
-            ]    
+            ]
         },
         {
             "items": [
                 "**Warning:** Only activate features on streams when you intend to use them.",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "Some capabilities cannot be disabled once enabled (e.g. schedules)",
-                        "Some capabilities are incompatible with Key Value Store or Source and Mirror (e.g. schedules)", 
-                    ]    
-                },  
+                        "Some capabilities are incompatible with Key Value Store or Source and Mirror (e.g. schedules)",
+                    ]
+                },
             ]
         },
         {
             "title": "**Message TTL**",
             "items": [
-                "Publish a message with diffrent TTLs - see them disappear",
+                "Publish a message with different TTLs - see them disappear",
                 "``**nats pub S1 Hi --header=Nats-TTL:5s**``",
                 "``**nats pub S1 Hi --header=Nats-TTL:10s**``",
                 "``**nats pub S1 Hi --header=Nats-TTL:15s**``",
                 "``**watch -n 1 'nats s info S1**``'"
-            ]    
+            ]
         },
         {
             "title": "**Atomic Counters**",
@@ -101,22 +101,22 @@
                 "``**nats request S2 '' --header=Nats-Incr:+1**``",
                 "``**nats request S2 '' --header=Nats-Incr:+2**``",
                 "``**nats stream get S2 --last-for=S2**``'"
-            ]    
+            ]
         },
         {
             "title": "**Scheduled Messages**",
             "items": [
-                "Schedule messsages to be sent later.",
-                { 
+                "Schedule messages to be sent later.",
+                {
                     bullets: true,
                     "items": [
                         "All scheduling happens in the same stream.",
-                        "The schedule lives in ***unique*** subject it is sent on. The schedule can be deleted, overwritten etc.", 
-                        "The message is send to ``**--schedule-dest=SUBJECT**``", 
-                        "The schedule may copy the last message from``**--schedule-source=SUBJECT**``",                        
-                    ]    
+                        "The schedule lives in ***unique*** subject it is sent on. The schedule can be deleted, overwritten etc.",
+                        "The message is send to ``**--schedule-dest=SUBJECT**``",
+                        "The schedule may copy the last message from``**--schedule-source=SUBJECT**``",
+                    ]
                 },
-            ]    
+            ]
         },
         {
             "items": [
@@ -152,14 +152,14 @@
             "items": [
                 "Publish multiple messages in one atomic, all or nothing, operation. Limited to the same stream.",
                 "``**echo -e 'A\\nB\\nC\\n' | nats pub --atomic --send-on=newline S4**``",
-            ]    
+            ]
         },
         {
             "title": "**Fast Batch Publish**",
             "items": [
                 "Allows safe (no dups, no messages lost) fast publishing in order.",
                 "``**nats bench js pub fast S5 --stream S5**``",
-            ]    
+            ]
         },
         {
             "title": "**Stream I/O buffer optimizations**",
@@ -167,16 +167,16 @@
                 "Replicated streams do NOT flush their buffers to disk immediately, but rather with a delay or when `sync_interval` triggers. With todays server and OS reliability in memory replication is sufficient guarantee for data persistence over a few seconds interval.",
                 "Non replicated stream will flush to disk by default. If performance wins over data consistency replicas=1 streams can be set to async mode",
                 "``**nats s add S6 --replicas=1 --defaults --subjects S6 --persist-mode=async**``",
-               
-            ]    
+
+            ]
         },
         {
             "title": "**Check stream downgrade compatibility**",
             "items": [
-                "Check the compatibility of streams against past Jetstream API levels. Depends on the feaures actually activated. The command below will show the rquired API level of all streams.",
+                "Check the compatibility of streams against past Jetstream API levels. Depends on the features actually activated. The command below will show the required API level of all streams.",
                 "``**nats server report downgrade 0**``",
-               
-            ]    
+
+            ]
         },
         {
             "title": "**Consumer pause, resume and reset**",
@@ -189,22 +189,21 @@
                 "``**nats consumer reset S1 C1**``",
                 "``**nats consumer reset S1 C1 --sequence=42**``",
                 "E.g. you can now pause a stuck consumer, find the sequence number of the message it fails to process and then skip over it.",
-               
-            ]    
+
+            ]
         },
          {
             "title": "**Source/Mirror with durable consumers**",
             "items": [
-                "Prevously source/mirror relied on ephemeral consumers to initia message stransport, with replication state stored on the mirror stream only.",
-                "Ephemeral consumers do not works as intended on interest and workqueue streams and do not allow control to the operator controlling the stream from which messages originate.",
-                "2.14 now supports a new flow_control consumer which can be explcitly configured to be used with source and mirror streams.",
+                "Previously source/mirror relied on ephemeral consumers to initiate message transport, with replication state stored on the mirror stream only.",
+                "Ephemeral consumers do not work as intended on interest and workqueue streams and do not allow control to the operator controlling the stream from which messages originate.",
+                "2.14 now supports a new flow_control consumer which can be explicitly configured to be used with source and mirror streams.",
                 "Create Origin stream with a durable consumer. The consumer is a push consumer, so we need to set a delivery subject.",
                 "``**nats s add S_ORIGIN --defaults --subjects S_ORIGIN**``",
                 "``**nats consumer create --defaults --ack=flow_control --heartbeat=1s --deliver=all S_ORIGIN C_MIRROR --target mirror.S_ORIGIN.C_MIRROR**``",
-                "Create stream. Mirro config accepts a JSON fragment. The permutation of configuration options have become to complex to support as command line parameters.",
+                "Create stream. Mirror config accepts a JSON fragment. The permutation of configuration options have become too complex to support as command line parameters.",
                 "``**nats s create S_MIRROR --defaults --mirror='{\"name\":\"S_ORIGIN\",\"consumer\":{\"name\":\"C_MIRROR\",\"deliver_subject\":\"mirror.S_ORIGIN.C_MIRROR\"}}'**``",
-            ]    
+            ]
         },
     ]
 }
-

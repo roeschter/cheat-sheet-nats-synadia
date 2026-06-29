@@ -1,5 +1,5 @@
 {
-    
+
     style: NATS_style.json,
     styleoverride: {
         laneWidthRel: [ 1.0, 1.0, 1.0, 1.0 ],
@@ -8,17 +8,17 @@
         titleFontSize: 11,
         bullets: false,
         bodyLineSpacingRel: 0.15,
-        
-       
-        
+
+
+
     },
 
     "pageHeader": "CLI Extended",
     "pageFooter": "**Created by Synadia, the team behind NATS - www.synadia.com**   *https://github.com/roeschter/cheat-sheet-nats-synadia*",
-    
+
 
     "blocks": [
-        { 
+        {
             "title": "**Login options**",
             "items": [
                 "Login with username and password",
@@ -29,9 +29,9 @@
                 "``**nats --nkey <file> sub foo**``",
                 "Login with creds file - operator mode - generated with nsc or Synadia Control Plane",
                 "``**nats --creds <file> sub foo**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**Storing options in local context**",
             "items": [
                 "Save connection options to context",
@@ -39,55 +39,55 @@
                 "Select context",
                 "``**nats context select LOCAL**``",
                 "Quick validate all contexts (connect servers)",
-                "``**nats context validate**``",   
-            ]    
+                "``**nats context validate**``",
+            ]
         },
-        
-        { 
+
+        {
             "title": "**LLM support**",
             "items": [
                 "Set ``LLMFORMAT=1`` in environment to switch to LLM friendly markdown output.",
                 "``**export LLMFORMAT=1**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**API Json Schemas**",
             "items": [
                 "List all supported schemas used by client APIs to communicate with the server. This may include APIs not (yet) exposed in the standard clients.",
                 "``**nats schema search**``",
                 "Show the schema for the new ***multi get*** API",
                 "``**nats schema info io.nats.jetstream.api.v1. stream_msg_get_request**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**List and lookup server errors**",
             "items": [
                 "List all API error codes emitted by the server",
                 "``**nats errors ls**``",
                 "Lookup details. The returned ``**Go Index Constant**`` is useful for tracing the error in the server code. LLMs in reasoning mode do a good job at identifying code paths leading to the error.",
                 "``**nats errors lookup <code>**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**Server Configuration**",
             "items": [
                 "Obtain current server configuration and statistics (SYS)",
                 "``**nats server request variables**``",
                 "Reload server config file (SYS) - server id can be obtained with the command above",
                 "``**nats server config reload <server id>**``",
-                
-            ]    
+
+            ]
         },
-        { 
+        {
             "title": "**Server and Stream Events**",
             "items": [
                 "Connect/Disconnect and authentication errors",
                 "``**nats events**``",
                 "Including all Jetstream advisories and events",
                 "``***nats events --all**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**Graphs - ASCII Dashboard**",
             "items": [
                 "A number of commands have a ``**graph**`` subcommand or ``**--graph**`` option.",
@@ -96,134 +96,134 @@
                 "``**nats consumer graph <stream> <consumer>**``",
                 "Graph subject traffic. E.g. Jetstream consumer management.",
                 "``**nats sub '$JS.API.CONSUMER.CREATE.>' '$JS.API.CONSUMER.INFO.>'  '$JS.API.CONSUMER.DELETE.>' --graph**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**Extended Health Check**",
             "items": [
                 "**Health probe (SYS) - used by Kubernetes et. al.**",
                 "``**nats server report health**``",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "Ensure you see all servers and all report 200",
-                        "Repeat multiple times if needed",                        
-                    ]    
+                        "Repeat multiple times if needed",
+                    ]
                 },
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "**Check clusters and routes (SYS)**",
                 "``**nats server ls <server count>**``",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "Ensure all servers respond quickly. This means all expected servers replied.",
                         "Ensure there are 0 slow consumers",
                         "Ensure routes/GW are consistent",
                         "Look for consistent versions",
-                        "Look for consistent CPU usage",    
+                        "Look for consistent CPU usage",
                         "Look for consistent uptime",
-                        "Look for consistent memory usage. Is one server using RAM excessivly?",
+                        "Look for consistent memory usage. Is one server using RAM excessively?",
                         "Check the number of connections.",
-                   
-                    ]    
+
+                    ]
                 },
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "**Message traffic (SYS) - Run as system user for extended info**",
                 "``**nats traffic**``",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "**Raft:** Ensure votes are all to 0 (non zero may indicate instability)",
-                        "**Raft:** Ensure append is half of reply", 
-                        "**General:** Ensure there are less than 1000 JS API Requests per second",                        
-                    ]    
+                        "**Raft:** Ensure append is half of reply",
+                        "**General:** Ensure there are less than 1000 JS API Requests per second",
+                    ]
                 },
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "**Jetstream health - Note that not all servers may have Jetstream enabled (SYS)**",
                 "``**nats server report jetstream <JS server count>**``",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "Ensure all servers respond quickly. This means all expected servers are there.",
-                        "Ensure the number of consumers is as expected",  
-                        "Make sure there is a stable meta leader",       
-                        "Compare the number of servers in the RAFT Meta Group with Jetstream summary. Ensure all server are current and show in the Jetstream summary.", 
-                    ]    
+                        "Ensure the number of consumers is as expected",
+                        "Make sure there is a stable meta leader",
+                        "Compare the number of servers in the RAFT Meta Group with Jetstream summary. Ensure all server are current and show in the Jetstream summary.",
+                    ]
                 },
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "**Gather and analyze information for auditing**",
                 "``**nats audit gather**``",
-                { 
+                {
                     bullets: true,
                     "items": [
-                        "Keep audit data for post mortem.",                
-                    ]    
+                        "Keep audit data for post mortem.",
+                    ]
                 },
-             
+
                 "**And do a quick analysis**",
                 "``**nats audit analyze**``",
-                { 
+                {
                     bullets: true,
                     "items": [
-                        "This is not an exhaustive report. Details may change over time. See ``**nats audit checks**`` for a list of current checks.",                 
-                    ]    
+                        "This is not an exhaustive report. Details may change over time. See ``**nats audit checks**`` for a list of current checks.",
+                    ]
                 },
-                 
-            ]    
+
+            ]
         },
         {
             "items": [
                 "**Exhaustive Stream and consumer status (SYS) WARNING - These reports can be large and impact server performance** ",
                 "``**nats server stream-check**``",
                 "``**nats server consumer-check**``",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "Check for out of sync streams and consumers. Use ``**--unsynced**`` to filter.",
                         "Check for expected replicas count, stream size, message count and offline peers"
-                    ]    
+                    ]
                 },
                 "The output of ``**nats audit gather**`` can be fed into ``**stream-check**`` and ``**consumer-check**`` for offline analysis",
                 "``**cat ./clusters/\\*/\\*/jetstream_info/\\* | jq -c '.' > jsz.json**``",
                 "``**nats server stream-check --stdin --unsynced < jsz.json**``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "**Jetstream queueing/bottlenecks (SYS)**",
                 "Detecting bottlenecks in Jetstream replications and request routing",
                 "``**nats server request ipqueue**``",
-                { 
+                {
                     bullets: true,
                     "items": [
                         "Check **Routed JS API Requests** for pending API requests.",
-                        "Check RAFT groups for pending operations. Reports account, streams and consumer.",                      
-                    ]    
-                }, 
-                
-            ]    
+                        "Check RAFT groups for pending operations. Reports account, streams and consumer.",
+                    ]
+                },
+
+            ]
         },
-        { 
+        {
             "items": [
                 "**Detailed RAFT status report (SYS)**",
                 "``**nats server request raftz --account='$G'**``",
                 "Identify suspect streams/consumers from ``**Cluster Group**`` in ``**nats stream info**``",
                 "``**nats server request raftz --account=<account> --group=<raft group>** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**Configuring accounts and users in operator mode**",
             "items": [
                 "The nats cli can now replace the ``nsc``for most use cases.",
@@ -234,238 +234,238 @@
                     "More interactive modes for a quick start.",
                     "Uses the same underlying library - *https://github.com/nats-io/jwt*",
                     "Uses the same storage format on disk."
-                ]  
-                },    
+                ]
+                },
                 "For details see:",
                 {
                 bullets: true,
                 "items": [
                     "*https://docs.nats.io/running-a-nats-service/configuration/securing_nats/auth_intro/jwt*",
                     "*https://docs.nats.io/running-a-nats-service/configuration/sys_accounts/sys_accounts*",
-                ]  
+                ]
                 },
-               
-               
-            ]    
+
+
+            ]
         },
-        { 
+        {
             "items": [
                  "Basic steps for setting up decentralized authentication. All configuration changes are stored locally until ``**nats auth account push**``ed to a nats cluster.",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Create a new operator with system account",
                 "``**nats auth operator add SYSOP** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Create a new operator with system account",
                 "``**nats auth operator add SYSOP** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Set as default",
                 "``**nats auth operator select SYSOP** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Generate a template server configuration file from an operator",
                 "``**nats server generate server.conf** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Create an application account",
                 "``**nats auth account add MyAccount --defaults** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Create a new user",
-                "``**nats auth account add MyAccount --defaults** ``",
-            ]    
+                "``**nats auth user add MyUser --defaults** ``",
+            ]
         },
-        { 
+        {
             "items": [
                 "Create an admin user in system account",
                 "``**nats auth user add admin SYSTEM --defaults** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Export credentials for the system user",
                 "``**nats auth user credential sys_admin.creds admin SYSTEM** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Use ``**nats context**`` to set defaults",
                 "``**nats context add sysadmin --description=SYSOP --server=nats://localhost:4222 --creds=sys_admin.creds** ``",
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
                 "Push an account or its changes from a specific operator to a specific server, using system account credentials",
                 "``**nats auth account push MyAccount**``",
-            ]    
+            ]
         },
 
 
-        { 
+        {
             "title": "**Monitoring with the CLI**",
             "items": [
-                "**nats server check** provide simple warning rules, suitable to log file based monitoring. For proper monitoring the **NATS Prometheus exporter** or the **NATS Surveyor** should be used in conjunction with Graphana or similar tools.", 
-                
+                "**nats server check** provide simple warning rules, suitable to log file based monitoring. For proper monitoring the **NATS Prometheus exporter** or the **NATS Surveyor** should be used in conjunction with Grafana or similar tools.",
+
                 "List server check options and available warning rules. Checks one server at a time.",
                 "``**nats server check**``",
                 "``**nats server check server --help**``",
-               
-            ]    
+
+            ]
         },
-        { 
+        {
             "items": [
-                "Simple alerts on server CPU and memory usage (SYS)",       
+                "Simple alerts on server CPU and memory usage (SYS)",
                 "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --mem-warn=100000000 --mem-critical=200000000**``",
             ]
-        },   
-        { 
-            "items": [ 
-                "Alert on connection count being out of range. The check can be inverted by setting **critical < warn** (SYS)",     
+        },
+        {
+            "items": [
+                "Alert on connection count being out of range. The check can be inverted by setting **critical < warn** (SYS)",
                 "``**nats server check server --name <server> --conn-warn=1000 --conn-critical=2000**``",
                 "``**nats server check server --name <server> --conn-warn=400 --conn-critical=300**``",
-            ]    
-        },   
-        { 
-            "items": [ 
+            ]
+        },
+        {
+            "items": [
                 "Report in prometheus format (or nagios, json, text)",
-                "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --format=prometheus**``", 
-            ]    
-        },   
-        { 
+                "``**nats server check server --name <server> --cpu-warn=50 --cpu-critical=80 --format=prometheus**``",
+            ]
+        },
+        {
             "items": [
                 "Watch servers (SYS) and jetstream",
                 "``**nats server watch servers**``",
                 "``**nats server watch jetstream**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**Account management**",
             "items": [
-                "Current account information, connections overview and statistics",       
+                "Current account information, connections overview and statistics",
                 "``**nats account info**``",
                 "``**nats account report connections**``",
                 "``**nats account report statistics**``",
-                
+
                 "Backup and restore all streams in an account. ",
                 "``**nats account backup <directory>**``",
                 "``**nats account restore <directory>**``",
-                
+
                 "**Purge/Delete all streams in an account. (SYS)** ",
                 "``**nats server account purge <account>**``",
-            ]    
+            ]
         },
-        { 
+        {
             "title": "**Advanced Jetstream management**",
             "items": [
-                "Change the cluster leader of a stream or consumer. Useful when stream or consumer are unresponsive",       
+                "Change the cluster leader of a stream or consumer. Useful when stream or consumer are unresponsive",
                 "``**nats stream cluster step-down <stream>**``",
                 "``**nats consumer cluster step-down <stream> <consumer>**``",
-                
+
                 "Change to a preferred leader",
-                "``**nats stream cluster step-down <stream> --preferred <server>**``",            
-            ]    
+                "``**nats stream cluster step-down <stream> --preferred <server>**``",
+            ]
         },
-        { 
+        {
             "items": [
-                
-                "Rebalance **all** stream leaders in the account - **Use with caution**",       
+
+                "Rebalance **all** stream leaders in the account - **Use with caution**",
                 "``**nats stream cluster balance**``",
-            
-                "Scaling a stream down and up",       
+
+                "Scaling a stream down and up",
                 "``**nats stream edit <stream> replicas=3**``",
 
-            ]    
+            ]
         },
-        { 
+        {
             "items": [
-    
+
                 "Catching a stream create config json with --json or --trace",
                 "``**nats stream add <stream> --defaults --subject 'foo.>' --json**``",
                 "``**nats stream add <stream> --defaults --subject 'foo.>' --trace**``",
-                
+
                 "Creating a stream from json config",
                 "``**nats stream add --config <config file>**``",
-    
-            ]    
+
+            ]
         },
-        { 
+        {
             "title": "**Advanced cluster management**",
             "items": [
-                "Rebalance client connections between servers (SYS) - **Use with caution** and check the extended options with --help",       
+                "Rebalance client connections between servers (SYS) - **Use with caution** and check the extended options with --help",
                 "``**nats server cluster balance**``",
-              
-                "Change meta raft leader (SYS) for repairing a cluster",    
+
+                "Change meta raft leader (SYS) for repairing a cluster",
                 "``**nats server cluster step-down**``",
-              
+
                 "Removing a node from a cluster after a cluster scale down (SYS). NATS cluster will wait for nodes to come back. Streams will not repair their replicas until nodes are removed - **Use with caution**",
-                "``**nats server cluster peer-remove <server>**``",   
-                "If the server name is unknown find and use the server id (SYS)",    
-                "``**nats server report jetstream**``",   
-                "``**nats server cluster peer-remove <server id>**``",   
-            ]    
+                "``**nats server cluster peer-remove <server>**``",
+                "If the server name is unknown find and use the server id (SYS)",
+                "``**nats server report jetstream**``",
+                "``**nats server cluster peer-remove <server id>**``",
+            ]
         },
-        { 
+        {
             "title": "**Quick Server status reports**",
             "items": [
-                "**Note:** some reports are accessible from the SYS account only or show diffrent details in SYS and app account", 
+                "**Note:** some reports are accessible from the SYS account only or show different details in SYS and app account",
                 "",
-                "The server helth probe as exposed by the HTTP interface and used by K8S et.al. to report server readiness.",       
+                "The server health probe as exposed by the HTTP interface and used by K8S et.al. to report server readiness.",
                 "``**nats server report health**``",
-                
-                "Jetstream status, including meta raft group status.",       
+
+                "Jetstream status, including meta raft group status.",
                 "``**nats server report jetstream**``",
-                
-                "Quick memory and cpu usage report",       
+
+                "Quick memory and cpu usage report",
                 "``**nats server report cpu**``",
                 "``**nats server report mem**``",
-               
-            ]    
+
+            ]
         },
-        { 
+        {
             "title": "**Detailed server status, profiling and connection kick**",
             "items": [
-                "Most information is also availabe on the **http debug (port 8222)** interface. Most of this information is auto collected by ``**nats audit gather**``. Except for **connections** all commands require a system account.",  
-                "List all connections.",  
+                "Most information is also available on the **http debug (port 8222)** interface. Most of this information is auto collected by ``**nats audit gather**``. Except for **connections** all commands require a system account.",
+                "List all connections.",
                 "``**nats server request connections**``",
-                "List connections and all subscriptions",  
+                "List connections and all subscriptions",
                 "``**nats server request connections --subscriptions**``",
-                "Kick a connection. (SYS)",  
+                "Kick a connection. (SYS)",
                 "``**nats server request kick <conn id> <server id>**``",
-                
-                "Current server configuration. (SYS)",       
+
+                "Current server configuration. (SYS)",
                 "``**nats server request variables**``",
-               
-            ]    
+
+            ]
         },
-        { 
+        {
             "items": [
-                "Detailed status report per server of all streams and replicas. (SYS)",       
+                "Detailed status report per server of all streams and replicas. (SYS)",
                 "``**nats server request jetstream**``",
-                "All subscriptions system wide (SYS)",     
+                "All subscriptions system wide (SYS)",
                 "``**nats server request subscriptions --detail**``",
-                ".. other reports are **acounts**, **gateways**, **leafnodes**, **routes** and **raft**"
-            ]    
+                ".. other reports are **accounts**, **gateways**, **leafnodes**, **routes** and **raft**"
+            ]
         },
-        { 
+        {
             "items": [
-                "Various GoLang runtime profiles. (SYS) - Supports: allocs, heap, goroutine, mutex, threadcreate, block, cpu",       
+                "Various GoLang runtime profiles. (SYS) - Supports: allocs, heap, goroutine, mutex, threadcreate, block, cpu",
                 "``**nats server request profile <profile>**``",
-            ]    
+            ]
         },
-        
+
     ]
 }
