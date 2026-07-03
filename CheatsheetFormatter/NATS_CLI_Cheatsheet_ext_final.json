@@ -226,7 +226,7 @@
         {
             "title": "**Configuring accounts and users in operator mode**",
             "items": [
-                "The nats cli can now replace the ``nsc``for most use cases.",
+                "The nats cli can now replace the ``nsc`` tool for most use cases.",
                 {
                 bullets: true,
                 "items": [
@@ -251,6 +251,7 @@
         {
             "items": [
                  "Basic steps for setting up decentralized authentication. All configuration changes are stored locally until ``**nats auth account push**``ed to a nats cluster.",
+                 "Set ``**XDG_DATA_HOME**`` to override the local storage dirctory."
             ]
         },
         {
@@ -261,13 +262,7 @@
         },
         {
             "items": [
-                "Create a new operator with system account",
-                "``**nats auth operator add SYSOP** ``",
-            ]
-        },
-        {
-            "items": [
-                "Set as default",
+                "Set SYSOP as default",
                 "``**nats auth operator select SYSOP** ``",
             ]
         },
