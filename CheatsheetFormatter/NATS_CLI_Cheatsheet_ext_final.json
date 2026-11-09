@@ -355,9 +355,9 @@
                 "``**nats account report connections**``",
                 "``**nats account report statistics**``",
 
-                "Backup and restore all streams in an account. ",
-                "``**nats account backup <directory>**``",
-                "``**nats account restore <directory>**``",
+                "Backup and restore all streams in an account. See ``**nats backup --help**`` for stream backups, edit and validate.",
+                "``**nats backup account <directory>**``",
+                "``**nats backup restore account <directory>**``",
 
                 "**Purge/Delete all streams in an account. (SYS)** ",
                 "``**nats server account purge <account>**``",
@@ -398,6 +398,14 @@
             ]
         },
         {
+            "items": [
+                "Reset a consumer. Without ``**--sequence**`` it rewinds to the ack floor and redelivers all unacknowledged messages",
+                "``**nats consumer reset <stream> <consumer>**``",
+                "Reset to a stream sequence, e.g. to skip a poison message. Consumers with a start sequence or start time cannot go below it.",
+                "``**nats consumer reset <stream> <consumer> --sequence=<seq>**``",
+            ]
+        },
+        {
             "title": "**Advanced cluster management**",
             "items": [
                 "Rebalance client connections between servers (SYS) - **Use with caution** and check the extended options with --help",
@@ -411,6 +419,17 @@
                 "If the server name is unknown find and use the server id (SYS)",
                 "``**nats server report jetstream**``",
                 "``**nats server cluster peer-remove <server id>**``",
+            ]
+        },
+        {
+            "items": [
+                "**Rescue a meta group that lost quorum (SYS, 2.15+)** - e.g. 2 of 3 servers lost for good. **Use with caution**",
+                "Confirm there is no meta leader and which servers are missing",
+                "``**nats server report jetstream**``",
+                "Temporarily lower the quorum on the surviving servers. Prompts for the quorum size. Use ``**--js-domain**`` if servers run in a JetStream domain.",
+                "``**nats server cluster rescue --js-domain <domain>**``",
+                "Within **5 minutes**, before the lowered quorum expires, remove the dead servers",
+                "``**nats server cluster peer-remove <server> --js-domain <domain>**``",
             ]
         },
         {

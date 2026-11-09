@@ -20,7 +20,7 @@
         {
             "title": "**Overview**",
             "items": [
-                "Since Nats-server v2.12 and 2.14 a number of features have been added.",
+                "Since Nats-server v2.12, 2.14 and 2.15 a number of features have been added.",
                 "Some have not (yet) been added to the standard API but are published as ***orbit extensions***.",
                 {
                     bullets: true,
@@ -181,11 +181,11 @@
         {
             "title": "**Consumer pause, resume and reset**",
             "items": [
-                "Consumers can now be paused (for an amount of time), resumed or reset to their initial state or a sequence number.",
+                "Consumers can now be paused (for an amount of time), resumed or reset to their ack floor or a sequence number.",
                 "``**nats consumer create S1 C1 --defaults --pull**``",
                 "``**nats consumer pause S1 C1 10s**``",
                 "``**nats consumer resume S1 C1**``",
-                "You cannot reset a consumer to a sequence number earlier then the one it started on. But you can set a future one, skipping messages for a while.",
+                "Without ``**--sequence**`` reset rewinds to the ack floor and redelivers unacknowledged messages. Consumers with a start sequence or start time cannot be reset below it. But you can set a future one, skipping messages for a while.",
                 "``**nats consumer reset S1 C1**``",
                 "``**nats consumer reset S1 C1 --sequence=42**``",
                 "E.g. you can now pause a stuck consumer, find the sequence number of the message it fails to process and then skip over it.",
@@ -203,6 +203,49 @@
                 "``**nats consumer create --defaults --ack=flow_control --heartbeat=1s --deliver=all S_ORIGIN C_MIRROR --target mirror.S_ORIGIN.C_MIRROR**``",
                 "Create stream. Mirror config accepts a JSON fragment. The permutation of configuration options have become too complex to support as command line parameters.",
                 "``**nats s create S_MIRROR --defaults --mirror='{\"name\":\"S_ORIGIN\",\"consumer\":{\"name\":\"C_MIRROR\",\"deliver_subject\":\"mirror.S_ORIGIN.C_MIRROR\"}}'**``",
+            ]
+        },
+        {
+            "title": "**Meta cluster rescue (2.15)**",
+            "items": [
+                "If a cluster permanently loses the majority of its servers, the meta RAFT group cannot elect a leader and JetStream stops. ``**peer-remove**`` needs a meta leader too. Rescue temporarily lowers the quorum on the surviving servers. (SYS)",
+                "Discover - the report shows ***No cluster meta leader found*** and servers missing from the RAFT Meta Group.",
+                "``**nats server report jetstream**``",
+                "Rescue - shows the cluster state and prompts for the new quorum size (default: servers online). Specify the domain if the servers run in one.",
+                "``**nats server cluster rescue --js-domain <domain>**``",
+                "The lowered quorum expires after **5 minutes**. The report shows ``**Rescuing true**``. Peer remove the dead servers within that window.",
+                "``**nats server cluster peer-remove <server> --js-domain <domain>**``",
+                {
+                    bullets: true,
+                    "items": [
+                        "Only for servers that will never come back. **Use with caution**",
+                        "Survivors must hold data - servers with an empty log refuse the rescue",
+                    ]
+                },
+            ]
+        },
+        {
+            "title": "**Backup - new format (2.15)**",
+            "items": [
+                "``**nats backup**`` replaces ``**nats stream backup**`` and ``**nats account backup**``. The new format can be inspected, validated and **edited offline**. Requires server 2.15+.",
+                "``**nats backup stream ORDERS ./bk**``",
+                "``**nats backup account ./bk_all**``",
+                "``**nats backup info ./bk --subjects**``",
+                "``**nats backup validate ./bk**``",
+                "``**nats backup restore stream ./bk**``",
+            ]
+        },
+        {
+            "items": [
+                "**Edit** writes a filtered copy of a backup. Filter by subject, time, sequence, header or payload. Preview with ``**--dry-run**``.",
+                "``**nats backup edit ./bk ./bk2 --exclude-subject=orders.test --exclude-payload-match=card --dry-run**``",
+                "Keep the last 2 hours and renumber from 1 (drops consumers)",
+                "``**nats backup edit ./bk ./bk2 --after=2h --renumber**``",
+                "Compact a KV backup - latest revision per key, deleted keys dropped",
+                "``**nats backup edit ./kv ./kv2 --kv-compact**``",
+                "Obfuscate before sharing, e.g. with support. Keep the key file private.",
+                "``**nats backup edit ./bk ./bk_obf --obfuscate**``",
+                "``**nats backup lookup ./bk_obf.keys.json <value>**``",
             ]
         },
     ]
