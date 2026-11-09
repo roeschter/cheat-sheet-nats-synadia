@@ -248,5 +248,17 @@
                 "``**nats backup lookup ./bk_obf.keys.json <value>**``",
             ]
         },
+        {
+            "title": "**Default consumer limit (2.15)**",
+            "items": [
+                "Streams are now limited to **1000 consumers** unless ``**max_consumers**`` is set on the stream or in the account limits. Existing consumers are kept, but new ones fail with ***maximum consumers limit reached (10026)***.",
+                "**Warning:** ``**nats s info**`` still shows ***Maximum Consumers: unlimited***.",
+                "Raise the limit per stream",
+                "``**nats s add S7 --defaults --subjects S7 --max-consumers=5000**``",
+                "``**nats s edit S7 --max-consumers=5000**``",
+                "Or change the server-wide default in the server config (-1 = unlimited)",
+                "``**jetstream { limits { default_max_consumers: 5000 } }**``",
+            ]
+        },
     ]
 }

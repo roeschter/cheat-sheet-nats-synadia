@@ -423,6 +423,16 @@
         },
         {
             "items": [
+                "**Evacuate a server before maintenance (SYS, 2.15+)** - moves all streams and consumers off a server with full data transfer. No peer-remove needed.",
+                "``**nats server cluster evacuate <server>**``",
+                "Move a single stream off a server",
+                "``**nats stream cluster evacuate <stream> <server>**``",
+                "Cancel an in-flight stream move or scale. The stream returns to its original placement.",
+                "``**nats stream cluster cancel-move <stream>**``",
+            ]
+        },
+        {
+            "items": [
                 "**Rescue a meta group that lost quorum (SYS, 2.15+)** - e.g. 2 of 3 servers lost for good. **Use with caution**",
                 "Confirm there is no meta leader and which servers are missing",
                 "``**nats server report jetstream**``",
